@@ -1584,7 +1584,8 @@ function readDefaults() {
       const td = tds[COL[f.key]];
       if (!td) { defaults[id][f.key] = 0; return; }
       // Strip R$, spaces, dots, commas to get raw number
-      const raw = td.dataset.orig || td.textContent.replace(/[R$\s.]/g,'').replace(',','.').replace(/[^0-9.]/g,'');
+      const origText = td.dataset.orig || td.textContent.trim();
+      const raw = origText.replace(/[R$\s.]/g,'').replace(',','.').replace(/[^0-9.]/g,'');
       defaults[id][f.key] = parseFloat(raw) || 0;
       // Cache original text
       if (!td.dataset.orig) td.dataset.orig = td.textContent.trim();
