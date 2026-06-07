@@ -222,6 +222,26 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:18px;
   border-top:1px solid var(--gray2);margin-top:6px}
 .note-box{padding:9px 14px;background:var(--gray);font-size:10px;color:var(--muted);
   border-top:1px solid var(--gray2);line-height:1.6}
+
+  .cost-editable {
+    cursor: pointer;
+    position: relative;
+    transition: background 0.15s;
+  }
+  .cost-editable:hover {
+    background: rgba(124,58,237,0.15) !important;
+    border-radius: 4px;
+  }
+  .cost-editable::after {
+    content: ' ✏️';
+    font-size: 10px;
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+  .cost-editable:hover::after {
+    opacity: 1;
+  }
+
 </style>
 </head>
 <body>
@@ -346,7 +366,7 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:18px;
         </tr></thead>
         <tbody>
 
-          <tr onclick="openModal('belo')">
+          <tr data-event-id="belo" onclick="openModal('belo')">
             <td><div class="ev-wrap"><img class="ev-img" src="https://images.ticket360.com.br/images.ticket360/eventos/minifeed/33108-20260511165906.webp" onerror="this.style.display='none'">
               <div>
                 <div class="ev-name">🎤 Belo In Concert</div>
@@ -354,16 +374,16 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:18px;
                 <div class="ev-loc">📍 Shopping Park Sul · Barra da Tijuca, Rio de Janeiro – RJ</div>
               </div></div></td>
             <td><a href="https://produtor.ticket360.com.br/produtor/vendas/detalhe/33108" target="_blank" onclick="event.stopPropagation()"><span class="chip chip-t360">T360</span></a></td>
-            <td>R$ 850.000</td>
+            <td data-cost-id="belo" class="cost-editable" title="Clique para editar custo">R$ 850.000</td>
             <td class="num-green">670</td><td>0</td><td>0</td><td>670</td>
             <td class="num-amber">R$ 85.832</td>
             <td>R$ 23.450</td>
             <td class="num-amber">R$ 109.282</td>
-            <td><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill purple" style="width:12.9%"></div></div><span class="pbar-pct" style="color:#7c3aed">12,9%</span></div></td>
+            <td data-breakeven-id="belo"><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill purple" id="pbar-belo" style="width:12.9%"></div></div><span class="pbar-pct" id="pct-belo" style="color:#7c3aed">12,9%</span></div></td>
             <td><span class="status-tag tag-warn">↑ No ritmo</span></td>
           </tr>
 
-          <tr onclick="openModal('4amigos')">
+          <tr data-event-id="4amigos" onclick="openModal('4amigos')">
             <td><div class="ev-wrap"><div style="width:42px;height:42px;border-radius:7px;background:linear-gradient(135deg,#6c3fc5,#9b59b6);display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;flex-shrink:0">🎭</div>
               <div>
                 <div class="ev-name">4 Amigos 2026</div>
@@ -371,16 +391,16 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:18px;
                 <div class="ev-loc">📍 Niterói – RJ</div>
               </div></div></td>
             <td><span class="chip chip-be">BE</span></td>
-            <td>R$ 160.000</td>
+            <td data-cost-id="4amigos" class="cost-editable" title="Clique para editar custo">R$ 160.000</td>
             <td class="num-green">842</td><td>—</td><td>0</td><td>842</td>
             <td class="num-amber">R$ 76.122</td>
             <td>—</td>
             <td class="num-amber">R$ 76.122</td>
-            <td><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill amber" style="width:47.6%"></div></div><span class="pbar-pct" style="color:var(--amber)">47,6%</span></div></td>
+            <td data-breakeven-id="4amigos"><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill amber" id="pbar-4amigos" style="width:47.6%"></div></div><span class="pbar-pct" id="pct-4amigos" style="color:var(--amber)">47,6%</span></div></td>
             <td><span class="status-tag tag-warn">↑ Bom ritmo</span></td>
           </tr>
 
-          <tr onclick="openModal('piquenovo')" style="background:#f0fdf4">
+          <tr data-event-id="piquenovo" onclick="openModal('piquenovo')" style="background:#f0fdf4">
             <td><div class="ev-wrap"><img class="ev-img" src="https://images.ticket360.com.br/images.ticket360/eventos/minifeed/33153-20260513115958.webp" onerror="this.style.display='none'">
               <div>
                 <div class="ev-name">🏆 Fun Fest — Pique Novo & Rogerinho</div>
@@ -388,16 +408,16 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:18px;
                 <div class="ev-loc">📍 Shopping Park Sul · Barra da Tijuca, Rio de Janeiro – RJ</div>
               </div></div></td>
             <td><a href="https://produtor.ticket360.com.br/produtor/vendas/detalhe/33153" target="_blank" onclick="event.stopPropagation()"><span class="chip chip-t360">T360</span></a></td>
-            <td>R$ 129.348</td>
+            <td data-cost-id="piquenovo" class="cost-editable" title="Clique para editar custo">R$ 129.348</td>
             <td class="num-green">50</td><td>110</td><td class="num-amber">4.838</td><td>4.998</td>
             <td class="num-green">R$ 2.550</td>
             <td class="num-green">R$ 174.930</td>
             <td class="num-green">R$ 177.480</td>
-            <td><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill green" style="width:100%"></div></div><span class="pbar-pct" style="color:var(--green)">137,2% ✅</span></div></td>
+            <td data-breakeven-id="piquenovo"><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill green" id="pbar-piquenovo" style="width:100%"></div></div><span class="pbar-pct" id="pct-piquenovo" style="color:var(--green)">137,2% ✅</span></div></td>
             <td><span class="status-tag tag-ok">✅ Breakeven!</span></td>
           </tr>
 
-          <tr onclick="openModal('djzullu')" style="background:#f0fdf4">
+          <tr data-event-id="djzullu" onclick="openModal('djzullu')" style="background:#f0fdf4">
             <td><div class="ev-wrap"><img class="ev-img" src="https://images.ticket360.com.br/images.ticket360/eventos/minifeed/33163-20260513120053.webp" onerror="this.style.display='none'">
               <div>
                 <div class="ev-name">✅ Fun Fest — DJ Zullu & Pokémon DJ</div>
@@ -405,16 +425,16 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:18px;
                 <div class="ev-loc">📍 Shopping Park Sul · Barra da Tijuca, Rio de Janeiro – RJ</div>
               </div></div></td>
             <td><a href="https://produtor.ticket360.com.br/produtor/vendas/detalhe/33163" target="_blank" onclick="event.stopPropagation()"><span class="chip chip-t360">T360</span></a></td>
-            <td>R$ 129.348</td>
+            <td data-cost-id="djzullu" class="cost-editable" title="Clique para editar custo">R$ 129.348</td>
             <td class="num-green">7</td><td>100</td><td class="num-amber">3.967</td><td>4.074</td>
             <td class="num-green">R$ 420</td>
             <td class="num-green">R$ 142.590</td>
             <td class="num-green">R$ 143.010</td>
-            <td><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill green" style="width:100%"></div></div><span class="pbar-pct" style="color:var(--green)">110,6% ✅</span></div></td>
+            <td data-breakeven-id="djzullu"><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill green" id="pbar-djzullu" style="width:100%"></div></div><span class="pbar-pct" id="pct-djzullu" style="color:var(--green)">110,6% ✅</span></div></td>
             <td><span class="status-tag tag-ok">✅ Breakeven!</span></td>
           </tr>
 
-          <tr onclick="openModal('brunodiegues')" style="background:#f0fdf4">
+          <tr data-event-id="brunodiegues" onclick="openModal('brunodiegues')" style="background:#f0fdf4">
             <td><div class="ev-wrap"><img class="ev-img" src="https://images.ticket360.com.br/images.ticket360/eventos/minifeed/33159-20260513120108.webp" onerror="this.style.display='none'">
               <div>
                 <div class="ev-name">✅ Fun Fest — Bruno Diegues</div>
@@ -422,16 +442,16 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:18px;
                 <div class="ev-loc">📍 Shopping Park Sul · Barra da Tijuca, Rio de Janeiro – RJ</div>
               </div></div></td>
             <td><a href="https://produtor.ticket360.com.br/produtor/vendas/detalhe/33159" target="_blank" onclick="event.stopPropagation()"><span class="chip chip-t360">T360</span></a></td>
-            <td>R$ 129.348</td>
+            <td data-cost-id="brunodiegues" class="cost-editable" title="Clique para editar custo">R$ 129.348</td>
             <td class="num-green">6</td><td>100</td><td class="num-amber">4.064</td><td>4.170</td>
             <td class="num-green">R$ 330</td>
             <td class="num-green">R$ 145.950</td>
             <td class="num-green">R$ 146.280</td>
-            <td><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill green" style="width:100%"></div></div><span class="pbar-pct" style="color:var(--green)">113,1% ✅</span></div></td>
+            <td data-breakeven-id="brunodiegues"><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill green" id="pbar-brunodiegues" style="width:100%"></div></div><span class="pbar-pct" id="pct-brunodiegues" style="color:var(--green)">113,1% ✅</span></div></td>
             <td><span class="status-tag tag-ok">✅ Breakeven!</span></td>
           </tr>
 
-          <tr onclick="openModal('gamadinho')">
+          <tr data-event-id="gamadinho" onclick="openModal('gamadinho')">
             <td><div class="ev-wrap"><img class="ev-img" src="https://images.ticket360.com.br/images.ticket360/eventos/minifeed/33162-20260513115927.webp" onerror="this.style.display='none'">
               <div>
                 <div class="ev-name">Fun Fest — Gamadinho Resenha</div>
@@ -439,16 +459,16 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:18px;
                 <div class="ev-loc">📍 Shopping Park Sul · Barra da Tijuca, Rio de Janeiro – RJ</div>
               </div></div></td>
             <td><a href="https://produtor.ticket360.com.br/produtor/vendas/detalhe/33162" target="_blank" onclick="event.stopPropagation()"><span class="chip chip-t360">T360</span></a></td>
-            <td>R$ 92.391</td>
+            <td data-cost-id="gamadinho" class="cost-editable" title="Clique para editar custo">R$ 92.391</td>
             <td>0</td><td>0</td><td class="num-amber">248</td><td>248</td>
             <td>R$ 0</td>
             <td>R$ 8.680</td>
             <td>R$ 8.680</td>
-            <td><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill amber" style="width:9.4%"></div></div><span class="pbar-pct" style="color:var(--amber)">9,4%</span></div></td>
+            <td data-breakeven-id="gamadinho"><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill amber" id="pbar-gamadinho" style="width:9.4%"></div></div><span class="pbar-pct" id="pct-gamadinho" style="color:var(--amber)">9,4%</span></div></td>
             <td><span class="status-tag tag-warn">Em curso</span></td>
           </tr>
 
-          <tr onclick="openModal('tamente')">
+          <tr data-event-id="tamente" onclick="openModal('tamente')">
             <td><div class="ev-wrap"><img class="ev-img" src="https://images.ticket360.com.br/images.ticket360/eventos/minifeed/33158-20260513120151.webp" onerror="this.style.display='none'">
               <div>
                 <div class="ev-name">Fun Fest — Tá Na Mente</div>
@@ -456,16 +476,16 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:18px;
                 <div class="ev-loc">📍 Shopping Park Sul · Barra da Tijuca, Rio de Janeiro – RJ</div>
               </div></div></td>
             <td><a href="https://produtor.ticket360.com.br/produtor/vendas/detalhe/33158" target="_blank" onclick="event.stopPropagation()"><span class="chip chip-t360">T360</span></a></td>
-            <td>R$ 92.391</td>
+            <td data-cost-id="tamente" class="cost-editable" title="Clique para editar custo">R$ 92.391</td>
             <td class="num-amber">4</td><td>0</td><td class="num-amber">295</td><td>299</td>
             <td>R$ 180</td>
             <td>R$ 10.465</td>
             <td>R$ 10.645</td>
-            <td><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill amber" style="width:11.5%"></div></div><span class="pbar-pct" style="color:var(--amber)">11,5%</span></div></td>
+            <td data-breakeven-id="tamente"><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill amber" id="pbar-tamente" style="width:11.5%"></div></div><span class="pbar-pct" id="pct-tamente" style="color:var(--amber)">11,5%</span></div></td>
             <td><span class="status-tag tag-warn">Em curso</span></td>
           </tr>
 
-          <tr>
+          <tr data-event-id="ff3datas">
             <td><div class="ev-wrap"><img class="ev-img" src="https://images.ticket360.com.br/images.ticket360/eventos/minifeed/33160-20260513120131.webp" onerror="this.style.display='none'">
               <div>
                 <div class="ev-name">Fun Fest — 08/07 · 14/07 · 19/07</div>
@@ -473,14 +493,14 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:18px;
                 <div class="ev-loc">📍 Shopping Park Sul · Barra da Tijuca, Rio de Janeiro – RJ</div>
               </div></div></td>
             <td><a href="https://produtor.ticket360.com.br/produtor/vendas" target="_blank" onclick="event.stopPropagation()"><span class="chip chip-t360">T360</span></a></td>
-            <td>R$ 92.391 cada</td>
+            <td data-cost-id="ff3datas" class="cost-editable" title="Clique para editar custo">R$ 92.391 cada</td>
             <td>0</td><td>0</td><td>0</td><td>0</td>
             <td>R$ 0</td><td>R$ 0</td><td>R$ 0</td>
             <td><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill red" style="width:0%"></div></div><span class="pbar-pct" style="color:var(--muted)">0%</span></div></td>
             <td><span class="status-tag tag-zero">Sem vendas</span></td>
           </tr>
 
-          <tr>
+          <tr data-event-id="chico">
             <td><div class="ev-wrap"><div style="width:42px;height:42px;border-radius:7px;background:linear-gradient(135deg,#1a1a2e,#333);display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;flex-shrink:0">🎸</div>
               <div>
                 <div class="ev-name">Chico Chico — Let It Burn</div>
@@ -488,14 +508,14 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:18px;
                 <div class="ev-loc">📍 Volta Redonda – RJ</div>
               </div></div></td>
             <td><span class="chip chip-be">BE</span></td>
-            <td>R$ 80.000</td>
+            <td data-cost-id="chico" class="cost-editable" title="Clique para editar custo">R$ 80.000</td>
             <td>0</td><td>0</td><td>0</td><td>0</td>
             <td>R$ 0</td><td>—</td><td>R$ 0</td>
             <td><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill red" style="width:0%"></div></div><span class="pbar-pct" style="color:var(--muted)">0%</span></div></td>
             <td><span class="status-tag tag-zero">Sem vendas</span></td>
           </tr>
 
-          <tr>
+          <tr data-event-id="zoom">
             <td><div class="ev-wrap"><div style="width:42px;height:42px;border-radius:7px;background:linear-gradient(135deg,#0f172a,#1e3a5f);display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;flex-shrink:0">🎡</div>
               <div>
                 <div class="ev-name">ZOOM Music Festival</div>
@@ -503,7 +523,7 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:18px;
                 <div class="ev-loc">📍 Volta Redonda – RJ</div>
               </div></div></td>
             <td><span class="chip chip-be">BE</span></td>
-            <td>R$ 850.000</td>
+            <td data-cost-id="zoom" class="cost-editable" title="Clique para editar custo">R$ 850.000</td>
             <td>0</td><td>0</td><td>0</td><td>0</td>
             <td>R$ 0</td><td>—</td><td>R$ 0</td>
             <td><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill red" style="width:0%"></div></div><span class="pbar-pct" style="color:var(--muted)">0%</span></div></td>
@@ -650,7 +670,7 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:18px;
             <td class="num-amber">R$ 76.122</td>
             <td>R$ 90</td>
             <td>1.963</td>
-            <td><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill amber" style="width:47.6%"></div></div><span class="pbar-pct" style="color:var(--amber)">47,6%</span></div></td>
+            <td data-breakeven-id="4amigos"><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill amber" id="pbar-4amigos" style="width:47.6%"></div></div><span class="pbar-pct" id="pct-4amigos" style="color:var(--amber)">47,6%</span></div></td>
           </tr>
           <tr>
             <td><div class="ev-wrap"><div style="width:42px;height:42px;border-radius:7px;background:linear-gradient(135deg,#1a1a2e,#333);display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;flex-shrink:0">🎸</div>
@@ -1224,7 +1244,7 @@ new Chart(document.getElementById('beloDonut'), {
 });
 
 // BREAKEVEN CHART
-new Chart(document.getElementById('breakevenChart'), {
+window._breakevenChart = window._breakevenChart = new Chart(document.getElementById('breakevenChart'), {
   type: 'bar',
   data: {
     labels: ['Belo In Concert','4 Amigos','Pique Novo ✅','DJ Zullu ✅','Bruno Diegues ✅','Gamadinho','Tá Na Mente','FF 3 datas','Chico Chico','ZOOM'],
@@ -1251,6 +1271,312 @@ new Chart(document.getElementById('breakevenChart'), {
     }
   }
 });
+
+
+// ════════════════════════════════════════════════════════
+// EDITOR COMPLETO DE DADOS — Axis Entretenimento
+// ════════════════════════════════════════════════════════
+
+// Column indices in the breakeven table
+const COL = { custo:2, pagos:3, cortesias:4, gratuitos:5, total:6, bilheteria:7, bar:8, receita:9 };
+
+const NOMES_EV = {
+  'belo':         '🎤 Belo In Concert',
+  '4amigos':      '🎭 4 Amigos 2026',
+  'piquenovo':    '🏆 Fun Fest — Pique Novo',
+  'djzullu':      '✅ Fun Fest — DJ Zullu',
+  'brunodiegues': '✅ Fun Fest — Bruno Diegues',
+  'gamadinho':    'Fun Fest — Gamadinho',
+  'tamente':      'Fun Fest — Tá Na Mente',
+  'ff3datas':     'Fun Fest — 3 datas (08, 14, 19/07)',
+  'chico':        '🎸 Chico Chico',
+  'zoom':         '🎡 ZOOM Music Festival'
+};
+
+const FIELDS = [
+  { key:'custo',     label:'Custo do Evento',        prefix:'R$', type:'money' },
+  { key:'pagos',     label:'Ingressos Pagos',         prefix:'',   type:'int'   },
+  { key:'cortesias', label:'Cortesias',               prefix:'',   type:'int'   },
+  { key:'gratuitos', label:'Gratuitos (Arena/acesso livre)', prefix:'', type:'int' },
+  { key:'bilheteria',label:'Bilheteria (arrecadado)', prefix:'R$', type:'money' },
+  { key:'bar',       label:'Bar estimado (R$35/pax)', prefix:'R$', type:'money' },
+];
+
+function fmtBRL(v) { return 'R$ ' + Math.round(v).toLocaleString('pt-BR'); }
+function fmtNum(v) { return Math.round(v).toLocaleString('pt-BR'); }
+
+// ── DOM Cell Helpers ──
+function setupCellIds() {
+  document.querySelectorAll('tr[data-event-id]').forEach(tr => {
+    const id = tr.dataset.eventId;
+    const tds = tr.querySelectorAll('td');
+    Object.entries(COL).forEach(([key, idx]) => {
+      if (tds[idx]) tds[idx].dataset.cellId = `${id}.${key}`;
+    });
+  });
+}
+
+function getCellEl(eventId, field) {
+  return document.querySelector(`[data-cell-id="${eventId}.${field}"]`);
+}
+
+// ── Read HTML defaults (before any overrides) ──
+function readDefaults() {
+  const defaults = {};
+  document.querySelectorAll('tr[data-event-id]').forEach(tr => {
+    const id = tr.dataset.eventId;
+    defaults[id] = {};
+    const tds = tr.querySelectorAll('td');
+    FIELDS.forEach(f => {
+      const td = tds[COL[f.key]];
+      if (!td) { defaults[id][f.key] = 0; return; }
+      // Strip R$, spaces, dots, commas to get raw number
+      const raw = td.dataset.orig || td.textContent.replace(/[R$\s.]/g,'').replace(',','.').replace(/[^0-9.]/g,'');
+      defaults[id][f.key] = parseFloat(raw) || 0;
+      // Cache original text
+      if (!td.dataset.orig) td.dataset.orig = td.textContent.trim();
+    });
+  });
+  return defaults;
+}
+
+// ── localStorage ──
+function loadOverrides() {
+  try { return JSON.parse(localStorage.getItem('axis_dados') || '{}'); }
+  catch { return {}; }
+}
+
+function saveOverrides(o) { localStorage.setItem('axis_dados', JSON.stringify(o)); }
+
+// ── Apply merged data to DOM ──
+function applyDados() {
+  const defs = readDefaults();
+  const overrides = loadOverrides();
+
+  document.querySelectorAll('tr[data-event-id]').forEach(tr => {
+    const id = tr.dataset.eventId;
+    const o = overrides[id] || {};
+    const d = defs[id] || {};
+
+    const custo     = o.custo     ?? d.custo     ?? 0;
+    const pagos     = o.pagos     ?? d.pagos     ?? 0;
+    const cortesias = o.cortesias ?? d.cortesias ?? 0;
+    const gratuitos = o.gratuitos ?? d.gratuitos ?? 0;
+    const bilheteria= o.bilheteria?? d.bilheteria?? 0;
+    const bar       = o.bar       ?? d.bar       ?? 0;
+    const total     = pagos + cortesias + gratuitos;
+    const receita   = bilheteria + bar;
+    const pct       = custo > 0 ? Math.round((receita / custo) * 1000) / 10 : 0;
+
+    const set = (field, val) => {
+      const td = getCellEl(id, field);
+      if (!td) return;
+      if (field === 'custo')      td.textContent = fmtBRL(val) + (id === 'ff3datas' ? ' cada' : '');
+      else if (field === 'bilheteria' || field === 'bar' || field === 'receita') td.textContent = fmtBRL(val);
+      else td.textContent = fmtNum(val);
+      // Highlight if overridden
+      td.style.outline = (o[field] !== undefined) ? '2px solid rgba(124,58,237,0.5)' : '';
+    };
+
+    set('custo', custo);
+    set('pagos', pagos);
+    set('cortesias', cortesias);
+    set('gratuitos', gratuitos);
+    set('total', total);
+    set('bilheteria', bilheteria);
+    set('bar', bar);
+    set('receita', receita);
+
+    // Update breakeven bar
+    const pbar = document.getElementById('pbar-' + id);
+    const pctEl = document.getElementById('pct-' + id);
+    if (pbar) {
+      const cls = pct >= 100 ? 'green' : pct >= 50 ? 'amber' : pct > 0 ? 'purple' : 'red';
+      pbar.className = 'pbar-fill ' + cls;
+      pbar.style.width = Math.min(pct, 100) + '%';
+    }
+    if (pctEl) {
+      const col = pct >= 100 ? 'var(--green)' : pct >= 50 ? 'var(--amber)' : pct > 0 ? '#7c3aed' : 'var(--muted)';
+      pctEl.style.color = col;
+      pctEl.textContent = pct.toFixed(1).replace('.', ',') + '%' + (pct >= 100 ? ' ✅' : '');
+    }
+    // chart data
+    if (window._chartDataArr) window._chartDataArr[id] = pct;
+  });
+
+  updateChart();
+}
+
+function updateChart() {
+  if (!window._breakevenChart) return;
+  const ORDER = ['belo','4amigos','piquenovo','djzullu','brunodiegues','gamadinho','tamente','ff3datas','chico','zoom'];
+  const data = ORDER.map(id => window._chartDataArr?.[id] ?? 0);
+  window._breakevenChart.data.datasets[0].data = data;
+  window._breakevenChart.data.datasets[0].backgroundColor = data.map(p =>
+    p >= 100 ? '#16a34a' : p >= 50 ? '#d97706' : p > 0 ? '#7c3aed' : '#9ca3af'
+  );
+  window._breakevenChart.update();
+}
+
+// ── Editor UI ──
+let _currentEventId = 'belo';
+
+function openEditor() {
+  buildTabs();
+  buildForm(_currentEventId);
+  document.getElementById('editor-overlay').style.display = 'flex';
+}
+
+function closeEditor() {
+  document.getElementById('editor-overlay').style.display = 'none';
+}
+
+function buildTabs() {
+  const tabs = document.getElementById('editor-tabs');
+  tabs.innerHTML = '';
+  const ORDER = ['belo','4amigos','piquenovo','djzullu','brunodiegues','gamadinho','tamente','ff3datas','chico','zoom'];
+  ORDER.forEach(id => {
+    const btn = document.createElement('button');
+    btn.textContent = NOMES_EV[id] || id;
+    btn.dataset.tabId = id;
+    btn.style.cssText = `background:${id === _currentEventId ? 'rgba(124,58,237,0.4)' : 'rgba(255,255,255,0.06)'};border:1px solid ${id === _currentEventId ? 'rgba(124,58,237,0.6)' : 'rgba(255,255,255,0.1)'};color:${id === _currentEventId ? '#fff' : '#aaa'};border-radius:8px;padding:6px 12px;cursor:pointer;font-size:12px;white-space:nowrap`;
+    btn.onclick = () => { _currentEventId = id; buildTabs(); buildForm(id); };
+    tabs.appendChild(btn);
+  });
+}
+
+function buildForm(eventId) {
+  const defs = readDefaults();
+  const overrides = loadOverrides();
+  const d = defs[eventId] || {};
+  const o = overrides[eventId] || {};
+  const form = document.getElementById('editor-form');
+  form.innerHTML = `<div style="font-size:13px;color:#888;margin-bottom:4px">Valores com ✏️ <span style="color:#a78bfa">roxo</span> foram editados manualmente. Os demais são automáticos (API).</div>`;
+
+  FIELDS.forEach(f => {
+    const autoVal = d[f.key] ?? 0;
+    const manVal  = o[f.key];
+    const isOverridden = manVal !== undefined;
+    const dispVal = isOverridden ? manVal : autoVal;
+
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.04);border-radius:10px;padding:10px 14px;border:1px solid ' + (isOverridden ? 'rgba(124,58,237,0.35)' : 'transparent');
+    row.innerHTML = `
+      <div style="flex:1">
+        <div style="font-size:13px;color:#ddd">${f.label}${isOverridden ? ' <span style="color:#a78bfa;font-size:11px">✏️ editado</span>' : ''}</div>
+        <div style="font-size:11px;color:#666;margin-top:2px">Auto (API): ${f.type === 'money' ? fmtBRL(autoVal) : fmtNum(autoVal)}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:4px;background:rgba(0,0,0,0.3);border-radius:8px;padding:6px 10px;border:1px solid rgba(255,255,255,0.1)">
+        ${f.prefix ? `<span style="color:#666;font-size:12px">${f.prefix}</span>` : ''}
+        <input type="number" data-edit-event="${eventId}" data-edit-field="${f.key}"
+          value="${Math.round(dispVal)}"
+          style="background:none;border:none;color:${isOverridden ? '#c4b5fd' : '#fff'};font-size:14px;font-weight:700;width:110px;text-align:right;outline:none"
+          min="0" step="${f.type === 'money' ? 1000 : 1}"
+          oninput="this.style.color='#c4b5fd'">
+      </div>
+    `;
+    form.appendChild(row);
+  });
+}
+
+function saveEditor() {
+  const overrides = loadOverrides();
+  const eventId = _currentEventId;
+  if (!overrides[eventId]) overrides[eventId] = {};
+
+  document.querySelectorAll(`[data-edit-event="${eventId}"]`).forEach(inp => {
+    const field = inp.dataset.editField;
+    const defs = readDefaults();
+    const autoVal = (defs[eventId] || {})[field] ?? 0;
+    const newVal = parseFloat(inp.value) || 0;
+    // Only store if different from auto
+    if (newVal !== autoVal) {
+      overrides[eventId][field] = newVal;
+    } else {
+      delete overrides[eventId][field];
+    }
+  });
+
+  if (Object.keys(overrides[eventId]).length === 0) delete overrides[eventId];
+  saveOverrides(overrides);
+  applyDados();
+  closeEditor();
+
+  const toast = document.createElement('div');
+  toast.textContent = `✅ ${NOMES_EV[eventId]} salvo!`;
+  toast.style.cssText = 'position:fixed;bottom:80px;right:24px;background:#7c3aed;color:#fff;padding:10px 18px;border-radius:10px;font-weight:700;z-index:9999;font-size:14px;box-shadow:0 4px 15px rgba(0,0,0,0.4)';
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 2500);
+}
+
+function resetEditor() {
+  if (!confirm(`Resetar ${NOMES_EV[_currentEventId]} para os valores automáticos (API)?`)) return;
+  const o = loadOverrides();
+  delete o[_currentEventId];
+  saveOverrides(o);
+  applyDados();
+  buildForm(_currentEventId);
+}
+
+function resetAllEditor() {
+  if (!confirm('Resetar TODOS os eventos para os valores automáticos (API)?')) return;
+  localStorage.removeItem('axis_dados');
+  applyDados();
+  closeEditor();
+}
+
+document.getElementById('editor-overlay').addEventListener('click', function(e) {
+  if (e.target === this) closeEditor();
+});
+
+// ── Init ──
+window._chartDataArr = {};
+setupCellIds();
+applyDados();
+
 </script>
+    </div>
+    <div style="font-size:12px;color:#888;margin-bottom:16px">Os custos editados são salvos localmente e atualizam breakeven automaticamente.</div>
+    <div id="cost-editor-fields" style="display:flex;flex-direction:column;gap:10px"></div>
+    <div style="margin-top:20px;display:flex;gap:10px;justify-content:flex-end">
+      <button onclick="resetCustos()" style="background:rgba(255,80,80,0.15);border:1px solid rgba(255,80,80,0.3);color:#f87171;border-radius:8px;padding:10px 18px;cursor:pointer;font-size:14px">↺ Resetar padrão</button>
+      <button onclick="saveCostEditor()" style="background:var(--green,#16a34a);border:none;color:#fff;border-radius:8px;padding:10px 20px;cursor:pointer;font-size:14px;font-weight:700">💾 Salvar Custos</button>
+    </div>
+  </div>
+</div>
+
+<!-- FAB Button -->
+<button onclick="openCostEditor()" title="Editar custos dos eventos" style="position:fixed;bottom:24px;right:24px;z-index:8000;background:linear-gradient(135deg,#7c3aed,#6d28d9);border:none;color:#fff;border-radius:50px;padding:12px 20px;cursor:pointer;font-size:14px;font-weight:700;box-shadow:0 4px 20px rgba(124,58,237,0.5);display:flex;align-items:center;gap:8px;transition:transform 0.2s" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+  ⚙️ Editar Custos
+</button>
+
+
+<!-- ═══ EDITOR COMPLETO DE DADOS ═══ -->
+<div id="editor-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9000;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto">
+  <div style="background:#1a1a2e;border:1px solid rgba(255,255,255,0.15);border-radius:18px;padding:28px;width:min(700px,98vw);margin:auto">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+      <div style="font-size:18px;font-weight:800;color:#fff">✏️ Editar Dados do Dashboard</div>
+      <button onclick="closeEditor()" style="background:rgba(255,255,255,0.08);border:none;color:#ccc;border-radius:8px;padding:6px 14px;cursor:pointer;font-size:14px">✕</button>
+    </div>
+    <div style="font-size:12px;color:#888;margin-bottom:20px">Edite qualquer valor — salvo localmente, persiste entre sessões. A atualização automática das 8h traz novos dados das APIs.</div>
+
+    <div id="editor-tabs" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px"></div>
+    <div id="editor-form" style="display:flex;flex-direction:column;gap:10px"></div>
+
+    <div style="margin-top:22px;display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap">
+      <button onclick="resetEditor()" style="background:rgba(255,80,80,0.12);border:1px solid rgba(255,80,80,0.25);color:#f87171;border-radius:8px;padding:9px 16px;cursor:pointer;font-size:13px">↺ Resetar evento para automático</button>
+      <div style="display:flex;gap:10px">
+        <button onclick="resetAllEditor()" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#aaa;border-radius:8px;padding:9px 16px;cursor:pointer;font-size:13px">Resetar TUDO</button>
+        <button onclick="saveEditor()" style="background:linear-gradient(135deg,#7c3aed,#5b21b6);border:none;color:#fff;border-radius:8px;padding:10px 22px;cursor:pointer;font-size:14px;font-weight:700">💾 Salvar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FAB -->
+<button onclick="openEditor()" title="Editar dados dos eventos" style="position:fixed;bottom:24px;right:24px;z-index:8000;background:linear-gradient(135deg,#7c3aed,#6d28d9);border:none;color:#fff;border-radius:50px;padding:12px 20px;cursor:pointer;font-size:14px;font-weight:700;box-shadow:0 4px 20px rgba(124,58,237,0.5);display:flex;align-items:center;gap:8px;transition:transform 0.2s" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+  ✏️ Editar Dados
+</button>
+
 </body>
 </html>
