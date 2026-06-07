@@ -1542,12 +1542,13 @@ const NOMES_EV = {
 };
 
 const FIELDS = [
-  { key:'custo',     label:'Custo do Evento',        prefix:'R$', type:'money' },
-  { key:'pagos',     label:'Ingressos Pagos',         prefix:'',   type:'int'   },
-  { key:'cortesias', label:'Cortesias',               prefix:'',   type:'int'   },
-  { key:'gratuitos', label:'Gratuitos (Arena/acesso livre)', prefix:'', type:'int' },
-  { key:'bilheteria',label:'Bilheteria (arrecadado)', prefix:'R$', type:'money' },
-  { key:'bar',       label:'Bar estimado (R$35/pax)', prefix:'R$', type:'money' },
+  { key:'custo',     label:'Custo do Evento',                prefix:'R$', type:'money' },
+  { key:'pagos',     label:'Ingressos Pagos',                prefix:'',   type:'int'   },
+  { key:'cortesias', label:'Cortesias',                      prefix:'',   type:'int'   },
+  { key:'gratuitos', label:'Gratuitos (Arena/acesso livre)', prefix:'',   type:'int'   },
+  { key:'bilheteria',label:'Bilheteria (arrecadado)',         prefix:'R$', type:'money' },
+  { key:'bar',       label:'Bar Total',                      prefix:'R$', type:'money', hidden:true },
+  { key:'bar_tm',    label:'Ticket Médio Bar (R$/pessoa)',   prefix:'R$', type:'money' },
 ];
 
 function fmtBRL(v) { return 'R$ ' + Math.round(v).toLocaleString('pt-BR'); }
@@ -1581,6 +1582,17 @@ function readDefaults() {
     defaults[id] = {};
     const tds = tr.querySelectorAll('td');
     FIELDS.forEach(f => {
+      // bar_tm é derivado do bar total / público total (não tem coluna própria)
+      if (f.key === 'bar_tm') {
+        const barTd  = tds[COL['bar']];
+        const totTd  = tds[COL['total']];
+        const barOrig = barTd?.dataset.orig || barTd?.textContent || '0';
+        const totOrig = totTd?.dataset.orig || totTd?.textContent || '0';
+        const barNum  = parseFloat(barOrig.replace(/[R$\s.]/g,'').replace(',','.').replace(/[^0-9.]/g,'')) || 0;
+        const totNum  = parseInt(totOrig.replace(/[^\d]/g,'')) || 1;
+        defaults[id]['bar_tm'] = totNum > 0 ? Math.round(barNum / totNum) : 35;
+        return;
+      }
       const td = tds[COL[f.key]];
       if (!td) { defaults[id][f.key] = 0; return; }
       // Strip R$, spaces, dots, commas to get raw number
@@ -1618,7 +1630,8 @@ function applyDados() {
     const cortesias = o.cortesias ?? d.cortesias ?? 0;
     const gratuitos = o.gratuitos ?? d.gratuitos ?? 0;
     const bilheteria= o.bilheteria?? d.bilheteria?? 0;
-    const bar       = o.bar       ?? d.bar       ?? 0;
+    const bar_tm    = o.bar_tm    ?? d.bar_tm    ?? 35;
+    const bar       = total * bar_tm;
     const total     = pagos + cortesias + gratuitos;
     const receita   = bilheteria + bar;
     const pct       = custo > 0 ? Math.round((receita / custo) * 1000) / 10 : 0;
@@ -1709,6 +1722,7 @@ function buildForm(eventId) {
   form.innerHTML = `<div style="font-size:13px;color:#888;margin-bottom:4px">Valores com ✏️ <span style="color:#a78bfa">roxo</span> foram editados manualmente. Os demais são automáticos (API).</div>`;
 
   FIELDS.forEach(f => {
+    if (f.hidden) return; // campos internos, não mostrar no editor
     const autoVal = d[f.key] ?? 0;
     const manVal  = o[f.key];
     const isOverridden = manVal !== undefined;
