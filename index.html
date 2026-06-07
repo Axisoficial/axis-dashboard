@@ -1779,7 +1779,8 @@ function resetAllEditor() {
   closeEditor();
 }
 
-document.getElementById('editor-overlay').addEventListener('click', function(e) {
+const _overlay = document.getElementById('editor-overlay');
+if (_overlay) _overlay.addEventListener('click', function(e) {
   if (e.target === this) closeEditor();
 });
 
@@ -1787,8 +1788,9 @@ document.getElementById('editor-overlay').addEventListener('click', function(e) 
 window._chartDataArr = {};
 setupCellIds();
 applyDados();
-// Re-aplica overrides após page load completo (garante persistência)
-window.addEventListener('load', () => { applyDados(); });
+// Re-aplica overrides em múltiplos momentos (garante que Chart.js não sobrescreva)
+[0, 100, 400].forEach(t => setTimeout(applyDados, t));
+window.addEventListener('load', () => { [0, 100, 400].forEach(t => setTimeout(applyDados, t)); });
 
 </script>
     </div>
