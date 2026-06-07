@@ -1598,6 +1598,7 @@ function saveOverrides(o) { localStorage.setItem('axis_dados', JSON.stringify(o)
 
 // ── Apply merged data to DOM ──
 function applyDados() {
+  setupCellIds(); // garante data-cell-id sempre mapeado
   const defs = readDefaults();
   const overrides = loadOverrides();
 
