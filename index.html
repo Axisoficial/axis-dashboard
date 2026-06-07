@@ -347,6 +347,7 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:18px;
     <button class="tab" onclick="switchTab('be',this)">💜 Bilheteria Express</button>
     <button class="tab" onclick="switchTab('id',this)">🔵 Ingresso Digital</button>
     <button class="tab" onclick="switchTab('artistas',this)">🎵 Artistas & Pipeline</button>
+    <button class="tab" onclick="switchTab('setores',this)">🗺 Setores</button>
   </div>
 
   <!-- ─────────────── TAB BREAKEVEN ─────────────── -->
@@ -1068,6 +1069,214 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:18px;
     </div>
 
   </div><!-- /tab-artistas -->
+
+  <div id="tab-setores" class="panel">
+    <div class="section-label" style="margin-bottom:14px"><span></span> Vendas por Setor <span style="font-size:11px;font-weight:400;color:#888;text-transform:none;letter-spacing:0">— dados Ticket360 em tempo real · BE/ID pendente login</span></div>
+    <div class="sectors-grid">
+
+      <!-- BELO IN CONCERT -->
+      <div class="sector-card">
+        <div class="sector-card-hdr">
+          <h3>🎤 Belo In Concert</h3>
+          <div class="sc-meta"><span class="sc-date">01/08/2026</span><span class="sc-plat">T360</span></div>
+        </div>
+        <table class="sc-table">
+          <tr><th>Setor</th><th>Vendidos</th><th>Receita</th><th>%</th><th>Status</th></tr>
+          <tr class="paid-row">
+            <td>Pista Vip</td><td>511</td><td>R$ 37.402</td>
+            <td><div class="sc-bar-wrap"><div class="sc-bar green" style="width:74%"></div></div></td>
+            <td><span class="sc-tag good">✓ Ótimo</span></td>
+          </tr>
+          <tr class="paid-row">
+            <td>Setor 2</td><td>97</td><td>R$ 24.250</td>
+            <td><div class="sc-bar-wrap"><div class="sc-bar orange" style="width:14%"></div></div></td>
+            <td><span class="sc-tag watch">⚠ Atenção</span></td>
+          </tr>
+          <tr class="paid-row">
+            <td>Setor 3</td><td>43</td><td>R$ 8.600</td>
+            <td><div class="sc-bar-wrap"><div class="sc-bar orange" style="width:6%"></div></div></td>
+            <td><span class="sc-tag watch">⚠ Atenção</span></td>
+          </tr>
+          <tr class="paid-row">
+            <td>Setor 1</td><td>38</td><td>R$ 17.100</td>
+            <td><div class="sc-bar-wrap"><div class="sc-bar orange" style="width:6%"></div></div></td>
+            <td><span class="sc-tag watch">⚠ Atenção</span></td>
+          </tr>
+          <tr class="sc-total-row">
+            <td>TOTAL</td><td>689</td><td>R$ 87.352</td><td></td><td></td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- FUN FEST - PIQUE NOVO -->
+      <div class="sector-card">
+        <div class="sector-card-hdr">
+          <h3>🏆 Fun Fest — Pique Novo & Rogerinho</h3>
+          <div class="sc-meta"><span class="sc-date">13/06/2026</span><span class="sc-plat">T360</span></div>
+        </div>
+        <table class="sc-table">
+          <tr><th>Setor</th><th>Vendidos</th><th>Receita</th><th></th><th>Status</th></tr>
+          <tr class="paid-row">
+            <td>Dream Team (VIP)</td><td>35 + 110 cort.</td><td>R$ 2.100</td>
+            <td></td>
+            <td><span class="sc-tag watch">⚠ Atenção</span></td>
+          </tr>
+          <tr class="paid-row">
+            <td>Arena (sem limite hor.)</td><td>15</td><td>R$ 450</td>
+            <td></td>
+            <td><span class="sc-tag low">↓ Baixo</span></td>
+          </tr>
+          <tr class="free-row">
+            <td>Arena Gratuita (pré-jogo)</td><td>4.846</td><td>—</td>
+            <td></td>
+            <td><span class="sc-tag free">Gratuito</span></td>
+          </tr>
+          <tr class="sc-total-row">
+            <td>TOTAL PAGO</td><td>50 pagos</td><td>R$ 2.550</td><td></td><td></td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- FUN FEST - DJ ZULLU -->
+      <div class="sector-card">
+        <div class="sector-card-hdr">
+          <h3>✅ Fun Fest — DJ Zullu</h3>
+          <div class="sc-meta"><span class="sc-date">19/06/2026</span><span class="sc-plat">T360</span></div>
+        </div>
+        <table class="sc-table">
+          <tr><th>Setor</th><th>Vendidos</th><th>Receita</th><th></th><th>Status</th></tr>
+          <tr class="paid-row">
+            <td>Dream Team (VIP)</td><td>7 + 100 cort.</td><td>R$ 420</td>
+            <td></td>
+            <td><span class="sc-tag low">↓ Baixo</span></td>
+          </tr>
+          <tr class="free-row">
+            <td>Arena Gratuita (pré-jogo)</td><td>3.968</td><td>—</td>
+            <td></td>
+            <td><span class="sc-tag free">Gratuito</span></td>
+          </tr>
+          <tr class="sc-total-row">
+            <td>TOTAL PAGO</td><td>7 pagos</td><td>R$ 420</td><td></td><td></td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- FUN FEST - BRUNO DIEGUES -->
+      <div class="sector-card">
+        <div class="sector-card-hdr">
+          <h3>✅ Fun Fest — Bruno Diegues</h3>
+          <div class="sc-meta"><span class="sc-date">24/06/2026</span><span class="sc-plat">T360</span></div>
+        </div>
+        <table class="sc-table">
+          <tr><th>Setor</th><th>Vendidos</th><th>Receita</th><th></th><th>Status</th></tr>
+          <tr class="paid-row">
+            <td>Dream Team (VIP)</td><td>5 + 100 cort.</td><td>R$ 300</td>
+            <td></td>
+            <td><span class="sc-tag low">↓ Baixo</span></td>
+          </tr>
+          <tr class="paid-row">
+            <td>Arena (sem limite hor.)</td><td>1</td><td>R$ 30</td>
+            <td></td>
+            <td><span class="sc-tag low">↓ Baixo</span></td>
+          </tr>
+          <tr class="free-row">
+            <td>Arena Gratuita (pré-jogo)</td><td>4.065</td><td>—</td>
+            <td></td>
+            <td><span class="sc-tag free">Gratuito</span></td>
+          </tr>
+          <tr class="sc-total-row">
+            <td>TOTAL PAGO</td><td>6 pagos</td><td>R$ 330</td><td></td><td></td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- FUN FEST - GAMADINHO -->
+      <div class="sector-card">
+        <div class="sector-card-hdr">
+          <h3>Fun Fest — Gamadinho</h3>
+          <div class="sc-meta"><span class="sc-date">27/06/2026</span><span class="sc-plat">T360</span></div>
+        </div>
+        <table class="sc-table">
+          <tr><th>Setor</th><th>Vendidos</th><th>Receita</th><th></th><th>Status</th></tr>
+          <tr class="free-row">
+            <td>Arena Gratuita (pré-jogo)</td><td>251</td><td>—</td>
+            <td></td>
+            <td><span class="sc-tag free">Gratuito</span></td>
+          </tr>
+          <tr class="sc-total-row">
+            <td>VIP vendido</td><td colspan="4" style="color:#dc2626;font-weight:700">⚠ Sem Dream Team ativo ainda</td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- FUN FEST - TÁ NA MENTE -->
+      <div class="sector-card">
+        <div class="sector-card-hdr">
+          <h3>Fun Fest — Tá Na Mente</h3>
+          <div class="sc-meta"><span class="sc-date">04/07/2026</span><span class="sc-plat">T360</span></div>
+        </div>
+        <table class="sc-table">
+          <tr><th>Setor</th><th>Vendidos</th><th>Receita</th><th></th><th>Status</th></tr>
+          <tr class="paid-row">
+            <td>Dream Team (VIP)</td><td>2</td><td>R$ 120</td>
+            <td></td>
+            <td><span class="sc-tag low">↓ Baixo</span></td>
+          </tr>
+          <tr class="paid-row">
+            <td>Arena (sem limite hor.)</td><td>2</td><td>R$ 60</td>
+            <td></td>
+            <td><span class="sc-tag low">↓ Baixo</span></td>
+          </tr>
+          <tr class="free-row">
+            <td>Arena Gratuita (pré-jogo)</td><td>296</td><td>—</td>
+            <td></td>
+            <td><span class="sc-tag free">Gratuito</span></td>
+          </tr>
+          <tr class="sc-total-row">
+            <td>TOTAL PAGO</td><td>4 pagos</td><td>R$ 180</td><td></td><td></td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- FUN FEST 3 DATAS - sem vendas ainda -->
+      <div class="sector-card">
+        <div class="sector-card-hdr">
+          <h3>Fun Fest — 3 datas (08, 14, 19/07)</h3>
+          <div class="sc-meta"><span class="sc-date">Jul/2026</span><span class="sc-plat">T360</span></div>
+        </div>
+        <div class="sc-pending">📅 Vendas ainda não abertas — 0 ingressos</div>
+      </div>
+
+      <!-- 4 AMIGOS - BE -->
+      <div class="sector-card">
+        <div class="sector-card-hdr">
+          <h3>🎭 4 Amigos 2026</h3>
+          <div class="sc-meta"><span class="sc-be sc-plat be">BE</span></div>
+        </div>
+        <div class="sc-pending">🔒 Login Bilheteria Express necessário para ver setores</div>
+      </div>
+
+      <!-- CHICO CHICO - BE -->
+      <div class="sector-card">
+        <div class="sector-card-hdr">
+          <h3>🎸 Chico Chico</h3>
+          <div class="sc-meta"><span class="sc-plat be">BE</span></div>
+        </div>
+        <div class="sc-pending">🔒 Login Bilheteria Express necessário para ver setores</div>
+      </div>
+
+      <!-- ZOOM - BE -->
+      <div class="sector-card">
+        <div class="sector-card-hdr">
+          <h3>🎡 ZOOM Music Festival</h3>
+          <div class="sc-meta"><span class="sc-plat be">BE</span></div>
+        </div>
+        <div class="sc-pending">🔒 Login Bilheteria Express necessário para ver setores</div>
+      </div>
+
+    </div><!-- /sectors-grid -->
+    <p style="margin-top:16px;font-size:11px;color:#aaa;text-align:right">Atualizado: via Ticket360 produtor · <a href="https://produtor.ticket360.com.br/produtor/vendas" target="_blank" style="color:#ff6b00">Abrir T360 ↗</a></p>
+  </div><!-- /tab-setores -->
 
 </div><!-- /container -->
 
