@@ -1630,9 +1630,9 @@ function applyDados() {
     const cortesias = o.cortesias ?? d.cortesias ?? 0;
     const gratuitos = o.gratuitos ?? d.gratuitos ?? 0;
     const bilheteria= o.bilheteria?? d.bilheteria?? 0;
+    const total     = pagos + cortesias + gratuitos;
     const bar_tm    = o.bar_tm    ?? d.bar_tm    ?? 35;
     const bar       = total * bar_tm;
-    const total     = pagos + cortesias + gratuitos;
     const receita   = bilheteria + bar;
     const pct       = custo > 0 ? Math.round((receita / custo) * 1000) / 10 : 0;
 
