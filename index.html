@@ -1565,7 +1565,12 @@ function setupCellIds() {
 }
 
 function getCellEl(eventId, field) {
-  return document.querySelector(`[data-cell-id="${eventId}.${field}"]`);
+  const tr = document.querySelector(`tr[data-event-id="${eventId}"]`);
+  if (!tr) return null;
+  const idx = COL[field];
+  if (idx === undefined) return null;
+  const tds = tr.querySelectorAll('td');
+  return tds[idx] || null;
 }
 
 // ── Read HTML defaults (before any overrides) ──
@@ -1782,6 +1787,8 @@ document.getElementById('editor-overlay').addEventListener('click', function(e) 
 window._chartDataArr = {};
 setupCellIds();
 applyDados();
+// Re-aplica overrides após page load completo (garante persistência)
+window.addEventListener('load', () => { applyDados(); });
 
 </script>
     </div>
