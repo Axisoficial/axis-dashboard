@@ -381,7 +381,7 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:18px;
             <td>R$ 23.450</td>
             <td class="num-amber">R$ 109.282</td>
             <td data-breakeven-id="belo"><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill purple" id="pbar-belo" style="width:12.9%"></div></div><span class="pbar-pct" id="pct-belo" style="color:#7c3aed">12,9%</span></div></td>
-            <td><span class="status-tag tag-warn">↑ No ritmo</span></td>
+            <td><span id="status-belo" class="status-tag tag-warn">↑ No ritmo</span></td>
           </tr>
 
           <tr data-event-id="4amigos" onclick="openModal('4amigos')">
@@ -398,7 +398,7 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:18px;
             <td>—</td>
             <td class="num-amber">R$ 76.122</td>
             <td data-breakeven-id="4amigos"><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill amber" id="pbar-4amigos" style="width:47.6%"></div></div><span class="pbar-pct" id="pct-4amigos" style="color:var(--amber)">47,6%</span></div></td>
-            <td><span class="status-tag tag-warn">↑ Bom ritmo</span></td>
+            <td><span id="status-4amigos" class="status-tag tag-warn">↑ Bom ritmo</span></td>
           </tr>
 
           <tr data-event-id="piquenovo" onclick="openModal('piquenovo')" style="background:#f0fdf4">
@@ -415,7 +415,7 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:18px;
             <td class="num-green">R$ 174.930</td>
             <td class="num-green">R$ 177.480</td>
             <td data-breakeven-id="piquenovo"><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill green" id="pbar-piquenovo" style="width:100%"></div></div><span class="pbar-pct" id="pct-piquenovo" style="color:var(--green)">137,2% ✅</span></div></td>
-            <td><span class="status-tag tag-ok">✅ Breakeven!</span></td>
+            <td><span id="status-piquenovo" class="status-tag tag-ok">✅ Breakeven!</span></td>
           </tr>
 
           <tr data-event-id="djzullu" onclick="openModal('djzullu')" style="background:#f0fdf4">
@@ -432,7 +432,7 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:18px;
             <td class="num-green">R$ 142.590</td>
             <td class="num-green">R$ 143.010</td>
             <td data-breakeven-id="djzullu"><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill green" id="pbar-djzullu" style="width:100%"></div></div><span class="pbar-pct" id="pct-djzullu" style="color:var(--green)">110,6% ✅</span></div></td>
-            <td><span class="status-tag tag-ok">✅ Breakeven!</span></td>
+            <td><span id="status-djzullu" class="status-tag tag-ok">✅ Breakeven!</span></td>
           </tr>
 
           <tr data-event-id="brunodiegues" onclick="openModal('brunodiegues')" style="background:#f0fdf4">
@@ -449,7 +449,7 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:18px;
             <td class="num-green">R$ 145.950</td>
             <td class="num-green">R$ 146.280</td>
             <td data-breakeven-id="brunodiegues"><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill green" id="pbar-brunodiegues" style="width:100%"></div></div><span class="pbar-pct" id="pct-brunodiegues" style="color:var(--green)">113,1% ✅</span></div></td>
-            <td><span class="status-tag tag-ok">✅ Breakeven!</span></td>
+            <td><span id="status-brunodiegues" class="status-tag tag-ok">✅ Breakeven!</span></td>
           </tr>
 
           <tr data-event-id="gamadinho" onclick="openModal('gamadinho')">
@@ -466,7 +466,7 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:18px;
             <td>R$ 8.680</td>
             <td>R$ 8.680</td>
             <td data-breakeven-id="gamadinho"><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill amber" id="pbar-gamadinho" style="width:9.4%"></div></div><span class="pbar-pct" id="pct-gamadinho" style="color:var(--amber)">9,4%</span></div></td>
-            <td><span class="status-tag tag-warn">Em curso</span></td>
+            <td><span id="status-gamadinho" class="status-tag tag-warn">Em curso</span></td>
           </tr>
 
           <tr data-event-id="tamente" onclick="openModal('tamente')">
@@ -483,7 +483,7 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:18px;
             <td>R$ 10.465</td>
             <td>R$ 10.645</td>
             <td data-breakeven-id="tamente"><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill amber" id="pbar-tamente" style="width:11.5%"></div></div><span class="pbar-pct" id="pct-tamente" style="color:var(--amber)">11,5%</span></div></td>
-            <td><span class="status-tag tag-warn">Em curso</span></td>
+            <td><span id="status-tamente" class="status-tag tag-warn">Em curso</span></td>
           </tr>
 
           <tr data-event-id="ff3datas">
@@ -1643,7 +1643,14 @@ function loadOverrides() {
 function saveOverrides(o) { localStorage.setItem('axis_dados', JSON.stringify(o)); }
 
 // ── Apply merged data to DOM ──
-function applyDados() {
+function getStatusTag(pct) {
+      if (pct >= 100) return ['tag-ok',   '\u2705 Breakeven!'];
+      if (pct >= 60)  return ['tag-warn',  '\u2191 Bom ritmo'];
+      if (pct >= 15)  return ['tag-warn',  '\u2191 No ritmo'];
+      if (pct > 0)    return ['tag-warn',  'Em curso'];
+      return ['tag-zero', 'Sem vendas'];
+    }
+    function applyDados() {
   setupCellIds(); // garante data-cell-id sempre mapeado
   const defs = readDefaults();
   const overrides = loadOverrides();
@@ -1697,6 +1704,13 @@ function applyDados() {
       pctEl.textContent = pct.toFixed(1).replace('.', ',') + '%' + (pct >= 100 ? ' ✅' : '');
     }
     // chart data
+        // Update status tag
+    const statusEl = document.getElementById('status-' + id);
+    if (statusEl) {
+      const [cls, txt] = getStatusTag(pct);
+      statusEl.className = 'status-tag ' + cls;
+      statusEl.textContent = txt;
+    }
     if (window._chartDataArr) window._chartDataArr[id] = pct;
   });
 
