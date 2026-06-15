@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Viabilidade de Evento — Axis</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --red:#C8102E;--gray:#f4f4f6;--gray2:#e8e8ec;--text:#1a1a2e;--muted:#6b7280;
+  --green:#16a34a;--amber:#d97706;--blue:#2563eb;--purple:#7c3aed;--teal:#0d9488;
+  color-scheme:light
+}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f7f7fa;color:var(--text);min-height:100vh}
+
+/* ── HEADER ── */
+header{background:#fff;border-bottom:3px solid var(--red);padding:12px 24px;
+  display:flex;align-items:center;justify-content:space-between;
+  box-shadow:0 2px 8px rgba(0,0,0,.07);position:sticky;top:0;z-index:100}
+.logo{font-size:20px;font-weight:900;color:var(--red)}
+.logo-sub{font-size:9px;color:var(--muted);font-weight:600;letter-spacing:1px}
+.hlinks{display:flex;gap:8px}
+.hlink{padding:6px 14px;border-radius:8px;font-size:11px;font-weight:700;text-decoration:none;transition:.2s}
+.hlink:hover{transform:translateY(-1px)}
+.hlink-gray{background:var(--gray);color:var(--text)}
+.hlink-red{background:var(--red);color:#fff}
+.header-right{text-align:right;font-size:12px;font-weight:700;color:var(--red)}
+.header-right small{display:block;font-size:10px;color:var(--muted);font-weight:400}
+
+/* ── LAYOUT ── */
+.container{max-width:1400px;margin:0 auto;padding:20px 18px}
+
+/* ── EVENT CONFIG ── */
+.event-config{background:#fff;border-radius:14px;padding:18px 22px;
+  box-shadow:0 2px 10px rgba(0,0,0,.06);margin-bottom:20px;border-top:4px solid var(--red)}
+.config-title{font-size:13px;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.config-grid{display:grid;grid-template-columns:2fr repeat(4,1fr);gap:14px;align-items:end}
+.field label{font-size:10px;font-weight:700;color:var(--muted);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.6px}
+.field input{width:100%;border:1.5px solid var(--gray2);border-radius:8px;
+  padding:8px 11px;font-size:13px;font-family:inherit;font-weight:700;outline:none;transition:.15s}
+.field input:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(200,16,46,.08)}
+.field input.nome{font-size:14px}
+
+/* ── KPI STRIP ── */
+.kpi-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px}
+.kpi{background:#fff;border-radius:12px;padding:14px 16px;
+  box-shadow:0 2px 10px rgba(0,0,0,.06);border-top:4px solid var(--gray2)}
+.kpi.red{border-top-color:var(--red)}
+.kpi.green{border-top-color:var(--green)}
+.kpi.amber{border-top-color:var(--amber)}
+.kpi.blue{border-top-color:var(--blue)}
+.kpi.teal{border-top-color:var(--teal)}
+.kpi-lbl{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:3px;font-weight:600}
+.kpi-val{font-size:20px;font-weight:900;line-height:1.1}
+.kpi-sub{font-size:10px;color:var(--muted);margin-top:3px}
+
+/* ── MAIN GRID ── */
+.main-grid{display:grid;grid-template-columns:320px 280px 1fr;gap:16px;margin-bottom:20px}
+
+/* ── PANELS ── */
+.panel{background:#fff;border-radius:12px;padding:18px;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+.panel-title{font-size:12px;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:6px}
+.panel-title .badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;
+  background:var(--gray);color:var(--muted);font-weight:600}
+
+/* cost rows */
+.cost-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.cost-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.cost-lbl{font-size:11px;font-weight:600;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cost-inp{border:1.5px solid var(--gray2);border-radius:7px;padding:5px 8px;
+  font-size:12px;font-weight:700;font-family:inherit;width:120px;text-align:right;
+  outline:none;transition:.15s}
+.cost-inp:focus{border-color:var(--red)}
+.cost-total-row{display:flex;justify-content:space-between;align-items:center;
+  padding:9px 10px;background:var(--red);border-radius:8px;margin-top:10px}
+.cost-total-row .lbl{color:#fff;font-size:11px;font-weight:700}
+.cost-total-row .val{color:#fff;font-size:14px;font-weight:900}
+
+/* receita rows */
+.rec-row{margin-bottom:10px}
+.rec-row label{font-size:10px;font-weight:700;color:var(--muted);display:block;margin-bottom:3px;text-transform:uppercase;letter-spacing:.5px}
+.rec-inp{width:100%;border:1.5px solid var(--gray2);border-radius:8px;
+  padding:7px 10px;font-size:13px;font-weight:700;font-family:inherit;outline:none;transition:.15s}
+.rec-inp:focus{border-color:var(--green)}
+.rec-inp.readonly{background:#f8f8fa;color:var(--muted)}
+.rec-tag{font-size:9px;color:var(--muted);margin-top:2px}
+.rec-total-row{display:flex;justify-content:space-between;align-items:center;
+  padding:9px 10px;background:var(--green);border-radius:8px;margin-top:10px}
+.rec-total-row .lbl{color:#fff;font-size:11px;font-weight:700}
+.rec-total-row .val{color:#fff;font-size:14px;font-weight:900}
+
+/* result panel */
+.result-panel{display:flex;flex-direction:column;gap:16px}
+.chart-wrap{position:relative;height:200px}
+.be-box{background:linear-gradient(135deg,#fffbeb,#fff);border:2px solid #fde68a;border-radius:10px;padding:14px}
+.be-box.danger{background:linear-gradient(135deg,#fff5f5,#fff);border-color:#fecdd3}
+.be-box.ok{background:linear-gradient(135deg,#f0fdf4,#fff);border-color:#bbf7d0}
+.be-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:8px}
+.be-val{font-size:22px;font-weight:900;margin-bottom:2px}
+.be-sub{font-size:11px;color:var(--muted)}
+.gauge-wrap{margin-top:10px}
+.gauge-track{height:10px;background:var(--gray2);border-radius:10px;overflow:visible;position:relative}
+.gauge-fill{height:100%;border-radius:10px;transition:width .4s ease;max-width:100%}
+.gauge-needle{position:absolute;top:-4px;height:18px;width:3px;border-radius:2px;
+  background:var(--red);transform:translateX(-50%);transition:left .4s ease}
+.gauge-labels{display:flex;justify-content:space-between;font-size:9px;color:var(--muted);margin-top:4px;font-weight:600}
+
+/* ── SCENARIOS ── */
+.scenarios-section{background:#fff;border-radius:12px;padding:20px;
+  box-shadow:0 2px 10px rgba(0,0,0,.06);margin-bottom:20px}
+.scenarios-title{font-size:13px;font-weight:800;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.scenarios-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+.sc-card{border-radius:10px;padding:14px;border:2px solid var(--gray2)}
+.sc-card.pessimista{border-color:#fecdd3;background:linear-gradient(135deg,#fff5f5,#fff)}
+.sc-card.realista{border-color:#fde68a;background:linear-gradient(135deg,#fffbeb,#fff)}
+.sc-card.otimista{border-color:#bbf7d0;background:linear-gradient(135deg,#f0fdf4,#fff)}
+.sc-card.custom{border-color:#bfdbfe;background:linear-gradient(135deg,#eff6ff,#fff)}
+.sc-label{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px}
+.sc-pct{font-size:26px;font-weight:900;line-height:1;margin-bottom:2px}
+.sc-pub{font-size:11px;color:var(--muted);margin-bottom:8px}
+.sc-row{display:flex;justify-content:space-between;align-items:center;
+  padding:4px 0;border-bottom:1px solid rgba(0,0,0,.05);font-size:10.5px}
+.sc-row:last-child{border-bottom:none;margin-top:4px;padding-top:6px;font-weight:800;font-size:11px}
+.sc-row .k{color:var(--muted);font-weight:600}
+.sc-row .v{font-weight:700}
+
+/* slider */
+.slider-row{display:flex;align-items:center;gap:14px;padding:12px 16px;
+  background:var(--gray);border-radius:10px}
+.slider-row label{font-size:11px;font-weight:700;white-space:nowrap}
+.slider-row input[type=range]{flex:1;accent-color:var(--blue)}
+.slider-pct{font-size:18px;font-weight:900;color:var(--blue);min-width:50px;text-align:center}
+.slider-note{font-size:10px;color:var(--muted);margin-top:6px;text-align:center;font-style:italic}
+
+/* bar chart */
+.bar-chart-wrap{height:180px;margin-top:4px}
+
+/* util */
+.sep{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);
+  margin:0 0 12px;display:flex;align-items:center;gap:8px}
+.sep::after{content:'';flex:1;height:1px;background:var(--gray2)}
+.tag-ok{color:var(--green);font-weight:800}
+.tag-danger{color:var(--red);font-weight:800}
+.tag-amber{color:var(--amber);font-weight:800}
+.reset-btn{font-size:10px;color:var(--muted);background:none;border:none;cursor:pointer;text-decoration:underline;margin-left:auto}
+.reset-btn:hover{color:var(--red)}
+</style>
+</head>
+<body>
+
+<header>
+  <div><div class="logo">AXIS</div><div class="logo-sub">ENTRETENIMENTO</div></div>
+  <div class="hlinks">
+    <a href="index.html" class="hlink hlink-gray">&#8592; Dashboard</a>
+    <a href="custos.html" class="hlink hlink-gray">&#128176; Gastos</a>
+    <span class="hlink hlink-red">&#127919; Viabilidade</span>
+  </div>
+  <div class="header-right" id="hdate">&#8212;<small>Análise de Viabilidade</small></div>
+</header>
+
+<div class="container">
+
+  <!-- EVENT CONFIG -->
+  <div class="event-config">
+    <div class="config-title">&#127926; Configuração do Evento
+      <button class="reset-btn" onclick="resetToMatue()">&#8635; Carregar dados Matuê + Brandão</button>
+    </div>
+    <div class="config-grid">
+      <div class="field"><label>Nome do Evento</label>
+        <input type="text" id="inp-nome" class="nome" value="Matuê + Brandão · Park da Copa" oninput="calc()">
+      </div>
+      <div class="field"><label>Capacidade Total</label>
+        <input type="number" id="inp-cap" value="5000" min="1" oninput="calc()">
+      </div>
+      <div class="field"><label>Ticket Médio (R$)</label>
+        <input type="number" id="inp-tm" value="124" min="0" step="0.01" oninput="calc()">
+      </div>
+      <div class="field"><label>Consumação/Pessoa (R$)</label>
+        <input type="number" id="inp-cons" value="35" min="0" step="0.01" oninput="calc()">
+      </div>
+      <div class="field"><label>% Público Simulado</label>
+        <input type="number" id="inp-pct-ev" value="70" min="0" max="100" step="1" oninput="syncSlider();calc()">
+      </div>
+    </div>
+  </div>
+
+  <!-- KPI STRIP -->
+  <div class="kpi-strip">
+    <div class="kpi red">
+      <div class="kpi-lbl">Total de Custos</div>
+      <div class="kpi-val" id="kv-custo" style="color:var(--red)">&#8212;</div>
+      <div class="kpi-sub">soma de todas categorias</div>
+    </div>
+    <div class="kpi green">
+      <div class="kpi-lbl">Receita Projetada</div>
+      <div class="kpi-val" id="kv-receita" style="color:var(--green)">&#8212;</div>
+      <div class="kpi-sub" id="kv-pub-sim">&#8212; pessoas</div>
+    </div>
+    <div class="kpi amber">
+      <div class="kpi-lbl">Resultado</div>
+      <div class="kpi-val" id="kv-resultado">&#8212;</div>
+      <div class="kpi-sub" id="kv-resultado-sub">&#8212;</div>
+    </div>
+    <div class="kpi teal">
+      <div class="kpi-lbl">Breakeven — Público Mínimo</div>
+      <div class="kpi-val" id="kv-be-pub" style="color:var(--teal)">&#8212;</div>
+      <div class="kpi-sub" id="kv-be-pub-sub">pessoas necessárias</div>
+    </div>
+    <div class="kpi blue">
+      <div class="kpi-lbl">Breakeven — % Capacidade</div>
+      <div class="kpi-val" id="kv-be-pct" style="color:var(--blue)">&#8212;</div>
+      <div class="kpi-sub" id="kv-be-pct-sub">da lotação</div>
+    </div>
+  </div>
+
+  <!-- MAIN GRID -->
+  <div class="main-grid">
+
+    <!-- CUSTOS -->
+    <div class="panel">
+      <div class="panel-title">&#128181; Custos por Categoria <span class="badge" id="badge-custos">0 itens</span></div>
+      <div id="custo-rows">
+        <!-- injected by JS -->
+      </div>
+      <div class="cost-total-row">
+        <span class="lbl">TOTAL CUSTO</span>
+        <span class="val" id="custo-total-display">&#8212;</span>
+      </div>
+    </div>
+
+    <!-- RECEITAS -->
+    <div class="panel">
+      <div class="panel-title">&#128200; Receitas</div>
+
+      <div class="rec-row">
+        <label>Bilheteria (auto)</label>
+        <input type="text" id="rec-bilheteria" class="rec-inp readonly" readonly>
+        <div class="rec-tag">Público simulado × Ticket Médio</div>
+      </div>
+      <div class="rec-row">
+        <label>Bar / Consumação (auto)</label>
+        <input type="text" id="rec-bar" class="rec-inp readonly" readonly>
+        <div class="rec-tag">Público simulado × R$ por pessoa</div>
+      </div>
+      <div class="rec-row">
+        <label>Patrocínio (R$)</label>
+        <input type="number" id="rec-pat" class="rec-inp" value="0" min="0" step="100" oninput="calc()">
+        <div class="rec-tag">Valor fixo de patrocinadores</div>
+      </div>
+      <div class="rec-row">
+        <label>Outras Receitas (R$)</label>
+        <input type="number" id="rec-outros" class="rec-inp" value="0" min="0" step="100" oninput="calc()">
+        <div class="rec-tag">Merchandising, VIP, food trucks...</div>
+      </div>
+
+      <div class="rec-total-row">
+        <span class="lbl">RECEITA TOTAL</span>
+        <span class="val" id="rec-total-display">&#8212;</span>
+      </div>
+
+      <!-- Proporções -->
+      <div style="margin-top:14px">
+        <div class="sep">Proporção da receita</div>
+        <div id="rec-props"></div>
+      </div>
+    </div>
+
+    <!-- RESULT + CHART -->
+    <div class="result-panel">
+
+      <!-- Donut -->
+      <div class="panel">
+        <div class="panel-title">&#127829; Distribuição dos Custos</div>
+        <div class="chart-wrap"><canvas id="chartCusto"></canvas></div>
+        <div id="custo-legend" style="margin-top:8px;display:flex;flex-direction:column;gap:3px"></div>
+      </div>
+
+      <!-- Breakeven gauge -->
+      <div class="panel">
+        <div class="be-title">Posição vs. Breakeven</div>
+        <div class="gauge-wrap">
+          <div class="gauge-track">
+            <div class="gauge-fill" id="gauge-fill" style="background:var(--amber);width:0%"></div>
+            <div class="gauge-needle" id="gauge-needle" style="left:0%"></div>
+          </div>
+          <div class="gauge-labels"><span>0%</span><span>Breakeven</span><span>100%</span></div>
+        </div>
+        <div style="margin-top:10px;font-size:11px;color:var(--muted);line-height:1.5" id="be-explain"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SCENARIOS -->
+  <div class="scenarios-section">
+    <div class="scenarios-title">&#127937; Cenários de Público</div>
+
+    <div class="scenarios-grid">
+      <div class="sc-card pessimista">
+        <div class="sc-label" style="color:var(--red)">&#128308; Pessimista</div>
+        <div class="sc-pct" style="color:var(--red)" id="sc0-pct">50%</div>
+        <div class="sc-pub" id="sc0-pub">&#8212; pessoas</div>
+        <div class="sc-row"><span class="k">Bilheteria</span><span class="v" id="sc0-bil">&#8212;</span></div>
+        <div class="sc-row"><span class="k">Bar</span><span class="v" id="sc0-bar">&#8212;</span></div>
+        <div class="sc-row"><span class="k">Patrocínio</span><span class="v" id="sc0-pat">&#8212;</span></div>
+        <div class="sc-row"><span class="k">Receita Total</span><span class="v" id="sc0-rec">&#8212;</span></div>
+        <div class="sc-row"><span class="k">Resultado</span><span class="v" id="sc0-res">&#8212;</span></div>
+        <div class="sc-row"><span class="k">ROI</span><span class="v" id="sc0-roi">&#8212;</span></div>
+      </div>
+      <div class="sc-card realista">
+        <div class="sc-label" style="color:var(--amber)">&#128992; Realista</div>
+        <div class="sc-pct" style="color:var(--amber)" id="sc1-pct">70%</div>
+        <div class="sc-pub" id="sc1-pub">&#8212; pessoas</div>
+        <div class="sc-row"><span class="k">Bilheteria</span><span class="v" id="sc1-bil">&#8212;</span></div>
+        <div class="sc-row"><span class="k">Bar</span><span class="v" id="sc1-bar">&#8212;</span></div>
+        <div class="sc-row"><span class="k">Patrocínio</span><span class="v" id="sc1-pat">&#8212;</span></div>
+        <div class="sc-row"><span class="k">Receita Total</span><span class="v" id="sc1-rec">&#8212;</span></div>
+        <div class="sc-row"><span class="k">Resultado</span><span class="v" id="sc1-res">&#8212;</span></div>
+        <div class="sc-row"><span class="k">ROI</span><span class="v" id="sc1-roi">&#8212;</span></div>
+      </div>
+      <div class="sc-card otimista">
+        <div class="sc-label" style="color:var(--green)">&#128994; Otimista</div>
+        <div class="sc-pct" style="color:var(--green)" id="sc2-pct">90%</div>
+        <div class="sc-pub" id="sc2-pub">&#8212; pessoas</div>
+        <div class="sc-row"><span class="k">Bilheteria</span><span class="v" id="sc2-bil">&#8212;</span></div>
+        <div class="sc-row"><span class="k">Bar</span><span class="v" id="sc2-bar">&#8212;</span></div>
+        <div class="sc-row"><span class="k">Patrocínio</span><span class="v" id="sc2-pat">&#8212;</span></div>
+        <div class="sc-row"><span class="k">Receita Total</span><span class="v" id="sc2-rec">&#8212;</span></div>
+        <div class="sc-row"><span class="k">Resultado</span><span class="v" id="sc2-res">&#8212;</span></div>
+        <div class="sc-row"><span class="k">ROI</span><span class="v" id="sc2-roi">&#8212;</span></div>
+      </div>
+      <div class="sc-card custom">
+        <div class="sc-label" style="color:var(--blue)">&#128309; Personalizado</div>
+        <div class="sc-pct" style="color:var(--blue)" id="sc3-pct">70%</div>
+        <div class="sc-pub" id="sc3-pub">&#8212; pessoas</div>
+        <div class="sc-row"><span class="k">Bilheteria</span><span class="v" id="sc3-bil">&#8212;</span></div>
+        <div class="sc-row"><span class="k">Bar</span><span class="v" id="sc3-bar">&#8212;</span></div>
+        <div class="sc-row"><span class="k">Patrocínio</span><span class="v" id="sc3-pat">&#8212;</span></div>
+        <div class="sc-row"><span class="k">Receita Total</span><span class="v" id="sc3-rec">&#8212;</span></div>
+        <div class="sc-row"><span class="k">Resultado</span><span class="v" id="sc3-res">&#8212;</span></div>
+        <div class="sc-row"><span class="k">ROI</span><span class="v" id="sc3-roi">&#8212;</span></div>
+      </div>
+    </div>
+
+    <!-- SLIDER -->
+    <div class="slider-row">
+      <label>&#127918; Simular ocupação:</label>
+      <input type="range" id="sl-pct" min="0" max="100" value="70" oninput="syncPct();calc()">
+      <span class="slider-pct" id="sl-pct-display">70%</span>
+    </div>
+    <div class="slider-note" id="slider-note">Arraste para simular diferentes níveis de lotação</div>
+
+    <!-- Bar chart -->
+    <div style="margin-top:20px">
+      <div class="sep">Receita vs. Custo por cenário</div>
+      <div class="bar-chart-wrap"><canvas id="chartBar"></canvas></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────
+var MATUE_CUSTOS = {
+  cache:       376500,
+  mkt:          50260.50,
+  estrutura:   153874.40,
+  transporte:   54749.27,
+  hospedagem:    9003.78,
+  imposto:      39097.03,
+  alimentacao:    813.48,
+  outros:        6065.71
+};
+
+var CAT_LBL = {
+  cache:'Cachê / Artistas', mkt:'Marketing', estrutura:'Estrutura / Produção',
+  transporte:'Transporte', hospedagem:'Hospedagem',
+  imposto:'Impostos / Taxas', alimentacao:'Alimentação', outros:'Outros'
+};
+
+var CAT_COLORS = {
+  cache:'#7c3aed', mkt:'#2563eb', estrutura:'#d97706', transporte:'#16a34a',
+  hospedagem:'#0284c7', imposto:'#dc2626', alimentacao:'#ca8a04', outros:'#6b7280'
+};
+
+var custos = Object.assign({}, MATUE_CUSTOS);
+var chartCusto = null, chartBar = null;
+
+// ── INIT COST ROWS ────────────────────────────────────────────
+function buildCostRows() {
+  var cats = Object.keys(CAT_LBL);
+  var html = '';
+  cats.forEach(function(c) {
+    html += '<div class="cost-row">'
+      + '<div class="cost-dot" style="background:' + CAT_COLORS[c] + '"></div>'
+      + '<span class="cost-lbl">' + CAT_LBL[c] + '</span>'
+      + '<input type="number" class="cost-inp" id="c-' + c + '" value="' + custos[c].toFixed(2) + '" min="0" step="0.01" oninput="custos[\'' + c + '\']=parseFloat(this.value)||0;calc()">'
+      + '</div>';
+  });
+  document.getElementById('custo-rows').innerHTML = html;
+  document.getElementById('badge-custos').textContent = cats.length + ' categorias';
+}
+
+// ── FORMAT ────────────────────────────────────────────────────
+var fmt = function(v) {
+  return 'R$ ' + Number(v).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
+};
+var fmtK = function(v) {
+  if (Math.abs(v) >= 1000000) return 'R$ ' + (v/1000000).toFixed(2).replace('.',',') + 'M';
+  if (Math.abs(v) >= 1000) return 'R$ ' + (v/1000).toFixed(0) + 'k';
+  return fmt(v);
+};
+
+// ── CALC SCENARIO ─────────────────────────────────────────────
+function calcScenario(pct, totalCusto, tm, cons, pat, outros_rec) {
+  var cap = parseFloat(document.getElementById('inp-cap').value) || 5000;
+  var pub = Math.round(cap * pct / 100);
+  var bil = pub * tm;
+  var bar = pub * cons;
+  var rec = bil + bar + pat + outros_rec;
+  var res = rec - totalCusto;
+  var roi = totalCusto > 0 ? (res / totalCusto * 100) : 0;
+  return { pub: pub, bil: bil, bar: bar, pat: pat, rec: rec, res: res, roi: roi };
+}
+
+// ── FILL SCENARIO CARD ────────────────────────────────────────
+function fillScenario(prefix, pct, data) {
+  var pctInt = Math.round(pct);
+  document.getElementById(prefix+'-pct').textContent = pctInt + '%';
+  document.getElementById(prefix+'-pub').textContent = data.pub.toLocaleString('pt-BR') + ' pessoas';
+  document.getElementById(prefix+'-bil').textContent = fmtK(data.bil);
+  document.getElementById(prefix+'-bar').textContent = fmtK(data.bar);
+  document.getElementById(prefix+'-pat').textContent = fmtK(data.pat);
+  document.getElementById(prefix+'-rec').textContent = fmtK(data.rec);
+  var resEl = document.getElementById(prefix+'-res');
+  resEl.textContent = (data.res >= 0 ? '+' : '') + fmtK(data.res);
+  resEl.style.color = data.res >= 0 ? 'var(--green)' : 'var(--red)';
+  var roiEl = document.getElementById(prefix+'-roi');
+  roiEl.textContent = (data.roi >= 0 ? '+' : '') + data.roi.toFixed(1) + '%';
+  roiEl.style.color = data.roi >= 0 ? 'var(--green)' : 'var(--red)';
+}
+
+// ── MAIN CALC ─────────────────────────────────────────────────
+function calc() {
+  var cap   = parseFloat(document.getElementById('inp-cap').value)  || 5000;
+  var tm    = parseFloat(document.getElementById('inp-tm').value)    || 124;
+  var cons  = parseFloat(document.getElementById('inp-cons').value)  || 35;
+  var pctSim = parseFloat(document.getElementById('inp-pct-ev').value) || 70;
+  var pat   = parseFloat(document.getElementById('rec-pat').value)   || 0;
+  var outRec = parseFloat(document.getElementById('rec-outros').value) || 0;
+
+  // Total custo
+  var totalCusto = 0;
+  Object.keys(custos).forEach(function(c){ totalCusto += (custos[c] || 0); });
+
+  // Simulated
+  var pubSim = Math.round(cap * pctSim / 100);
+  var bilSim = pubSim * tm;
+  var barSim = pubSim * cons;
+  var recSim = bilSim + barSim + pat + outRec;
+  var resSim = recSim - totalCusto;
+  var roiSim = totalCusto > 0 ? (resSim / totalCusto * 100) : 0;
+
+  // Update receita auto fields
+  document.getElementById('rec-bilheteria').value = fmt(bilSim);
+  document.getElementById('rec-bar').value = fmt(barSim);
+
+  // KPIs
+  document.getElementById('kv-custo').textContent   = fmtK(totalCusto);
+  document.getElementById('kv-receita').textContent = fmtK(recSim);
+  document.getElementById('kv-pub-sim').textContent = pubSim.toLocaleString('pt-BR') + ' pessoas (' + pctSim + '%)';
+  var resEl = document.getElementById('kv-resultado');
+  resEl.textContent = (resSim >= 0 ? '+' : '') + fmtK(resSim);
+  resEl.style.color = resSim >= 0 ? 'var(--green)' : 'var(--red)';
+  document.getElementById('kv-resultado-sub').textContent = 'ROI: ' + (resSim >= 0 ? '+' : '') + roiSim.toFixed(1) + '%';
+
+  // Breakeven
+  var bePub = (totalCusto - pat - outRec) / (tm + cons);
+  var bePct = cap > 0 ? (bePub / cap * 100) : 0;
+  document.getElementById('kv-be-pub').textContent = Math.ceil(bePub).toLocaleString('pt-BR');
+  document.getElementById('kv-be-pct').textContent = bePct.toFixed(1) + '%';
+  document.getElementById('kv-be-pct-sub').textContent = bePct <= 100 ? 'da lotação (viável)' : 'ACIMA da capacidade!';
+
+  // Cost total display
+  document.getElementById('custo-total-display').textContent = fmt(totalCusto);
+  document.getElementById('rec-total-display').textContent   = fmt(recSim);
+
+  // Receita proportions
+  var recParts = [
+    {lbl:'Bilheteria', val:bilSim, color:'var(--blue)'},
+    {lbl:'Bar', val:barSim, color:'var(--green)'},
+    {lbl:'Patrocínio', val:pat, color:'var(--purple)'},
+    {lbl:'Outras', val:outRec, color:'var(--amber)'}
+  ].filter(function(x){return x.val > 0});
+  var recTotal = recSim || 1;
+  document.getElementById('rec-props').innerHTML = recParts.map(function(p){
+    var pct = (p.val / recTotal * 100).toFixed(1);
+    return '<div style="display:flex;align-items:center;gap:6px;margin-bottom:5px">'
+      +'<div style="width:9px;height:9px;border-radius:50%;background:'+p.color+';flex-shrink:0"></div>'
+      +'<span style="font-size:10px;font-weight:600;flex:1">'+p.lbl+'</span>'
+      +'<span style="font-size:10px;font-weight:700;color:var(--muted)">'+pct+'%</span>'
+      +'<div style="width:80px;height:5px;background:var(--gray2);border-radius:5px;overflow:hidden">'
+      +'<div style="height:100%;width:'+pct+'%;background:'+p.color+';border-radius:5px"></div>'
+      +'</div></div>';
+  }).join('') || '<div style="font-size:10px;color:var(--muted)">Nenhuma receita calculada</div>';
+
+  // GAUGE
+  var fillPct = Math.min(pctSim, 100);
+  var needlePct = Math.min(bePct, 100);
+  var gaugeColor = pctSim >= bePct ? 'var(--green)' : pctSim >= bePct * 0.8 ? 'var(--amber)' : 'var(--red)';
+  document.getElementById('gauge-fill').style.width   = fillPct + '%';
+  document.getElementById('gauge-fill').style.background = gaugeColor;
+  document.getElementById('gauge-needle').style.left  = needlePct + '%';
+  document.getElementById('be-explain').innerHTML =
+    'Breakeven: <strong>' + Math.ceil(bePub).toLocaleString('pt-BR') + ' pessoas (' + bePct.toFixed(1) + '%)</strong><br>'
+    + 'Simulado: <strong>' + pubSim.toLocaleString('pt-BR') + ' pessoas (' + pctSim + '%)</strong><br>'
+    + (pctSim >= bePct
+        ? '<span class="tag-ok">✓ Acima do breakeven — evento viável!</span>'
+        : '<span class="tag-danger">✗ Abaixo do breakeven — ainda no prejuízo.</span>');
+
+  // SCENARIOS (50 / 70 / 90 / custom)
+  [['sc0',50],['sc1',70],['sc2',90],['sc3',pctSim]].forEach(function(s){
+    fillScenario(s[0], s[1], calcScenario(s[1], totalCusto, tm, cons, pat, outRec));
+  });
+  document.getElementById('slider-note').textContent =
+    'Ocupação simulada: ' + pctSim + '% → ' + pubSim.toLocaleString('pt-BR') + ' pessoas · Resultado: '
+    + (resSim >= 0 ? '+' : '') + fmt(resSim);
+
+  // Update charts
+  updateCharts(totalCusto, tm, cons, pat, outRec, cap);
+}
+
+// ── CHARTS ────────────────────────────────────────────────────
+function initCharts() {
+  var ctx1 = document.getElementById('chartCusto').getContext('2d');
+  chartCusto = new Chart(ctx1, {
+    type: 'doughnut',
+    data: { labels:[], datasets:[{data:[],backgroundColor:[],borderWidth:2,borderColor:'#fff'}]},
+    options: {
+      responsive: true, maintainAspectRatio: true, cutout: '60%',
+      plugins:{legend:{display:false},tooltip:{callbacks:{
+        label: function(c){ return ' '+c.label+': '+fmt(c.raw); }
+      }}}
+    }
+  });
+
+  var ctx2 = document.getElementById('chartBar').getContext('2d');
+  chartBar = new Chart(ctx2, {
+    type: 'bar',
+    data: {
+      labels: ['Pessimista (50%)', 'Realista (70%)', 'Otimista (90%)', 'Personalizado'],
+      datasets: [
+        {label:'Custo Total', data:[0,0,0,0], backgroundColor:'rgba(200,16,46,.18)', borderColor:'var(--red)', borderWidth:2},
+        {label:'Receita', data:[0,0,0,0], backgroundColor:['rgba(220,38,38,.25)','rgba(217,119,6,.25)','rgba(22,163,74,.25)','rgba(37,99,235,.25)'],
+          borderColor:['var(--red)','var(--amber)','var(--green)','var(--blue)'], borderWidth:2}
+      ]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{labels:{font:{size:10}}}},
+      scales:{y:{ticks:{callback:function(v){return 'R$'+(v/1000).toFixed(0)+'k';}},grid:{color:'rgba(0,0,0,.05)'}}}
+    }
+  });
+}
+
+function updateCharts(totalCusto, tm, cons, pat, outRec, cap) {
+  if (!chartCusto || !chartBar) return;
+  // Donut
+  var cats = Object.keys(CAT_LBL);
+  var vals = cats.map(function(c){ return custos[c] || 0; });
+  var colors = cats.map(function(c){ return CAT_COLORS[c]; });
+  var labels = cats.map(function(c){ return CAT_LBL[c]; });
+  chartCusto.data.labels = labels;
+  chartCusto.data.datasets[0].data = vals;
+  chartCusto.data.datasets[0].backgroundColor = colors;
+  chartCusto.update('none');
+
+  // Legend
+  var legHtml = cats.map(function(c, i){
+    var pct = totalCusto > 0 ? (vals[i]/totalCusto*100).toFixed(1) : 0;
+    return '<div style="display:flex;align-items:center;gap:5px;font-size:9px;font-weight:600">'
+      +'<div style="width:8px;height:8px;border-radius:50%;background:'+colors[i]+';flex-shrink:0"></div>'
+      +'<span style="flex:1">'+labels[i]+'</span>'
+      +'<span style="color:var(--muted)">'+pct+'%</span></div>';
+  }).join('');
+  document.getElementById('custo-legend').innerHTML = legHtml;
+
+  // Bar chart
+  var pcts = [50, 70, 90, parseFloat(document.getElementById('inp-pct-ev').value)||70];
+  var recs = pcts.map(function(p){
+    var pub = Math.round(cap * p / 100);
+    return pub*tm + pub*cons + pat + outRec;
+  });
+  chartBar.data.datasets[0].data = [totalCusto, totalCusto, totalCusto, totalCusto];
+  chartBar.data.datasets[1].data = recs;
+  chartBar.update('none');
+}
+
+// ── SLIDER SYNC ───────────────────────────────────────────────
+function syncSlider(){
+  var v = document.getElementById('inp-pct-ev').value;
+  document.getElementById('sl-pct').value = v;
+  document.getElementById('sl-pct-display').textContent = v + '%';
+}
+function syncPct(){
+  var v = document.getElementById('sl-pct').value;
+  document.getElementById('inp-pct-ev').value = v;
+  document.getElementById('sl-pct-display').textContent = v + '%';
+}
+
+// ── RESET TO MATUE ────────────────────────────────────────────
+function resetToMatue(){
+  custos = Object.assign({}, MATUE_CUSTOS);
+  document.getElementById('inp-nome').value   = 'Matuê + Brandão · Park da Copa';
+  document.getElementById('inp-cap').value    = 5000;
+  document.getElementById('inp-tm').value     = 124;
+  document.getElementById('inp-cons').value   = 35;
+  document.getElementById('inp-pct-ev').value = 70;
+  document.getElementById('rec-pat').value    = 0;
+  document.getElementById('rec-outros').value = 0;
+  // Reset inputs
+  Object.keys(MATUE_CUSTOS).forEach(function(c){
+    var el = document.getElementById('c-'+c);
+    if(el) el.value = MATUE_CUSTOS[c].toFixed(2);
+  });
+  syncSlider();
+  calc();
+}
+
+// ── INIT ──────────────────────────────────────────────────────
+var n = new Date();
+document.getElementById('hdate').innerHTML =
+  n.toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'})
+  +'<small>Viabilidade de Evento</small>';
+
+buildCostRows();
+initCharts();
+calc();
+syncSlider();
+</script>
+</body>
+</html>
