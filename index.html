@@ -122,6 +122,28 @@ td{padding:10px 11px;vertical-align:middle}
 .card-title span{width:4px;height:14px;background:var(--red);border-radius:2px;display:inline-block}
 .chart-section{background:#fff;border-radius:12px;padding:20px;box-shadow:0 2px 10px rgba(0,0,0,.06);margin-bottom:24px}
 
+
+/* DONUT BREAKEVEN GRID */
+.donut-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:14px;padding:6px 2px 18px}
+.donut-card{background:#fff;border-radius:14px;padding:14px 10px 12px;box-shadow:0 2px 10px rgba(0,0,0,.07);
+  text-align:center;transition:transform .2s,box-shadow .2s;cursor:default}
+.donut-card:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.12)}
+.donut-wrap{position:relative;width:88px;height:88px;margin:0 auto 8px}
+.donut-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;line-height:1.1}
+.donut-pct{font-size:15px;font-weight:800;color:var(--text)}
+.donut-pct.green{color:var(--green)}
+.donut-pct.amber{color:var(--amber)}
+.donut-pct.red{color:var(--red)}
+.donut-pct.purple{color:#7c3aed}
+.donut-lbl{font-size:7px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.donut-name{font-size:9px;font-weight:700;color:var(--text);margin-bottom:4px;line-height:1.3}
+.donut-status{font-size:8px;font-weight:700;padding:2px 7px;border-radius:20px;display:inline-block}
+.donut-status.green{background:#dcfce7;color:var(--green)}
+.donut-status.amber{background:#fef3c7;color:var(--amber)}
+.donut-status.red{background:#fee2e2;color:var(--red)}
+.donut-status.gray{background:#f3f4f6;color:#9ca3af}
+.donut-status.purple{background:#ede9fe;color:#7c3aed}
+
 /* ARTIST CARDS */
 .artist-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:28px}
 .artist-card{background:#fff;border-radius:14px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,.07);
@@ -276,7 +298,7 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:18px;
   </div>
   <div class="header-right">
     <div class="header-date">Axis Entretenimento</div>
-    <div class="header-sub">Dashboard Comercial · Atualizado 10/06/2026</div>
+    <div class="header-sub">Dashboard Comercial · Atualizado 15/06/2026</div>
   </div>
 </header>
 
@@ -292,14 +314,14 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:18px;
     </div>
     <div class="kpi green">
       <div class="kpi-label">Breakeven Atingido</div>
-      <div class="kpi-value">0</div>
-      <div class="kpi-sub">Eventos ativos ainda em vendas</div>
-      <span class="kpi-badge badge-amber">Em curso</span>
+      <div class="kpi-value">3</div>
+      <div class="kpi-sub">Pique Novo · DJ Zullu · Bruno Diegues</div>
+      <span class="kpi-badge badge-green">✅ Atingido</span>
     </div>
     <div class="kpi amber">
       <div class="kpi-label">Eventos Ativos</div>
-      <div class="kpi-value">8</div>
-      <div class="kpi-sub">3 encerrados removidos · 8 em curso</div>
+      <div class="kpi-value">12</div>
+      <div class="kpi-sub">2 passados removidos · 12 em curso</div>
       <span class="kpi-badge badge-amber">2026</span>
     </div>
     <div class="kpi purple">
@@ -354,7 +376,85 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:18px;
   <div id="tab-breakeven" class="panel active">
     <div class="chart-section">
       <div class="card-title"><span></span> Breakeven por Evento (Receita Total vs. Custo)</div>
-      <canvas id="breakevenChart" height="70"></canvas>
+      <div class="donut-grid">
+        <!-- Belo -->
+        <div class="donut-card">
+          <div class="donut-name">🎤 Belo In Concert</div>
+          <div class="donut-wrap"><canvas id="d-belo"></canvas>
+            <div class="donut-center"><div class="donut-pct purple">17,1%</div><div class="donut-lbl">breakeven</div></div></div>
+          <div class="donut-status purple">Em vendas</div>
+        </div>
+        <!-- 4 Amigos -->
+        <div class="donut-card">
+          <div class="donut-name">🎭 4 Amigos 2026</div>
+          <div class="donut-wrap"><canvas id="d-4amigos"></canvas>
+            <div class="donut-center"><div class="donut-pct amber">49,4%</div><div class="donut-lbl">breakeven</div></div></div>
+          <div class="donut-status amber">Em andamento</div>
+        </div>
+        <!-- Pique Novo -->
+        <div class="donut-card">
+          <div class="donut-name">🏆 Fun Fest — Pique Novo</div>
+          <div class="donut-wrap"><canvas id="d-piquenovo"></canvas>
+            <div class="donut-center"><div class="donut-pct green">155,6%</div><div class="donut-lbl">breakeven</div></div></div>
+          <div class="donut-status green">✅ Atingido</div>
+        </div>
+        <!-- DJ Zullu -->
+        <div class="donut-card">
+          <div class="donut-name">✅ Fun Fest — DJ Zullu</div>
+          <div class="donut-wrap"><canvas id="d-djzullu"></canvas>
+            <div class="donut-center"><div class="donut-pct green">123,9%</div><div class="donut-lbl">breakeven</div></div></div>
+          <div class="donut-status green">✅ Atingido</div>
+        </div>
+        <!-- Bruno Diegues -->
+        <div class="donut-card">
+          <div class="donut-name">✅ Fun Fest — Bruno Diegues</div>
+          <div class="donut-wrap"><canvas id="d-brunodiegues"></canvas>
+            <div class="donut-center"><div class="donut-pct green">119,8%</div><div class="donut-lbl">breakeven</div></div></div>
+          <div class="donut-status green">✅ Atingido</div>
+        </div>
+        <!-- Gamadinho -->
+        <div class="donut-card">
+          <div class="donut-name">Fun Fest — Gamadinho</div>
+          <div class="donut-wrap"><canvas id="d-gamadinho"></canvas>
+            <div class="donut-center"><div class="donut-pct amber">29,1%</div><div class="donut-lbl">breakeven</div></div></div>
+          <div class="donut-status amber">Em andamento</div>
+        </div>
+        <!-- Tá Na Mente -->
+        <div class="donut-card">
+          <div class="donut-name">Fun Fest — Tá Na Mente</div>
+          <div class="donut-wrap"><canvas id="d-tamente"></canvas>
+            <div class="donut-center"><div class="donut-pct amber">25,4%</div><div class="donut-lbl">breakeven</div></div></div>
+          <div class="donut-status amber">Em andamento</div>
+        </div>
+        <!-- FF 3 datas -->
+        <div class="donut-card">
+          <div class="donut-name">Fun Fest — 08 · 14 · 19/07</div>
+          <div class="donut-wrap"><canvas id="d-ff3"></canvas>
+            <div class="donut-center"><div class="donut-pct red">0%</div><div class="donut-lbl">breakeven</div></div></div>
+          <div class="donut-status gray">Sem vendas</div>
+        </div>
+        <!-- Matuê -->
+        <div class="donut-card">
+          <div class="donut-name">Matuê & Brandão</div>
+          <div class="donut-wrap"><canvas id="d-matue"></canvas>
+            <div class="donut-center"><div class="donut-pct amber">36,4%</div><div class="donut-lbl">breakeven</div></div></div>
+          <div class="donut-status amber">Em andamento</div>
+        </div>
+        <!-- Chico Chico -->
+        <div class="donut-card">
+          <div class="donut-name">Chico Chico — Let It Burn</div>
+          <div class="donut-wrap"><canvas id="d-chico"></canvas>
+            <div class="donut-center"><div class="donut-pct red">0%</div><div class="donut-lbl">breakeven</div></div></div>
+          <div class="donut-status gray">Aguardando</div>
+        </div>
+        <!-- ZOOM -->
+        <div class="donut-card">
+          <div class="donut-name">🎡 ZOOM Music Festival</div>
+          <div class="donut-wrap"><canvas id="d-zoom"></canvas>
+            <div class="donut-center"><div class="donut-pct red">0%</div><div class="donut-lbl">breakeven</div></div></div>
+          <div class="donut-status gray">Aguardando</div>
+        </div>
+      </div>
     </div>
 
     <div class="tbl-wrap">
@@ -384,20 +484,71 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:18px;
             <td><span class="status-tag tag-warn">↑ No ritmo</span></td>
           </tr>
 
+          <tr data-event-id="piquenovo" onclick="openModal('piquenovo')" style="background:#f0fdf4">
+            <td><div class="ev-wrap"><img class="ev-img" src="https://images.ticket360.com.br/images.ticket360/eventos/minifeed/33153-20260513115958.webp" onerror="this.style.display='none'">
+              <div>
+                <div class="ev-name">🏆 Fun Fest — Pique Novo</div>
+                <div class="ev-date">13/06/2026</div>
+                <div class="ev-loc">📍 Shopping Park Sul · Barra da Tijuca, Rio de Janeiro – RJ</div>
+              </div></div></td>
+            <td><a href="https://produtor.ticket360.com.br/produtor/vendas/detalhe/33153" target="_blank" onclick="event.stopPropagation()"><span class="chip chip-t360">T360</span></a></td>
+            <td data-cost-id="piquenovo" class="cost-editable" title="Clique para editar custo">R$ 129.348</td>
+            <td class="num-green">5.465</td><td>110</td><td>0</td><td>5.575</td>
+            <td class="num-green">R$ 6.080</td>
+            <td class="num-green">R$ 195.125</td>
+            <td class="num-green">R$ 201.205</td>
+            <td data-breakeven-id="piquenovo"><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill green" id="pbar-piquenovo" style="width:100%"></div></div><span class="pbar-pct" id="pct-piquenovo" style="color:var(--green)">155,6% ✅</span></div></td>
+            <td><span class="status-tag tag-ok">✅ Breakeven!</span></td>
+          </tr>
+
+          <tr data-event-id="djzullu" onclick="openModal('djzullu')" style="background:#f0fdf4">
+            <td><div class="ev-wrap"><img class="ev-img" src="https://images.ticket360.com.br/images.ticket360/eventos/minifeed/33154-20260513120015.webp" onerror="this.style.display='none'">
+              <div>
+                <div class="ev-name">✅ Fun Fest — DJ Zullu</div>
+                <div class="ev-date">19/06/2026</div>
+                <div class="ev-loc">📍 Shopping Park Sul · Barra da Tijuca, Rio de Janeiro – RJ</div>
+              </div></div></td>
+            <td><a href="https://produtor.ticket360.com.br/produtor/vendas/detalhe/33154" target="_blank" onclick="event.stopPropagation()"><span class="chip chip-t360">T360</span></a></td>
+            <td data-cost-id="djzullu" class="cost-editable" title="Clique para editar custo">R$ 129.348</td>
+            <td class="num-green">4.467</td><td>100</td><td>0</td><td>4.567</td>
+            <td>R$ 420</td>
+            <td class="num-green">R$ 159.845</td>
+            <td class="num-green">R$ 160.265</td>
+            <td data-breakeven-id="djzullu"><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill green" id="pbar-djzullu" style="width:100%"></div></div><span class="pbar-pct" id="pct-djzullu" style="color:var(--green)">123,9% ✅</span></div></td>
+            <td><span class="status-tag tag-ok">✅ Breakeven!</span></td>
+          </tr>
+
+          <tr data-event-id="brunodiegues" onclick="openModal('brunodiegues')" style="background:#f0fdf4">
+            <td><div class="ev-wrap"><img class="ev-img" src="https://images.ticket360.com.br/images.ticket360/eventos/minifeed/33155-20260513120039.webp" onerror="this.style.display='none'">
+              <div>
+                <div class="ev-name">✅ Fun Fest — Bruno Diegues</div>
+                <div class="ev-date">24/06/2026</div>
+                <div class="ev-loc">📍 Shopping Park Sul · Barra da Tijuca, Rio de Janeiro – RJ</div>
+              </div></div></td>
+            <td><a href="https://produtor.ticket360.com.br/produtor/vendas/detalhe/33155" target="_blank" onclick="event.stopPropagation()"><span class="chip chip-t360">T360</span></a></td>
+            <td data-cost-id="brunodiegues" class="cost-editable" title="Clique para editar custo">R$ 129.348</td>
+            <td class="num-green">4.319</td><td>100</td><td>0</td><td>4.419</td>
+            <td>R$ 330</td>
+            <td class="num-green">R$ 154.665</td>
+            <td class="num-green">R$ 154.995</td>
+            <td data-breakeven-id="brunodiegues"><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill green" id="pbar-brunodiegues" style="width:100%"></div></div><span class="pbar-pct" id="pct-brunodiegues" style="color:var(--green)">119,8% ✅</span></div></td>
+            <td><span class="status-tag tag-ok">✅ Breakeven!</span></td>
+          </tr>
+
           <tr data-event-id="4amigos" onclick="openModal('4amigos')">
             <td><div class="ev-wrap"><div style="width:42px;height:42px;border-radius:7px;background:linear-gradient(135deg,#6c3fc5,#9b59b6);display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;flex-shrink:0">🎭</div>
               <div>
                 <div class="ev-name">4 Amigos 2026</div>
-                <div class="ev-date">A confirmar</div>
-                <div class="ev-loc">📍 Niterói – RJ</div>
+                <div class="ev-date">20/06/2026</div>
+                <div class="ev-loc">📍 Clube Naval Charitas · Niterói – RJ</div>
               </div></div></td>
             <td><span class="chip chip-be">BE</span></td>
             <td data-cost-id="4amigos" class="cost-editable" title="Clique para editar custo">R$ 160.000</td>
-            <td class="num-green">855</td><td>—</td><td>0</td><td>855</td>
-            <td class="num-amber">R$ 79.274</td>
+            <td class="num-green">853</td><td>—</td><td>0</td><td>853</td>
+            <td class="num-amber">R$ 79.034</td>
             <td>—</td>
-            <td class="num-amber">R$ 79.274</td>
-            <td data-breakeven-id="4amigos"><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill amber" id="pbar-4amigos" style="width:49.5%"></div></div><span class="pbar-pct" id="pct-4amigos" style="color:var(--amber)">49,5%</span></div></td>
+            <td class="num-amber">R$ 79.034</td>
+            <td data-breakeven-id="4amigos"><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill amber" id="pbar-4amigos" style="width:49.4%"></div></div><span class="pbar-pct" id="pct-4amigos" style="color:var(--amber)">49,4%</span></div></td>
             <td><span class="status-tag tag-warn">↑ Bom ritmo</span></td>
           </tr>
 
@@ -410,11 +561,11 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:18px;
               </div></div></td>
             <td><a href="https://produtor.ticket360.com.br/produtor/vendas/detalhe/33162" target="_blank" onclick="event.stopPropagation()"><span class="chip chip-t360">T360</span></a></td>
             <td data-cost-id="gamadinho" class="cost-editable" title="Clique para editar custo">R$ 92.391</td>
-            <td>0</td><td>0</td><td class="num-amber">720</td><td>720</td>
+            <td>0</td><td>0</td><td class="num-amber">768</td><td>768</td>
             <td>R$ 0</td>
-            <td>R$ 25.200</td>
-            <td>R$ 25.200</td>
-            <td data-breakeven-id="gamadinho"><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill amber" id="pbar-gamadinho" style="width:27.3%"></div></div><span class="pbar-pct" id="pct-gamadinho" style="color:var(--amber)">27,3%</span></div></td>
+            <td>R$ 26.880</td>
+            <td>R$ 26.880</td>
+            <td data-breakeven-id="gamadinho"><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill amber" id="pbar-gamadinho" style="width:29.1%"></div></div><span class="pbar-pct" id="pct-gamadinho" style="color:var(--amber)">29,1%</span></div></td>
             <td><span class="status-tag tag-warn">Em curso</span></td>
           </tr>
 
@@ -427,11 +578,11 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:18px;
               </div></div></td>
             <td><a href="https://produtor.ticket360.com.br/produtor/vendas/detalhe/33158" target="_blank" onclick="event.stopPropagation()"><span class="chip chip-t360">T360</span></a></td>
             <td data-cost-id="tamente" class="cost-editable" title="Clique para editar custo">R$ 92.391</td>
-            <td class="num-amber">4</td><td>0</td><td class="num-amber">618</td><td>622</td>
+            <td class="num-amber">4</td><td>0</td><td class="num-amber">659</td><td>663</td>
             <td>R$ 300</td>
-            <td>R$ 21.770</td>
-            <td>R$ 22.070</td>
-            <td data-breakeven-id="tamente"><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill amber" id="pbar-tamente" style="width:23.9%"></div></div><span class="pbar-pct" id="pct-tamente" style="color:var(--amber)">23,9%</span></div></td>
+            <td>R$ 23.205</td>
+            <td>R$ 23.505</td>
+            <td data-breakeven-id="tamente"><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill amber" id="pbar-tamente" style="width:25.4%"></div></div><span class="pbar-pct" id="pct-tamente" style="color:var(--amber)">25,4%</span></div></td>
             <td><span class="status-tag tag-warn">Em curso</span></td>
           </tr>
 
@@ -450,11 +601,28 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:18px;
             <td><span class="status-tag tag-zero">Sem vendas</span></td>
           </tr>
 
-          <tr data-event-id="chico">
+          <tr data-event-id="matue" onclick="openModal('matue')">
+            <td><div class="ev-wrap"><div style="width:42px;height:42px;border-radius:7px;background:linear-gradient(135deg,#ff6b00,#ff9500);display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;flex-shrink:0">🎤</div>
+              <div>
+                <div class="ev-name">Matuê e Brandão — Guarulhos</div>
+                <div class="ev-date">10/07/2026</div>
+                <div class="ev-loc">📍 Espaço Inter · Guarulhos – SP</div>
+              </div></div></td>
+            <td><span class="chip chip-be">BE</span></td>
+            <td data-cost-id="matue" class="cost-editable" title="Clique para editar custo">R$ 175.000</td>
+            <td class="num-green">525</td><td>—</td><td>0</td><td>525</td>
+            <td class="num-amber">R$ 63.670</td>
+            <td>—</td>
+            <td class="num-amber">R$ 63.670</td>
+            <td data-breakeven-id="matue"><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill amber" id="pbar-matue" style="width:36.4%"></div></div><span class="pbar-pct" id="pct-matue" style="color:var(--amber)">36,4%</span></div></td>
+            <td><span class="status-tag tag-warn">↑ Bom ritmo</span></td>
+          </tr>
+
+                    <tr data-event-id="chico">
             <td><div class="ev-wrap"><div style="width:42px;height:42px;border-radius:7px;background:linear-gradient(135deg,#1a1a2e,#333);display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;flex-shrink:0">🎸</div>
               <div>
                 <div class="ev-name">Chico Chico — Let It Burn</div>
-                <div class="ev-date">A confirmar</div>
+                <div class="ev-date">22/08/2026</div>
                 <div class="ev-loc">📍 Volta Redonda – RJ</div>
               </div></div></td>
             <td><span class="chip chip-be">BE</span></td>
@@ -469,8 +637,8 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:18px;
             <td><div class="ev-wrap"><div style="width:42px;height:42px;border-radius:7px;background:linear-gradient(135deg,#0f172a,#1e3a5f);display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;flex-shrink:0">🎡</div>
               <div>
                 <div class="ev-name">ZOOM Music Festival</div>
-                <div class="ev-date">Veigh + Alee · A confirmar</div>
-                <div class="ev-loc">📍 Volta Redonda – RJ</div>
+                <div class="ev-date">17/10/2026 · Veigh + Alee</div>
+                <div class="ev-loc">📍 Ilha São João · Volta Redonda – RJ</div>
               </div></div></td>
             <td><span class="chip chip-be">BE</span></td>
             <td data-cost-id="zoom" class="cost-editable" title="Clique para editar custo">R$ 850.000</td>
@@ -486,7 +654,7 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:18px;
         🍺 Bar R$35/pessoa aplicado a: Fun Fest (todos) e Belo In Concert &nbsp;·&nbsp;
         <strong>Gratuitos Arena Canarinho</strong> = acesso livre antes do jogo, geram receita de bar &nbsp;·&nbsp;
         Fun Fest: R$850.000 total — 3 primeiras datas R$129.348 (premium +40%) · 5 restantes R$92.391 &nbsp;·&nbsp;
-        <span style="color:var(--green);font-weight:700">✅ Pique Novo 137,2% · DJ Zullu 110,6% · Bruno Diegues 113,1% — breakeven atingido!</span>
+        <span style="color:var(--green);font-weight:700">✅ Pique Novo 155,6% · DJ Zullu 123,9% · Bruno Diegues 119,8% — breakeven atingido!</span>
       </div>
     </div>
   </div>
@@ -510,14 +678,44 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:18px;
             <td>R$ 38.255</td>
             <td><a href="https://produtor.ticket360.com.br/produtor/vendas/detalhe/33108" target="_blank" class="chip chip-t360" style="text-decoration:none">Ver ↗</a></td>
           </tr>
+          <tr style="background:#f0fdf4" onclick="openModal('piquenovo')">
+            <td><div class="ev-wrap"><img class="ev-img" src="https://images.ticket360.com.br/images.ticket360/eventos/minifeed/33153-20260513115958.webp" onerror="this.style.display='none'">
+              <div><div class="ev-name">🏆 Pique Novo & Rogerinho</div></div></div></td>
+            <td>13/06/2026</td>
+            <td><small>Shopping Park Sul<br>Barra da Tijuca, RJ</small></td>
+            <td class="num-green">5.465</td><td>110</td><td>0</td><td>5.575</td>
+            <td class="num-green">R$ 6.080</td><td>R$ 1,11</td>
+            <td class="num-green">R$ 195.125</td>
+            <td><a href="https://produtor.ticket360.com.br/produtor/vendas/detalhe/33153" target="_blank" class="chip chip-t360" style="text-decoration:none">Ver ↗</a></td>
+          </tr>
+          <tr style="background:#f0fdf4" onclick="openModal('djzullu')">
+            <td><div class="ev-wrap"><img class="ev-img" src="https://images.ticket360.com.br/images.ticket360/eventos/minifeed/33154-20260513120015.webp" onerror="this.style.display='none'">
+              <div><div class="ev-name">✅ DJ Zullu & Pokémon DJ</div></div></div></td>
+            <td>19/06/2026</td>
+            <td><small>Shopping Park Sul<br>Barra da Tijuca, RJ</small></td>
+            <td class="num-green">4.467</td><td>100</td><td>0</td><td>4.567</td>
+            <td>R$ 420</td><td>R$ 0,09</td>
+            <td class="num-green">R$ 159.845</td>
+            <td><a href="https://produtor.ticket360.com.br/produtor/vendas/detalhe/33154" target="_blank" class="chip chip-t360" style="text-decoration:none">Ver ↗</a></td>
+          </tr>
+          <tr style="background:#f0fdf4" onclick="openModal('brunodiegues')">
+            <td><div class="ev-wrap"><img class="ev-img" src="https://images.ticket360.com.br/images.ticket360/eventos/minifeed/33155-20260513120039.webp" onerror="this.style.display='none'">
+              <div><div class="ev-name">✅ Bruno Diegues</div></div></div></td>
+            <td>24/06/2026</td>
+            <td><small>Shopping Park Sul<br>Barra da Tijuca, RJ</small></td>
+            <td class="num-green">4.319</td><td>100</td><td>0</td><td>4.419</td>
+            <td>R$ 330</td><td>R$ 0,08</td>
+            <td class="num-green">R$ 154.665</td>
+            <td><a href="https://produtor.ticket360.com.br/produtor/vendas/detalhe/33155" target="_blank" class="chip chip-t360" style="text-decoration:none">Ver ↗</a></td>
+          </tr>
           <tr onclick="openModal('gamadinho')">
             <td><div class="ev-wrap"><img class="ev-img" src="https://images.ticket360.com.br/images.ticket360/eventos/minifeed/33162-20260513115927.webp" onerror="this.style.display='none'">
               <div><div class="ev-name">Gamadinho Resenha</div></div></div></td>
             <td>27/06/2026</td>
             <td><small>Shopping Park Sul<br>Barra da Tijuca, RJ</small></td>
-            <td>0</td><td>0</td><td class="num-amber">720</td><td>720</td>
+            <td>0</td><td>0</td><td class="num-amber">768</td><td>768</td>
             <td>R$ 0</td><td>—</td>
-            <td class="num-amber">R$ 25.200</td>
+            <td class="num-amber">R$ 26.880</td>
             <td><a href="https://produtor.ticket360.com.br/produtor/vendas/detalhe/33162" target="_blank" class="chip chip-t360" style="text-decoration:none">Ver ↗</a></td>
           </tr>
           <tr onclick="openModal('tamente')">
@@ -525,9 +723,9 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:18px;
               <div><div class="ev-name">Tá Na Mente</div></div></div></td>
             <td>04/07/2026</td>
             <td><small>Shopping Park Sul<br>Barra da Tijuca, RJ</small></td>
-            <td class="num-amber">4</td><td>0</td><td class="num-amber">618</td><td>622</td>
+            <td class="num-amber">4</td><td>0</td><td class="num-amber">659</td><td>663</td>
             <td>R$ 300</td><td>R$ 75</td>
-            <td class="num-amber">R$ 21.770</td>
+            <td class="num-amber">R$ 23.205</td>
             <td><a href="https://produtor.ticket360.com.br/produtor/vendas/detalhe/33158" target="_blank" class="chip chip-t360" style="text-decoration:none">Ver ↗</a></td>
           </tr>
           <tr>
@@ -559,10 +757,12 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:18px;
           </tr>
           <tr>
             <td><div class="ev-wrap"><img class="ev-img" src="https://images.ticket360.com.br/images.ticket360/eventos/minifeed/33183-20260518103153.webp" onerror="this.style.display='none'">
-              <div><div class="ev-name">Passaporte 3 Dias Fun Fest</div></div></div></td>
-            <td>Multi-datas</td>
+              <div><div class="ev-name">Passaporte 3 Dias Fun Fest Park da Copa</div></div></div></td>
+            <td>13/06/2026</td>
             <td><small>Shopping Park Sul, RJ</small></td>
-            <td colspan="7" style="color:var(--muted);font-size:10px">Produto season pass — excluído do custo individual</td>
+            <td>6</td><td>0</td><td>0</td><td>6</td>
+            <td>R$ 580</td><td>R$ 96,67</td>
+            <td>—</td>
             <td><a href="https://produtor.ticket360.com.br/produtor/vendas/detalhe/33183" target="_blank" class="chip chip-t360" style="text-decoration:none">Ver ↗</a></td>
           </tr>
         </tbody>
@@ -584,23 +784,23 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:18px;
         <tbody>
           <tr>
             <td><div class="ev-wrap"><div style="width:42px;height:42px;border-radius:7px;background:linear-gradient(135deg,#6c3fc5,#9b59b6);display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;flex-shrink:0">🎭</div>
-              <div><div class="ev-name">4 Amigos 2026</div></div></div></td>
-            <td><small>📍 Niterói – RJ</small></td>
-            <td class="num-green">855</td>
-            <td class="num-amber">R$ 79.274</td>
-            <td>R$ 92</td>
-            <td>1.950</td>
-            <td data-breakeven-id="4amigos"><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill amber" id="pbar-4amigos" style="width:49.5%"></div></div><span class="pbar-pct" id="pct-4amigos" style="color:var(--amber)">49,5%</span></div></td>
+              <div><div class="ev-name">4 Amigos 2026</div><div class="ev-date">20/06/2026</div></div></div></td>
+            <td><small>📍 Clube Naval Charitas · Niterói – RJ</small></td>
+            <td class="num-green">853</td>
+            <td class="num-amber">R$ 79.034</td>
+            <td>R$ 92,65</td>
+            <td>1.952</td>
+            <td data-breakeven-id="4amigos"><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill amber" id="pbar-4amigos" style="width:49.4%"></div></div><span class="pbar-pct" id="pct-4amigos" style="color:var(--amber)">49,4%</span></div></td>
           </tr>
           <tr>
             <td><div class="ev-wrap"><div style="width:42px;height:42px;border-radius:7px;background:linear-gradient(135deg,#ff6b00,#ff9500);display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;flex-shrink:0">🎤</div>
               <div><div class="ev-name">Matuê e Brandão — Guarulhos</div><div class="ev-date">10/07/2026</div></div></div></td>
             <td><small>📍 Espaço Inter — Guarulhos, SP</small></td>
-            <td class="num-green">511</td>
-            <td class="num-amber">R$ 61.520</td>
-            <td>R$ 120</td>
-            <td>942</td>
-            <td><span class="status-tag tag-warn">35,2% — ~9 dias p/ esgotar</span></td>
+            <td class="num-green">525</td>
+            <td class="num-amber">R$ 63.670</td>
+            <td>R$ 121</td>
+            <td>928</td>
+            <td><span class="status-tag tag-warn">36,4% — ~10 dias p/ esgotar</span></td>
           </tr>
           <tr>
             <td><div class="ev-wrap"><div style="width:42px;height:42px;border-radius:7px;background:linear-gradient(135deg,#1a1a2e,#333);display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;flex-shrink:0">🎸</div>
@@ -611,7 +811,7 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:18px;
           </tr>
           <tr>
             <td><div class="ev-wrap"><div style="width:42px;height:42px;border-radius:7px;background:linear-gradient(135deg,#0f172a,#1e3a5f);display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;flex-shrink:0">🎡</div>
-              <div><div class="ev-name">ZOOM Music Festival</div><div class="ev-date">Veigh + Alee</div></div></div></td>
+              <div><div class="ev-name">ZOOM Music Festival</div><div class="ev-date">17/10/2026 · Veigh + Alee</div></div></div></td>
             <td><small>📍 Volta Redonda – RJ</small></td>
             <td>0</td><td>R$ 0</td><td>—</td><td>—</td>
             <td><span class="status-tag tag-zero">Sem vendas</span></td>
@@ -633,18 +833,10 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:18px;
         </tr></thead>
         <tbody>
           <tr>
-            <td><div class="ev-wrap"><img class="ev-img" src="https://images.ticket360.com.br/images.ticket360/eventos/minifeed/33336-20260528175032.webp" onerror="this.style.display='none'">
-              <div><div class="ev-name">La Casa de Papel — A Festa</div></div></div></td>
-            <td><small>📍 Tulum Restaurante · Rio de Janeiro – RJ</small></td>
-            <td class="num-green">200</td><td class="num-amber">R$ 13.758</td>
-            <td><span class="status-tag tag-warn">PDV: 21 · Online: 179</span></td>
-          </tr>
-          <tr>
-            <td><div class="ev-wrap"><img class="ev-img" src="https://images.ticket360.com.br/images.ticket360/eventos/minifeed/33373-20260529151143.webp" onerror="this.style.display='none'">
-              <div><div class="ev-name">Kong Edition 001</div></div></div></td>
-            <td><small>📍 Tulum Restaurante · Rio de Janeiro – RJ</small></td>
-            <td class="num-green">13</td><td class="num-amber">R$ 754</td>
-            <td><span class="status-tag tag-warn">PDV: 9 · Online: 4</span></td>
+            <td colspan="5" style="text-align:center;padding:32px;color:var(--muted);font-size:12px">
+              📅 Nenhum evento ativo no Ingresso Digital no momento.<br>
+              <a href="https://app.ingressodigital.com" target="_blank" style="color:#0066cc;font-weight:700">→ Verificar plataforma</a>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -1037,7 +1229,79 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:18px;
         </table>
       </div>
 
-      <!-- FUN FEST - GAMADINHO -->
+      <!-- FUN FEST - PIQUE NOVO (13/06) -->
+      <div class="sector-card" style="border-top:3px solid #16a34a">
+        <div class="sector-card-hdr">
+          <h3>🏆 Fun Fest — Pique Novo & Rogerinho</h3>
+          <div class="sc-meta"><span class="sc-date">13/06/2026</span><span class="sc-plat">T360</span></div>
+        </div>
+        <table class="sc-table">
+          <tr><th>Setor</th><th>Vendidos</th><th>Receita</th><th>%</th><th>Status</th></tr>
+          <tr class="paid-row">
+            <td>Pagos (VIP + Pista)</td><td>5.465</td><td>R$ 6.080</td>
+            <td><div class="sc-bar-wrap"><div class="sc-bar green" style="width:98%"></div></div></td>
+            <td><span class="sc-tag good">✅ Breakeven</span></td>
+          </tr>
+          <tr class="free-row">
+            <td>Cortesias</td><td>110</td><td>—</td>
+            <td></td>
+            <td><span class="sc-tag free">Cortesia</span></td>
+          </tr>
+          <tr class="sc-total-row">
+            <td>TOTAL</td><td>5.575</td><td>R$ 201.205 c/ bar</td><td style="color:#16a34a;font-weight:700">155,6% ✅</td><td></td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- FUN FEST - DJ ZULLU (19/06) -->
+      <div class="sector-card" style="border-top:3px solid #16a34a">
+        <div class="sector-card-hdr">
+          <h3>✅ Fun Fest — DJ Zullu & Pokémon DJ</h3>
+          <div class="sc-meta"><span class="sc-date">19/06/2026</span><span class="sc-plat">T360</span></div>
+        </div>
+        <table class="sc-table">
+          <tr><th>Setor</th><th>Vendidos</th><th>Receita</th><th>%</th><th>Status</th></tr>
+          <tr class="paid-row">
+            <td>Pagos</td><td>4.467</td><td>R$ 420</td>
+            <td><div class="sc-bar-wrap"><div class="sc-bar green" style="width:98%"></div></div></td>
+            <td><span class="sc-tag good">✅ Breakeven</span></td>
+          </tr>
+          <tr class="free-row">
+            <td>Cortesias</td><td>100</td><td>—</td>
+            <td></td>
+            <td><span class="sc-tag free">Cortesia</span></td>
+          </tr>
+          <tr class="sc-total-row">
+            <td>TOTAL</td><td>4.567</td><td>R$ 160.265 c/ bar</td><td style="color:#16a34a;font-weight:700">123,9% ✅</td><td></td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- FUN FEST - BRUNO DIEGUES (24/06) -->
+      <div class="sector-card" style="border-top:3px solid #16a34a">
+        <div class="sector-card-hdr">
+          <h3>✅ Fun Fest — Bruno Diegues</h3>
+          <div class="sc-meta"><span class="sc-date">24/06/2026</span><span class="sc-plat">T360</span></div>
+        </div>
+        <table class="sc-table">
+          <tr><th>Setor</th><th>Vendidos</th><th>Receita</th><th>%</th><th>Status</th></tr>
+          <tr class="paid-row">
+            <td>Pagos</td><td>4.319</td><td>R$ 330</td>
+            <td><div class="sc-bar-wrap"><div class="sc-bar green" style="width:98%"></div></div></td>
+            <td><span class="sc-tag good">✅ Breakeven</span></td>
+          </tr>
+          <tr class="free-row">
+            <td>Cortesias</td><td>100</td><td>—</td>
+            <td></td>
+            <td><span class="sc-tag free">Cortesia</span></td>
+          </tr>
+          <tr class="sc-total-row">
+            <td>TOTAL</td><td>4.419</td><td>R$ 154.995 c/ bar</td><td style="color:#16a34a;font-weight:700">119,8% ✅</td><td></td>
+          </tr>
+        </table>
+      </div>
+
+            <!-- FUN FEST - GAMADINHO -->
       <div class="sector-card">
         <div class="sector-card-hdr">
           <h3>Fun Fest — Gamadinho</h3>
@@ -1046,7 +1310,7 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:18px;
         <table class="sc-table">
           <tr><th>Setor</th><th>Vendidos</th><th>Receita</th><th></th><th>Status</th></tr>
           <tr class="free-row">
-            <td>Arena Gratuita (pré-jogo)</td><td>720</td><td>—</td>
+            <td>Arena Gratuita (pré-jogo)</td><td>768</td><td>—</td>
             <td></td>
             <td><span class="sc-tag free">Gratuito</span></td>
           </tr>
@@ -1075,12 +1339,12 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:18px;
             <td><span class="sc-tag low">↓ Baixo</span></td>
           </tr>
           <tr class="free-row">
-            <td>Arena Gratuita (pré-jogo)</td><td>618</td><td>—</td>
+            <td>Arena Gratuita (pré-jogo)</td><td>659</td><td>—</td>
             <td></td>
             <td><span class="sc-tag free">Gratuito</span></td>
           </tr>
           <tr class="sc-total-row">
-            <td>TOTAL PAGO</td><td>4 pagos</td><td>R$ 300</td><td></td><td></td>
+            <td>TOTAL PAGO</td><td>4 pagos · 659 gratuitos</td><td>R$ 300</td><td></td><td></td>
           </tr>
         </table>
       </div>
@@ -1098,12 +1362,12 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:18px;
       <div class="sector-card">
         <div class="sector-card-hdr">
           <h3>🎭 4 Amigos 2026</h3>
-          <div class="sc-meta"><span class="sc-date">20/06/2026</span><span class="sc-plat be">BE</span></div>
+          <div class="sc-meta"><span class="sc-date">20/06/2026 · Clube Naval Charitas</span><span class="sc-plat be">BE</span></div>
         </div>
         <table class="sc-table">
           <tr><th>Setor</th><th>Vendidos</th><th>Receita</th><th>% total</th><th>Status</th></tr>
           <tr class="paid-row">
-            <td>Plateia</td><td>538</td><td>R$ 58.492</td>
+            <td>Plateia</td><td>537</td><td>R$ 58.382</td>
             <td><div class="sc-bar-wrap"><div class="sc-bar green" style="width:64%"></div></div></td>
             <td><span class="sc-tag good">✓ Bom</span></td>
           </tr>
@@ -1113,7 +1377,7 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:18px;
             <td><span class="sc-tag watch">⚠ Atenção</span></td>
           </tr>
           <tr class="sc-total-row">
-            <td>TOTAL</td><td>855 / 2.805</td><td>R$ 79.274</td><td style="color:#16a34a;font-weight:700">30%</td><td></td>
+            <td>TOTAL</td><td>853 / 2.805</td><td>R$ 79.034</td><td style="color:#d97706;font-weight:700">30%</td><td></td>
           </tr>
         </table>
       </div>
@@ -1127,12 +1391,12 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:18px;
         <table class="sc-table">
           <tr><th>Setor</th><th>Vendidos</th><th>Receita</th><th>% total</th><th>Status</th></tr>
           <tr class="paid-row">
-            <td>Geral</td><td>511</td><td>R$ 61.520</td>
-            <td><div class="sc-bar-wrap"><div class="sc-bar orange" style="width:35%"></div></div></td>
-            <td><span class="sc-tag watch">⚠ 35,2%</span></td>
+            <td>Geral</td><td>525</td><td>R$ 63.670</td>
+            <td><div class="sc-bar-wrap"><div class="sc-bar orange" style="width:36%"></div></div></td>
+            <td><span class="sc-tag watch">⚠ 36,4%</span></td>
           </tr>
           <tr class="sc-total-row">
-            <td>TOTAL</td><td>511 / 1.453</td><td>R$ 61.520</td><td style="color:#d97706;font-weight:700">35,2%</td><td></td>
+            <td>TOTAL</td><td>525 / 1.453</td><td>R$ 63.670</td><td style="color:#d97706;font-weight:700">36,4%</td><td></td>
           </tr>
         </table>
       </div>
@@ -1180,7 +1444,7 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:18px;
       </div>
 
     </div><!-- /sectors-grid -->
-    <p style="margin-top:16px;font-size:11px;color:#aaa;text-align:right">Atualizado: via Ticket360 produtor · <a href="https://produtor.ticket360.com.br/produtor/vendas" target="_blank" style="color:#ff6b00">Abrir T360 ↗</a></p>
+    <p style="margin-top:16px;font-size:11px;color:#aaa;text-align:right">Atualizado 15/06/2026 · via Ticket360 produtor · <a href="https://produtor.ticket360.com.br/produtor/vendas" target="_blank" style="color:#ff6b00">Abrir T360 ↗</a></p>
   </div><!-- /tab-setores -->
 
 </div><!-- /container -->
@@ -1215,12 +1479,12 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:18px;
   <div class="modal">
     <button class="modal-close" onclick="closeModal('4amigos')">✕</button>
     <h3>4 Amigos 2026</h3>
-    <p>📍 Niterói – RJ · Bilheteria Express</p>
+    <p>20/06/2026 · Clube Naval Charitas, Niterói – RJ · Bilheteria Express</p>
     <div class="modal-grid">
-      <div class="modal-stat"><div class="mv">855</div><div class="ml">Vendidos</div></div>
-      <div class="modal-stat"><div class="mv">R$ 79.274</div><div class="ml">Arrecadado</div></div>
-      <div class="modal-stat"><div class="mv">1.950</div><div class="ml">Disponíveis</div></div>
-      <div class="modal-stat"><div class="mv" style="color:var(--red)">R$ 80.726</div><div class="ml">Falta para breakeven</div></div>
+      <div class="modal-stat"><div class="mv">853</div><div class="ml">Vendidos</div></div>
+      <div class="modal-stat"><div class="mv">R$ 79.034</div><div class="ml">Arrecadado</div></div>
+      <div class="modal-stat"><div class="mv">1.952</div><div class="ml">Disponíveis</div></div>
+      <div class="modal-stat"><div class="mv" style="color:var(--red)">R$ 80.966</div><div class="ml">Falta para breakeven</div></div>
     </div>
     <div class="modal-strategy">
       <h4>💡 Estratégias Recomendadas</h4>
@@ -1241,10 +1505,10 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:18px;
     <div class="modal-grid">
       <div class="modal-stat"><div class="mv">0</div><div class="ml">Pagos</div></div>
       <div class="modal-stat"><div class="mv">0</div><div class="ml">Cortesias</div></div>
-      <div class="modal-stat"><div class="mv">720</div><div class="ml">Arena Canarinho (bar)</div></div>
-      <div class="modal-stat"><div class="mv" style="color:var(--amber)">R$ 25.200</div><div class="ml">Bar 720 × R$35</div></div>
-      <div class="modal-stat"><div class="mv" style="color:var(--red)">27,3%</div><div class="ml">Breakeven (custo R$92.391)</div></div>
-      <div class="modal-stat"><div class="mv" style="color:var(--red)">R$ 67.191</div><div class="ml">Falta para breakeven</div></div>
+      <div class="modal-stat"><div class="mv">768</div><div class="ml">Arena Canarinho (bar)</div></div>
+      <div class="modal-stat"><div class="mv" style="color:var(--amber)">R$ 26.880</div><div class="ml">Bar 768 × R$35</div></div>
+      <div class="modal-stat"><div class="mv" style="color:var(--red)">29,1%</div><div class="ml">Breakeven (custo R$92.391)</div></div>
+      <div class="modal-stat"><div class="mv" style="color:var(--red)">R$ 65.511</div><div class="ml">Falta para breakeven</div></div>
     </div>
     <div class="modal-strategy">
       <h4>💡 Push urgente antes de 27/06</h4>
@@ -1265,18 +1529,18 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:18px;
     <div class="modal-grid">
       <div class="modal-stat"><div class="mv">4</div><div class="ml">Pagos</div></div>
       <div class="modal-stat"><div class="mv">0</div><div class="ml">Cortesias</div></div>
-      <div class="modal-stat"><div class="mv">618</div><div class="ml">Arena Canarinho (bar)</div></div>
-      <div class="modal-stat"><div class="mv">622</div><div class="ml">Total público</div></div>
+      <div class="modal-stat"><div class="mv">659</div><div class="ml">Arena Canarinho (bar)</div></div>
+      <div class="modal-stat"><div class="mv">663</div><div class="ml">Total público</div></div>
       <div class="modal-stat"><div class="mv">R$ 300</div><div class="ml">Receita ingresso</div></div>
-      <div class="modal-stat"><div class="mv" style="color:var(--amber)">R$ 22.070</div><div class="ml">Total (ingresso + bar)</div></div>
-      <div class="modal-stat"><div class="mv" style="color:var(--red)">23,9%</div><div class="ml">Breakeven (custo R$92.391)</div></div>
-      <div class="modal-stat"><div class="mv" style="color:var(--red)">R$ 70.321</div><div class="ml">Falta para breakeven</div></div>
+      <div class="modal-stat"><div class="mv" style="color:var(--amber)">R$ 23.505</div><div class="ml">Total (ingresso + bar)</div></div>
+      <div class="modal-stat"><div class="mv" style="color:var(--red)">25,4%</div><div class="ml">Breakeven (custo R$92.391)</div></div>
+      <div class="modal-stat"><div class="mv" style="color:var(--red)">R$ 68.886</div><div class="ml">Falta para breakeven</div></div>
     </div>
   </div>
 </div>
 
 <footer>
-  Dashboard Axis Música · Entretenimento · Corporativo &nbsp;·&nbsp; Atualizado 10/06/2026 &nbsp;·&nbsp;
+  Dashboard Axis Música · Entretenimento · Corporativo &nbsp;·&nbsp; Atualizado 15/06/2026 &nbsp;·&nbsp;
   <a href="https://produtor.ticket360.com.br/produtor/vendas" target="_blank" style="color:#ff6b00">Ticket360</a> &nbsp;·&nbsp;
   <a href="https://www.bilheteriaexpress.com.br/produtor/login" target="_blank" style="color:#6c3fc5">Bilheteria Express</a> &nbsp;·&nbsp;
   <a href="https://app.ingressodigital.com" target="_blank" style="color:#0066cc">Ingresso Digital</a> &nbsp;·&nbsp;
@@ -1303,34 +1567,34 @@ new Chart(document.getElementById('beloDonut'), {
   options: { cutout: '78%', plugins: { legend: { display: false }, tooltip: { enabled: false } }, animation: { duration: 1200 } }
 });
 
-// BREAKEVEN CHART
-window._breakevenChart = window._breakevenChart = new Chart(document.getElementById('breakevenChart'), {
-  type: 'bar',
-  data: {
-    labels: ['Belo In Concert','4 Amigos','Gamadinho','Tá Na Mente','Matuê & Brandão','FF 3 datas','Chico Chico','ZOOM'],
-    datasets: [{
-      label: 'Breakeven %',
-      data: [17.1, 49.5, 27.3, 23.9, 35.2, 0, 0, 0],
-      backgroundColor: ['#7c3aed','#d97706','#d97706','#d97706','#d97706','#9ca3af','#9ca3af','#9ca3af'],
-      borderRadius: 6,
-      maxBarThickness: 60
-    },
-    { data: [100,100,100,100,100,100,100,100], type:'line', borderColor:'rgba(200,16,46,0.4)',
-      borderDash:[6,3], pointRadius:0, fill:false, label:'Meta 100%' }
-    ]
-  },
-  options: {
-    responsive: true,
-    plugins: {
-      legend: { display: false },
-      tooltip: { callbacks: { label: ctx => ` ${ctx.raw >= 100 ? '✅ ' : ''}${ctx.raw}% breakeven` } }
-    },
-    scales: {
-      y: { max: 150, ticks: { callback: v => v + '%' } },
-      x: { ticks: { font: { size: 10 } } }
-    }
-  }
-});
+// BREAKEVEN DONUT CHARTS
+(function() {
+  const events = [
+    { id:'d-belo',        pct:17.1,  color:'#7c3aed' },
+    { id:'d-4amigos',     pct:49.4,  color:'#d97706' },
+    { id:'d-piquenovo',   pct:100,   color:'#16a34a' },
+    { id:'d-djzullu',     pct:100,   color:'#16a34a' },
+    { id:'d-brunodiegues',pct:100,   color:'#16a34a' },
+    { id:'d-gamadinho',   pct:29.1,  color:'#d97706' },
+    { id:'d-tamente',     pct:25.4,  color:'#d97706' },
+    { id:'d-ff3',         pct:0,     color:'#9ca3af' },
+    { id:'d-matue',       pct:36.4,  color:'#d97706' },
+    { id:'d-chico',       pct:0,     color:'#9ca3af' },
+    { id:'d-zoom',        pct:0,     color:'#9ca3af' },
+  ];
+  events.forEach(function(ev) {
+    const el = document.getElementById(ev.id);
+    if (!el) return;
+    const fill = Math.min(ev.pct, 100);
+    new Chart(el, {
+      type: 'doughnut',
+      data: { datasets: [{ data: [fill, 100 - fill], backgroundColor: [ev.color, '#f3f4f6'], borderWidth: 0 }] },
+      options: { cutout: '72%', plugins: { legend:{display:false}, tooltip:{enabled:false} }, animation:{duration:900} }
+    });
+  });
+  // keep ref for updater compatibility
+  window._breakevenChart = null;
+})();
 
 
 // ════════════════════════════════════════════════════════
@@ -1488,7 +1752,7 @@ function applyDados() {
 }
 
 function updateChart() {
-  if (!window._breakevenChart) return;
+  if (!window._breakevenChart) { // donuts updated at init
   const ORDER = ['belo','4amigos','piquenovo','djzullu','brunodiegues','gamadinho','tamente','ff3datas','chico','zoom'];
   const data = ORDER.map(id => window._chartDataArr?.[id] ?? 0);
   window._breakevenChart.data.datasets[0].data = data;
@@ -1496,6 +1760,7 @@ function updateChart() {
     p >= 100 ? '#16a34a' : p >= 50 ? '#d97706' : p > 0 ? '#7c3aed' : '#9ca3af'
   );
   window._breakevenChart.update();
+  }
 }
 
 // ── Editor UI ──
@@ -1654,6 +1919,70 @@ window.addEventListener('load', () => { [0, 100, 400].forEach(t => setTimeout(ap
         <button onclick="resetAllEditor()" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#aaa;border-radius:8px;padding:9px 16px;cursor:pointer;font-size:13px">Resetar TUDO</button>
         <button onclick="saveEditor()" style="background:linear-gradient(135deg,#7c3aed,#5b21b6);border:none;color:#fff;border-radius:8px;padding:10px 22px;cursor:pointer;font-size:14px;font-weight:700">💾 Salvar</button>
       </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-piquenovo" onclick="if(event.target===this)closeModal('piquenovo')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('piquenovo')">✕</button>
+    <h3>🏆 Fun Fest — Pique Novo & Rogerinho</h3>
+    <p>13/06/2026 · Shopping Park Sul, Barra da Tijuca, RJ · <a href="https://produtor.ticket360.com.br/produtor/vendas/detalhe/33153" target="_blank" style="color:var(--red)">Ticket360 ↗</a></p>
+    <div class="modal-grid">
+      <div class="modal-stat"><div class="mv" style="color:var(--green)">5.465</div><div class="ml">Ingressos pagos</div></div>
+      <div class="modal-stat"><div class="mv">110</div><div class="ml">Cortesias</div></div>
+      <div class="modal-stat"><div class="mv" style="color:var(--green)">5.575</div><div class="ml">Total público</div></div>
+      <div class="modal-stat"><div class="mv">R$ 6.080</div><div class="ml">Bilheteria</div></div>
+      <div class="modal-stat"><div class="mv" style="color:var(--green)">R$ 195.125</div><div class="ml">Bar 5.575 × R$35</div></div>
+      <div class="modal-stat"><div class="mv" style="color:var(--green)">155,6% ✅</div><div class="ml">Breakeven (custo R$129.348)</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-djzullu" onclick="if(event.target===this)closeModal('djzullu')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('djzullu')">✕</button>
+    <h3>✅ Fun Fest — DJ Zullu & Pokémon DJ</h3>
+    <p>19/06/2026 · Shopping Park Sul, Barra da Tijuca, RJ · <a href="https://produtor.ticket360.com.br/produtor/vendas/detalhe/33154" target="_blank" style="color:var(--red)">Ticket360 ↗</a></p>
+    <div class="modal-grid">
+      <div class="modal-stat"><div class="mv" style="color:var(--green)">4.467</div><div class="ml">Ingressos pagos</div></div>
+      <div class="modal-stat"><div class="mv">100</div><div class="ml">Cortesias</div></div>
+      <div class="modal-stat"><div class="mv" style="color:var(--green)">4.567</div><div class="ml">Total público</div></div>
+      <div class="modal-stat"><div class="mv">R$ 420</div><div class="ml">Bilheteria</div></div>
+      <div class="modal-stat"><div class="mv" style="color:var(--green)">R$ 159.845</div><div class="ml">Bar 4.567 × R$35</div></div>
+      <div class="modal-stat"><div class="mv" style="color:var(--green)">123,9% ✅</div><div class="ml">Breakeven (custo R$129.348)</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-brunodiegues" onclick="if(event.target===this)closeModal('brunodiegues')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('brunodiegues')">✕</button>
+    <h3>✅ Fun Fest — Bruno Diegues</h3>
+    <p>24/06/2026 · Shopping Park Sul, Barra da Tijuca, RJ · <a href="https://produtor.ticket360.com.br/produtor/vendas/detalhe/33155" target="_blank" style="color:var(--red)">Ticket360 ↗</a></p>
+    <div class="modal-grid">
+      <div class="modal-stat"><div class="mv" style="color:var(--green)">4.319</div><div class="ml">Ingressos pagos</div></div>
+      <div class="modal-stat"><div class="mv">100</div><div class="ml">Cortesias</div></div>
+      <div class="modal-stat"><div class="mv" style="color:var(--green)">4.419</div><div class="ml">Total público</div></div>
+      <div class="modal-stat"><div class="mv">R$ 330</div><div class="ml">Bilheteria</div></div>
+      <div class="modal-stat"><div class="mv" style="color:var(--green)">R$ 154.665</div><div class="ml">Bar 4.419 × R$35</div></div>
+      <div class="modal-stat"><div class="mv" style="color:var(--green)">119,8% ✅</div><div class="ml">Breakeven (custo R$129.348)</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-matue" onclick="if(event.target===this)closeModal('matue')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('matue')">✕</button>
+    <h3>🎤 Matuê e Brandão — Guarulhos</h3>
+    <p>10/07/2026 · Espaço Inter, Guarulhos – SP · <a href="https://www.bilheteriaexpress.com.br/produtor/login" target="_blank" style="color:#6c3fc5">Bilheteria Express ↗</a></p>
+    <div class="modal-grid">
+      <div class="modal-stat"><div class="mv" style="color:var(--green)">525</div><div class="ml">Ingressos vendidos</div></div>
+      <div class="modal-stat"><div class="mv">R$ 63.670</div><div class="ml">Arrecadado</div></div>
+      <div class="modal-stat"><div class="mv">R$ 121</div><div class="ml">Ticket médio</div></div>
+      <div class="modal-stat"><div class="mv">928</div><div class="ml">Em estoque</div></div>
+      <div class="modal-stat"><div class="mv" style="color:var(--amber)">36,4%</div><div class="ml">Breakeven (custo R$175.000)</div></div>
+      <div class="modal-stat"><div class="mv" style="color:var(--red)">R$ 111.330</div><div class="ml">Falta para breakeven</div></div>
     </div>
   </div>
 </div>
