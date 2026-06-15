@@ -264,6 +264,24 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:18px;
     opacity: 1;
   }
 
+
+/* DONUT INGRESSO GRID */
+.donut-section-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;
+  color:var(--muted);margin:20px 0 10px;display:flex;align-items:center;gap:8px}
+.donut-section-title span{width:4px;height:14px;background:var(--red);border-radius:2px}
+.donut-section-title.ing span{background:#0066cc}
+.donut-section-title.dig span{background:#16a34a}
+
+/* DIGITAL ACTIONS */
+.digital-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;padding-bottom:18px}
+.ac-digital{background:#f8faff;border-radius:12px;padding:14px;border:1px solid #e8edf8}
+.acd-header{padding-left:10px;margin-bottom:10px}
+.acd-title{font-size:10px;font-weight:800;color:var(--text);line-height:1.3}
+.acd-date{font-size:9px;color:var(--muted);margin-top:2px}
+.acd-list{list-style:none;display:flex;flex-direction:column;gap:5px}
+.acd-list li{font-size:10px;color:var(--text);line-height:1.4;padding-left:14px;position:relative}
+.acd-list li::before{content:'→';position:absolute;left:0;color:#0066cc;font-weight:700}
+
 </style>
 </head>
 <body>
@@ -455,6 +473,139 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:18px;
           <div class="donut-status gray">Aguardando</div>
         </div>
       </div>
+
+        <!-- BEV INGRESSO DONUTS -->
+        <div class="donut-section-title ing"><span></span>Breakeven por Ingresso Pago (sem bar / sem cortesias)</div>
+        <div class="donut-grid">
+        <div class="donut-card">
+          <div class="donut-name">🎤 Belo In Concert</div>
+          <div class="donut-wrap"><canvas id="di-belo"></canvas>
+            <div class="donut-center"><div class="donut-pct purple">13.3%</div><div class="donut-lbl">ingresso</div></div></div>
+          <div class="donut-status purple">Em vendas</div>
+        </div>
+        <div class="donut-card">
+          <div class="donut-name">🎭 4 Amigos 2026</div>
+          <div class="donut-wrap"><canvas id="di-4amigos"></canvas>
+            <div class="donut-center"><div class="donut-pct amber">49.4%</div><div class="donut-lbl">ingresso</div></div></div>
+          <div class="donut-status amber">Em andamento</div>
+        </div>
+        <div class="donut-card">
+          <div class="donut-name">🏆 Fun Fest — Pique Novo</div>
+          <div class="donut-wrap"><canvas id="di-piquenovo"></canvas>
+            <div class="donut-center"><div class="donut-pct amber">4.7%</div><div class="donut-lbl">ingresso</div></div></div>
+          <div class="donut-status amber">★ Só bar</div>
+        </div>
+        <div class="donut-card">
+          <div class="donut-name">✅ Fun Fest — DJ Zullu</div>
+          <div class="donut-wrap"><canvas id="di-djzullu"></canvas>
+            <div class="donut-center"><div class="donut-pct gray">0.3%</div><div class="donut-lbl">ingresso</div></div></div>
+          <div class="donut-status gray">★ Só bar</div>
+        </div>
+        <div class="donut-card">
+          <div class="donut-name">✅ Fun Fest — Bruno Diegues</div>
+          <div class="donut-wrap"><canvas id="di-brunodiegues"></canvas>
+            <div class="donut-center"><div class="donut-pct gray">0.3%</div><div class="donut-lbl">ingresso</div></div></div>
+          <div class="donut-status gray">★ Só bar</div>
+        </div>
+        <div class="donut-card">
+          <div class="donut-name">Fun Fest — Gamadinho</div>
+          <div class="donut-wrap"><canvas id="di-gamadinho"></canvas>
+            <div class="donut-center"><div class="donut-pct gray">0%</div><div class="donut-lbl">ingresso</div></div></div>
+          <div class="donut-status gray">★ Só bar</div>
+        </div>
+        <div class="donut-card">
+          <div class="donut-name">Fun Fest — Tá Na Mente</div>
+          <div class="donut-wrap"><canvas id="di-tamente"></canvas>
+            <div class="donut-center"><div class="donut-pct gray">0.3%</div><div class="donut-lbl">ingresso</div></div></div>
+          <div class="donut-status gray">★ Só bar</div>
+        </div>
+        <div class="donut-card">
+          <div class="donut-name">Fun Fest — 08·14·19/07</div>
+          <div class="donut-wrap"><canvas id="di-ff3"></canvas>
+            <div class="donut-center"><div class="donut-pct gray">0%</div><div class="donut-lbl">ingresso</div></div></div>
+          <div class="donut-status gray">Sem vendas</div>
+        </div>
+        <div class="donut-card">
+          <div class="donut-name">Matuê e Brandão</div>
+          <div class="donut-wrap"><canvas id="di-matue"></canvas>
+            <div class="donut-center"><div class="donut-pct amber">36.4%</div><div class="donut-lbl">ingresso</div></div></div>
+          <div class="donut-status amber">Em andamento</div>
+        </div>
+        <div class="donut-card">
+          <div class="donut-name">Chico Chico</div>
+          <div class="donut-wrap"><canvas id="di-chico"></canvas>
+            <div class="donut-center"><div class="donut-pct gray">0%</div><div class="donut-lbl">ingresso</div></div></div>
+          <div class="donut-status gray">Sem vendas</div>
+        </div>
+        <div class="donut-card">
+          <div class="donut-name">ZOOM Music Festival</div>
+          <div class="donut-wrap"><canvas id="di-zoom"></canvas>
+            <div class="donut-center"><div class="donut-pct gray">0%</div><div class="donut-lbl">ingresso</div></div></div>
+          <div class="donut-status gray">Sem vendas</div>
+        </div>
+        </div>
+
+        <!-- DIGITAL ACTIONS -->
+        <div class="donut-section-title dig"><span></span>Possíveis Ações Digitais por Evento</div>
+        <div class="digital-grid">
+      <div class="ac-digital">
+        <div class="acd-header" style="border-left:3px solid #7c3aed">
+          <div class="acd-title">🎤 Belo In Concert</div>
+          <div class="acd-date">01/08</div>
+        </div>
+        <ul class="acd-list"><li>Meta Ads segmentado por fãs de pagode/samba no Rio</li><li>TikTok countdown "52 dias para o Belo" com hits virais</li><li>Remarketing para visitantes da página T360 que não converteram</li><li>Stories diários com trechos de shows anteriores do Belo</li><li>Email marketing para base Bilheteria Express com early bird</li></ul>
+      </div>
+      <div class="ac-digital">
+        <div class="acd-header" style="border-left:3px solid #6c3fc5">
+          <div class="acd-title">🎭 4 Amigos 2026</div>
+          <div class="acd-date">?</div>
+        </div>
+        <ul class="acd-list"><li>Campanha "4 Lendas, 1 Noite" com vídeo teaser dos 4 artistas juntos</li><li>Ads separados segmentados por fã de cada artista (4 criativos distintos)</li><li>Collab com cada artista nas redes sociais (reels/stories)</li><li>Email para base Bilheteria Express + Ingresso Digital</li><li>Sorteio de par de ingressos como gerador de engajamento</li></ul>
+      </div>
+      <div class="ac-digital">
+        <div class="acd-header" style="border-left:3px solid #d97706">
+          <div class="acd-title">Fun Fest — Gamadinho</div>
+          <div class="acd-date">27/06</div>
+        </div>
+        <ul class="acd-list"><li>Ads urgência "Esta semana!" com desconto last-minute</li><li>Remarketing para público das datas anteriores do Fun Fest</li><li>Stories com o Gamadinho confirmando presença no show</li><li>Push notification via listas de WhatsApp da base Arena Canarinho</li></ul>
+      </div>
+      <div class="ac-digital">
+        <div class="acd-header" style="border-left:3px solid #d97706">
+          <div class="acd-title">Fun Fest — Tá Na Mente</div>
+          <div class="acd-date">04/07</div>
+        </div>
+        <ul class="acd-list"><li>Stories countdown "Última semana!" com o artista</li><li>Meta Ads geolocalizado Shopping Park Sul — raio 15 km</li><li>Remarketing para quem foi nas datas anteriores e não comprou para Tá Na Mente</li><li>Live rápida do artista anunciando o show</li></ul>
+      </div>
+      <div class="ac-digital">
+        <div class="acd-header" style="border-left:3px solid #C8102E">
+          <div class="acd-title">Fun Fest — 08·14·19/07</div>
+          <div class="acd-date">3 datas</div>
+        </div>
+        <ul class="acd-list"><li>🚨 URGENTE: Anunciar artistas imediatamente nas redes</li><li>TikTok/Reels do lineup revelado com chamada para compra antecipada</li><li>Email blast para toda base Fun Fest com link de compra direto</li><li>Remarketing agressivo para público das 5 datas já realizadas</li><li>Oferta "Passaporte 3 Datas" com desconto bundle</li></ul>
+      </div>
+      <div class="ac-digital">
+        <div class="acd-header" style="border-left:3px solid #ff6b00">
+          <div class="acd-title">Matuê e Brandão</div>
+          <div class="acd-date">Guarulhos</div>
+        </div>
+        <ul class="acd-list"><li>TikTok Ads segmentado por fãs de trap/rap (público 18–28)</li><li>Spotify Ads no intervalo de playlists de trap BR</li><li>Collab com influencers de trap do YouTube e TikTok</li><li>Remarketing para seguidores do Matuê que ainda não compraram</li><li>YouTube pre-roll nos clipes do Matuê</li></ul>
+      </div>
+      <div class="ac-digital">
+        <div class="acd-header" style="border-left:3px solid #1a1a2e">
+          <div class="acd-title">Chico Chico — Let It Burn</div>
+          <div class="acd-date">22/08</div>
+        </div>
+        <ul class="acd-list"><li>Press release em portais culturais (Cultura, Trip, Etc.)</li><li>Instagram Ads para fãs de rock alternativo/indie SP</li><li>Spotify editorial pitch para playlist "Rock BR Atual"</li><li>Parceria com rádios culturais (Rádio USP, Eldorado)</li><li>Stories com bastidores de criação do novo álbum</li></ul>
+      </div>
+      <div class="ac-digital">
+        <div class="acd-header" style="border-left:3px solid #0f172a">
+          <div class="acd-title">ZOOM Music Festival</div>
+          <div class="acd-date">17/10</div>
+        </div>
+        <ul class="acd-list"><li>Campanha de festival com múltiplos artistas anunciados em fases</li><li>LinkedIn para patrocinadores e marcas parceiras</li><li>Parceria com influencers de festival (público 20–35)</li><li>Instagram "Quem você quer no ZOOM?" para engajamento e co-criação</li><li>Email para base de festivais anteriores com early bird</li></ul>
+      </div>
+        </div>
+
     </div>
 
     <div class="tbl-wrap">
@@ -900,7 +1051,7 @@ footer{text-align:center;font-size:10px;color:var(--muted);padding:18px;
         <div class="sc-header">
           <div class="sc-icon" style="background:#fef3c7">🍺</div>
           <div><div class="sc-title">Bar como Produto — Maximizar Receita R$35/pessoa</div>
-          <div class="sc-sub">Principal fonte de receita Fun Fest — 4.000–5.000 pessoas por data</div></div>
+          <div class="sc-sub">Principal fonte de receita Fun Fest — 4.000 pessoas por data (teto máximo)</div></div>
         </div>
         <ul class="sc-actions">
           <li>Negociar <strong>patrocínio exclusivo de cerveja</strong> (Brahma, Heineken, Itaipava) — pode render R$30k–100k extra por data</li>
@@ -1594,6 +1745,34 @@ new Chart(document.getElementById('beloDonut'), {
   });
   // keep ref for updater compatibility
   window._breakevenChart = null;
+
+// INGRESSO-ONLY BREAKEVEN DONUTS
+(function() {
+  const evs = [
+    {id:'di-belo',        pct:13.3, color:'#7c3aed'},
+    {id:'di-4amigos',     pct:49.4, color:'#d97706'},
+    {id:'di-piquenovo',   pct:4.7,  color:'#d97706'},
+    {id:'di-djzullu',     pct:0.3,  color:'#9ca3af'},
+    {id:'di-brunodiegues',pct:0.3,  color:'#9ca3af'},
+    {id:'di-gamadinho',   pct:0,    color:'#9ca3af'},
+    {id:'di-tamente',     pct:0.3,  color:'#9ca3af'},
+    {id:'di-ff3',         pct:0,    color:'#9ca3af'},
+    {id:'di-matue',       pct:36.4, color:'#d97706'},
+    {id:'di-chico',       pct:0,    color:'#9ca3af'},
+    {id:'di-zoom',        pct:0,    color:'#9ca3af'},
+  ];
+  evs.forEach(function(ev) {
+    var el = document.getElementById(ev.id);
+    if (!el) return;
+    var fill = Math.min(ev.pct, 100);
+    new Chart(el, {
+      type: 'doughnut',
+      data: {datasets:[{data:[fill,100-fill],backgroundColor:[ev.color,'#f3f4f6'],borderWidth:0}]},
+      options:{cutout:'72%',plugins:{legend:{display:false},tooltip:{enabled:false}},animation:{duration:900}}
+    });
+  });
+})();
+
 })();
 
 
