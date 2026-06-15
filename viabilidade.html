@@ -3,942 +3,741 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Viabilidade de Evento — Axis</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<title>Viabilidade · Axis</title>
 <style>
-
-/* ══════════════════════════════════════════
-   PRINT / PDF STYLES
-   ══════════════════════════════════════════ */
-@media print {
-  @page { size: A4 landscape; margin: 14mm 12mm; }
-
-  body { background: #fff !important; font-size: 10px !important; }
-
-  /* Hide interactive & nav elements */
-  header, .scenarios-section .slider-row, .slider-note,
-  #chartBar, .reset-btn, .hlinks, .fab { display: none !important; }
-
-  /* PDF header — Axis branding */
-  .pdf-header { display: flex !important; }
-
-  /* Force single-column on print */
-  .main-grid { grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
-  .kpi-strip { grid-template-columns: repeat(6,1fr) !important; gap: 6px !important; }
-  .config-grid { grid-template-columns: 2fr repeat(5,1fr) !important; gap: 8px !important; }
-  .scenarios-grid { grid-template-columns: repeat(4,1fr) !important; gap: 8px !important; }
-  .charts-row { display: none !important; }
-
-  .container { padding: 0 !important; max-width: 100% !important; }
-  .event-config, .panel, .kpi, .scenarios-section { box-shadow: none !important; break-inside: avoid; }
-  .kpi-val { font-size: 14px !important; }
-  .kpi-lbl { font-size: 7.5px !important; }
-
-  /* Remove colored backgrounds that don't print well */
-  .kpi { border-top-width: 3px !important; }
-
-  /* PDF footer on every page */
-  .pdf-footer { display: block !important; }
-}
-
-/* PDF header (hidden on screen) */
-.pdf-header {
-  display: none;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 0 12px;
-  border-bottom: 3px solid #C8102E;
-  margin-bottom: 14px;
-}
-.pdf-logo-wrap {
-  display: flex;
-  align-items: center;
-  gap: 0;
-}
-.pdf-logo-text {
-  font-size: 32px;
-  font-weight: 900;
-  font-style: italic;
-  color: #1a1a2e;
-  letter-spacing: -1px;
-  line-height: 1;
-}
-.pdf-logo-badge {
-  background: #C8102E;
-  color: #fff;
-  font-size: 9px;
-  font-weight: 900;
-  letter-spacing: .5px;
-  text-transform: uppercase;
-  padding: 5px 10px;
-  margin-left: 8px;
-  line-height: 1.4;
-  clip-path: polygon(6px 0%, 100% 0%, calc(100% - 0px) 100%, 0% 100%);
-}
-.pdf-header-right {
-  text-align: right;
-  font-size: 10px;
-  color: #6b7280;
-}
-.pdf-header-right strong { font-size: 12px; color: #1a1a2e; display: block; margin-bottom: 2px; }
-.pdf-header-right .pdf-date { font-size: 9px; }
-
-/* PDF footer */
-.pdf-footer {
-  display: none;
-  text-align: center;
-  font-size: 8px;
-  color: #9ca3af;
-  margin-top: 16px;
-  padding-top: 8px;
-  border-top: 1px solid #e8e8ec;
-}
-
 *{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --red:#C8102E;--gray:#f4f4f6;--gray2:#e8e8ec;--text:#1a1a2e;--muted:#6b7280;
-  --green:#16a34a;--amber:#d97706;--blue:#2563eb;--purple:#7c3aed;--teal:#0d9488;
-  color-scheme:light
+:root{--bg:#f1f5f9;--panel:#fff;--nav:#0f172a;--red:#ef4444;--green:#16a34a;--text:#1e293b;--muted:#64748b;--border:#e2e8f0;--input-bg:#f8fafc}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);font-size:13px;min-height:100vh}
+input[type=number],input[type=text]{border:1px solid var(--border);border-radius:4px;padding:4px 6px;background:var(--input-bg);width:100%;color:var(--text);font-size:13px;transition:border .15s}
+input:focus{outline:none;border-color:#3b82f6}
+input[type=number]{text-align:right}
+button{cursor:pointer;border:none;border-radius:6px;font-size:13px;font-weight:600;transition:.15s}
+
+/* HEADER */
+#header{background:var(--nav);padding:12px 20px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.4)}
+.logo-box{display:flex;flex-direction:column;align-items:center;flex-shrink:0}
+.logo-text{color:#fff;font-size:22px;font-weight:900;font-style:italic;letter-spacing:-1px;line-height:1}
+.logo-badge{background:var(--red);color:#fff;font-size:7px;font-weight:700;letter-spacing:.5px;padding:2px 4px;border-radius:2px;margin-top:2px;white-space:nowrap}
+.evento-fields{flex:1;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.evento-fields input{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;padding:6px 10px;border-radius:6px}
+.evento-fields input::placeholder{color:rgba(255,255,255,.5)}
+.evento-fields input:focus{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.5)}
+.ef-nome{flex:2;min-width:180px;font-size:15px;font-weight:700}
+.ef-sm{flex:1;min-width:100px}
+.header-btns{display:flex;gap:8px;flex-shrink:0}
+.btn-pdf{background:var(--red);color:#fff;padding:8px 16px}
+.btn-pdf:hover{background:#dc2626}
+.btn-novo{background:rgba(255,255,255,.15);color:#fff;padding:8px 16px;border:1px solid rgba(255,255,255,.3)}
+.btn-novo:hover{background:rgba(255,255,255,.25)}
+
+/* KPIs */
+#kpis{background:var(--nav);border-top:1px solid rgba(255,255,255,.1);padding:10px 20px;display:grid;grid-template-columns:repeat(6,1fr);gap:10px;position:sticky;top:57px;z-index:99}
+.kpi{background:rgba(255,255,255,.07);border-radius:6px;padding:8px 10px;text-align:center}
+.kpi-label{color:rgba(255,255,255,.5);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.kpi-val{font-size:15px;font-weight:700;color:#fff;margin-top:2px;white-space:nowrap}
+.kpi-val.pos{color:#4ade80}
+.kpi-val.neg{color:#f87171}
+.kpi-sub{font-size:10px;color:rgba(255,255,255,.4);margin-top:1px}
+
+/* TABS */
+#tabs{background:var(--nav);display:flex;gap:2px;padding:0 20px;border-top:1px solid rgba(255,255,255,.08)}
+.tab{padding:10px 20px;color:rgba(255,255,255,.5);font-weight:600;font-size:13px;cursor:pointer;border-bottom:3px solid transparent;transition:.15s}
+.tab.active{color:#fff;border-bottom-color:var(--red)}
+.tab:hover{color:rgba(255,255,255,.8)}
+
+/* CONTENT */
+#content{padding:20px;max-width:1400px;margin:0 auto}
+.tab-pane{display:none}
+.tab-pane.active{display:block}
+
+/* SECTION */
+.section{background:var(--panel);border-radius:10px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.07);overflow:hidden}
+.section-hdr{background:var(--nav);color:#fff;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;font-weight:700;font-size:13px;letter-spacing:.3px}
+.section-hdr .totals{display:flex;gap:20px;font-size:12px;font-weight:400}
+.section-hdr .totals span{opacity:.7}
+.section-hdr .totals strong{opacity:1}
+.section-body{padding:12px 16px}
+
+/* SETOR */
+.setor{margin-bottom:12px;border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.setor-hdr{background:#1e293b;color:#fff;padding:9px 12px;display:flex;align-items:center;gap:8px;user-select:none}
+.setor-hdr .setor-nome{flex:1;font-weight:700;font-size:13px}
+.setor-hdr .setor-totals{display:flex;gap:16px;font-size:12px}
+.setor-hdr .st-val{opacity:.8}
+.setor-hdr .st-val strong{color:#93c5fd}
+.setor-hdr .chevron{transition:transform .2s;opacity:.6;font-size:11px;cursor:pointer;padding:2px 4px}
+.setor-hdr .chevron.open{transform:rotate(90deg)}
+.setor-body{background:#f8fafc;padding:10px}
+.btn-s{font-size:11px;padding:3px 8px;border-radius:4px}
+.del-setor{background:rgba(239,68,68,.2);color:#fca5a5}
+.del-setor:hover{background:rgba(239,68,68,.4)}
+.rename-btn{background:rgba(255,255,255,.15);color:rgba(255,255,255,.7)}
+.rename-btn:hover{background:rgba(255,255,255,.25)}
+
+/* LOTE */
+.lote{background:#fff;border:1px solid var(--border);border-radius:6px;margin-bottom:8px;overflow:hidden}
+.lote-hdr{background:#334155;color:#fff;padding:7px 10px;display:flex;align-items:center;gap:8px}
+.lote-nome-input{background:transparent;border:none;color:#fff;font-weight:600;font-size:12px;min-width:80px;cursor:text}
+.lote-nome-input:focus{outline:none;border-bottom:1px solid rgba(255,255,255,.4)}
+.lote-hdr .lote-totals{flex:1;display:flex;gap:16px;font-size:11px;color:rgba(255,255,255,.7);justify-content:flex-end}
+.del-lote{background:rgba(239,68,68,.25);color:#fca5a5;font-size:11px;padding:2px 8px;border-radius:4px}
+.del-lote:hover{background:rgba(239,68,68,.45)}
+.lv-chevron{font-size:10px;opacity:.6;transition:transform .2s;cursor:pointer;padding:2px 4px}
+.lv-chevron.open{transform:rotate(90deg)}
+.lote-table{width:100%;border-collapse:collapse}
+.lote-table th{background:#f1f5f9;font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);padding:6px 8px;font-weight:700;border-bottom:1px solid var(--border);text-align:center}
+.lote-table th:first-child{text-align:left}
+.lote-table td{padding:5px 8px;border-bottom:1px solid var(--border);vertical-align:middle}
+.lote-table tr:last-child td{border-bottom:none}
+.lote-table tr:nth-child(even) td{background:#fafafa}
+.tipo-label{font-weight:600;color:var(--text);font-size:12px;white-space:nowrap}
+.auto-val{text-align:right;font-weight:700;color:#0f172a;font-size:12px}
+.real-val{text-align:right;font-weight:700;color:#16a34a;font-size:12px}
+
+/* ADD BTNS */
+.add-btn{display:inline-flex;align-items:center;gap:5px;background:#f1f5f9;color:var(--muted);padding:5px 12px;border-radius:20px;font-size:12px;border:1px dashed var(--border);margin-top:6px;margin-right:6px}
+.add-btn:hover{background:#e2e8f0;color:var(--text)}
+
+/* OUTRAS */
+.outras-table{width:100%;border-collapse:collapse}
+.outras-table th{background:#f1f5f9;font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);padding:7px 10px;font-weight:700;border-bottom:1px solid var(--border)}
+.outras-table td{padding:6px 10px;border-bottom:1px solid var(--border)}
+.outras-table tr:last-child td{border-bottom:none}
+.auto-row td{background:#fef9c3;font-style:italic;font-size:11px;color:var(--muted)}
+
+/* TOTAL */
+.total-row{background:var(--nav);color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:14px;border-radius:0 0 10px 10px;margin-bottom:16px}
+.total-row .tr-val{color:#4ade80}
+
+/* GRUPOS */
+.grupo{margin-bottom:12px;border-radius:8px;overflow:hidden;border:1px solid var(--border)}
+.grupo-hdr{padding:10px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+.grupo-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+.grupo-nome{font-weight:700;font-size:13px;flex:1}
+.grupo-totals{display:flex;gap:20px;font-size:12px}
+.grupo-totals .gt-val{color:var(--muted)}
+.grupo-totals .gt-val strong{color:var(--text)}
+.add-item-btn{background:#e2e8f0;color:var(--muted);font-size:11px;padding:3px 10px;border-radius:4px}
+.add-item-btn:hover{background:#cbd5e1}
+.del-grupo{background:rgba(239,68,68,.1);color:#ef4444;font-size:11px;padding:3px 8px;border-radius:4px}
+.del-grupo:hover{background:rgba(239,68,68,.2)}
+.g-chevron{font-size:11px;color:var(--muted);transition:transform .2s}
+.g-chevron.open{transform:rotate(90deg)}
+.grupo-body{border-top:1px solid var(--border)}
+.item-row{display:grid;grid-template-columns:1fr 150px 150px 90px 30px;gap:6px;padding:7px 14px;border-bottom:1px solid var(--border);align-items:center}
+.item-row:last-child{border-bottom:none}
+.item-row:nth-child(even){background:#fafafa}
+.item-desc input{background:transparent;border:none;font-size:12px;color:var(--text);width:100%}
+.item-desc input:focus{outline:none;border-bottom:1px solid #3b82f6}
+.item-delta{text-align:right;font-size:11px;font-weight:700}
+.item-delta.pos{color:var(--green)}
+.item-delta.neg{color:var(--red)}
+.del-item{background:none;color:#cbd5e1;font-size:14px;padding:0 4px}
+.del-item:hover{color:var(--red)}
+.items-header{display:grid;grid-template-columns:1fr 150px 150px 90px 30px;gap:6px;padding:6px 14px 4px;background:#f8fafc;border-bottom:1px solid var(--border)}
+.col-label{font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px;text-align:center}
+
+/* TAXAS */
+.taxas-section{background:#fef3c7;border:1px solid #fcd34d;border-radius:8px;padding:12px 16px;margin-bottom:12px}
+.taxas-title{font-weight:700;font-size:12px;color:#92400e;margin-bottom:8px}
+.taxa-row{display:grid;grid-template-columns:1fr 150px 150px;gap:6px;padding:5px 0;border-bottom:1px solid #fcd34d;align-items:center}
+.taxa-row:last-child{border-bottom:none;font-weight:700}
+.taxa-label{font-size:12px;color:#78350f}
+.taxa-val{text-align:right;font-size:12px;font-weight:700;color:#92400e;padding:4px 8px}
+
+/* ADD GRUPO */
+.add-grupo-wrap{display:flex;gap:8px;align-items:center}
+.add-grupo-wrap input[type=text]{flex:1;padding:7px 10px}
+.add-grupo-wrap button{background:var(--nav);color:#fff;padding:7px 14px}
+
+/* BREAKEVEN */
+.be-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.scenario-card{background:var(--panel);border:2px solid var(--border);border-radius:10px;padding:14px;text-align:center}
+.scenario-card.ok{border-color:#4ade80;background:#f0fdf4}
+.scenario-card.bad{border-color:#f87171;background:#fef2f2}
+.scenario-card.be{border-color:#fbbf24;background:#fffbeb}
+.sc-pct{font-size:26px;font-weight:900;margin-bottom:4px}
+.sc-pag{font-size:12px;color:var(--muted);margin-bottom:8px}
+.sc-rec{font-size:14px;font-weight:700;margin-bottom:3px}
+.sc-res{font-size:14px;font-weight:700}
+.sc-res.pos{color:var(--green)}
+.sc-res.neg{color:var(--red)}
+.sc-lbl{font-size:11px;color:var(--muted);margin-top:6px}
+
+.be-summary{background:var(--panel);border-radius:10px;padding:16px;border:1px solid var(--border);margin-bottom:16px}
+.be-summary-title{font-weight:700;font-size:14px;margin-bottom:12px;color:var(--nav)}
+.be-grid2{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.be-stat{text-align:center;padding:10px;background:#f8fafc;border-radius:8px}
+.be-stat-val{font-size:20px;font-weight:800;color:var(--nav)}
+.be-stat-label{font-size:11px;color:var(--muted);margin-top:3px}
+
+.gauge-wrap{position:relative;margin:0 auto 8px;width:240px;height:130px;overflow:hidden}
+.gauge-text{position:absolute;bottom:0;left:0;right:0;text-align:center}
+.gauge-pct{font-size:28px;font-weight:900;color:var(--nav)}
+.gauge-sub{font-size:11px;color:var(--muted)}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1000;align-items:center;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal-box{background:#fff;border-radius:12px;padding:28px;max-width:380px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.modal-box h3{font-size:18px;color:var(--nav);margin-bottom:8px}
+.modal-box p{color:var(--muted);font-size:13px;margin-bottom:20px;line-height:1.5}
+.modal-btns{display:flex;gap:10px;justify-content:center}
+.modal-cancel{background:#f1f5f9;color:var(--text);padding:9px 20px}
+.modal-cancel:hover{background:#e2e8f0}
+.modal-confirm{background:var(--red);color:#fff;padding:9px 20px}
+.modal-confirm:hover{background:#dc2626}
+
+/* PRINT */
+@media print{
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+  #tabs,#header .header-btns,.modal-overlay,.add-btn,.del-setor,.del-lote,.del-item,.del-grupo,.add-item-btn,.add-setor-btn,.add-grupo-wrap,.rename-btn{display:none!important}
+  body{background:#fff;font-size:11px}
+  #header{position:relative;top:auto!important;padding:10px 16px}
+  #kpis{position:relative;top:auto!important}
+  #content{padding:10px;max-width:100%}
+  .tab-pane{display:block!important}
+  .modal-overlay{display:none!important}
+  .section{break-inside:avoid}
+  .grupo{break-inside:avoid}
+  .setor{break-inside:avoid}
 }
-body{font-family:'Segoe UI',Arial,sans-serif;background:#f7f7fa;color:var(--text);min-height:100vh}
-
-header{background:#fff;border-bottom:3px solid var(--red);padding:12px 24px;
-  display:flex;align-items:center;justify-content:space-between;
-  box-shadow:0 2px 8px rgba(0,0,0,.07);position:sticky;top:0;z-index:100}
-.logo{font-size:20px;font-weight:900;color:var(--red)}
-.logo-sub{font-size:9px;color:var(--muted);font-weight:600;letter-spacing:1px}
-.hlinks{display:flex;gap:8px}
-.hlink{padding:6px 14px;border-radius:8px;font-size:11px;font-weight:700;text-decoration:none;transition:.2s}
-.hlink:hover{transform:translateY(-1px)}
-.hlink-gray{background:var(--gray);color:var(--text)}
-.hlink-red{background:var(--red);color:#fff}
-.header-right{text-align:right;font-size:12px;font-weight:700;color:var(--red)}
-.header-right small{display:block;font-size:10px;color:var(--muted);font-weight:400}
-.container{max-width:1440px;margin:0 auto;padding:20px 18px}
-
-/* CONFIG */
-.event-config{background:#fff;border-radius:14px;padding:16px 20px;
-  box-shadow:0 2px 10px rgba(0,0,0,.06);margin-bottom:18px;border-top:4px solid var(--red)}
-.config-top{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-.config-title{font-size:13px;font-weight:800}
-.config-grid{display:grid;grid-template-columns:2.2fr repeat(5,1fr);gap:12px;align-items:end}
-.field label{font-size:9px;font-weight:700;color:var(--muted);display:block;margin-bottom:3px;text-transform:uppercase;letter-spacing:.6px}
-.field input{width:100%;border:1.5px solid var(--gray2);border-radius:8px;
-  padding:7px 10px;font-size:13px;font-family:inherit;font-weight:700;outline:none;transition:.15s}
-.field input:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(200,16,46,.07)}
-
-/* KPI */
-.kpi-strip{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:18px}
-.kpi{background:#fff;border-radius:12px;padding:13px 15px;
-  box-shadow:0 2px 10px rgba(0,0,0,.06);border-top:4px solid var(--gray2)}
-.kpi.red{border-top-color:var(--red)}.kpi.green{border-top-color:var(--green)}
-.kpi.amber{border-top-color:var(--amber)}.kpi.blue{border-top-color:var(--blue)}
-.kpi.teal{border-top-color:var(--teal)}.kpi.purple{border-top-color:var(--purple)}
-.kpi-lbl{font-size:8.5px;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:3px;font-weight:700}
-.kpi-val{font-size:17px;font-weight:900;line-height:1.15}
-.kpi-sub{font-size:9px;color:var(--muted);margin-top:2px}
-.kpi-vs{display:flex;gap:6px;margin-top:4px}
-.kpi-proj{font-size:9px;color:var(--muted)}
-.kpi-real{font-size:9px;font-weight:700}
-
-/* MAIN GRID */
-.main-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px}
-
-/* PANEL */
-.panel{background:#fff;border-radius:12px;padding:16px 18px;box-shadow:0 2px 10px rgba(0,0,0,.06)}
-.panel-title{font-size:12px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:6px}
-.col-headers{display:grid;grid-template-columns:1fr 110px 110px 60px;gap:6px;
-  padding:0 0 6px;border-bottom:1.5px solid var(--gray2);margin-bottom:8px}
-.col-hdr{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);text-align:right}
-.col-hdr:first-child{text-align:left}
-
-/* COST ROWS */
-.cost-row{display:grid;grid-template-columns:1fr 110px 110px 60px;gap:6px;
-  align-items:center;margin-bottom:6px}
-.cost-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;display:inline-block;margin-right:5px}
-.cost-lbl{font-size:11px;font-weight:600;display:flex;align-items:center}
-.cost-inp{border:1.5px solid var(--gray2);border-radius:7px;padding:5px 7px;
-  font-size:11.5px;font-weight:700;font-family:inherit;width:100%;text-align:right;outline:none;transition:.15s}
-.cost-inp:focus{border-color:var(--red)}
-.cost-inp.proj{border-color:#bfdbfe;background:#eff6ff}
-.cost-inp.real{border-color:#bbf7d0;background:#f0fdf4}
-.cost-inp.auto-val{background:#f8f8fa;color:var(--muted);border-color:var(--gray2);cursor:default;font-style:italic}
-.delta{font-size:10px;font-weight:700;text-align:right}
-.delta.pos{color:var(--green)}.delta.neg{color:var(--red)}.delta.zero{color:var(--muted)}
-.cost-total-row{display:grid;grid-template-columns:1fr 110px 110px 60px;gap:6px;
-  padding:8px 10px;background:var(--red);border-radius:8px;margin-top:8px;align-items:center}
-.cost-total-row .lbl{color:#fff;font-size:11px;font-weight:800}
-.cost-total-row .val{font-size:12px;font-weight:900;color:#fff;text-align:right}
-.cost-total-row .dlt{font-size:10px;color:rgba(255,255,255,.8);text-align:right}
-
-/* AUTO TAX ROWS */
-.tax-section{margin-top:10px;padding-top:8px;border-top:1.5px dashed var(--gray2)}
-.tax-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:6px}
-.cost-row.auto .cost-lbl{font-style:italic;color:var(--muted)}
-
-/* REVENUE */
-.rec-col-headers{display:grid;grid-template-columns:1fr 120px 120px;gap:6px;
-  padding:0 0 6px;border-bottom:1.5px solid var(--gray2);margin-bottom:8px}
-.rec-row{display:grid;grid-template-columns:1fr 120px 120px;gap:6px;
-  align-items:center;margin-bottom:7px}
-.rec-lbl{font-size:11px;font-weight:600}
-.rec-lbl.deduc{color:var(--red);font-size:10px}
-.rec-lbl.subtotal{font-weight:800}
-.rec-inp{border:1.5px solid var(--gray2);border-radius:7px;padding:5px 7px;
-  font-size:11.5px;font-weight:700;font-family:inherit;width:100%;text-align:right;outline:none;transition:.15s}
-.rec-inp.proj{border-color:#bfdbfe;background:#eff6ff}
-.rec-inp.real{border-color:#bbf7d0;background:#f0fdf4}
-.rec-inp.auto-val{background:#fff5f5;color:var(--red);border-color:#fecdd3;cursor:default;font-style:italic}
-.rec-inp.subtotal-val{background:#f8f8fa;font-weight:900;border-color:var(--gray2)}
-.rec-total-row{display:grid;grid-template-columns:1fr 120px 120px;gap:6px;
-  padding:8px 10px;background:var(--green);border-radius:8px;margin-top:8px;align-items:center}
-.rec-total-row .lbl{color:#fff;font-size:11px;font-weight:800}
-.rec-total-row .val{font-size:12px;font-weight:900;color:#fff;text-align:right}
-.rec-note{font-size:9px;color:var(--muted);margin-top:6px;font-style:italic;
-  padding:6px 8px;background:var(--gray);border-radius:6px;line-height:1.4}
-
-/* RESULT PANEL */
-.result-row{display:flex;justify-content:space-between;align-items:center;
-  padding:8px 12px;border-radius:8px;margin-bottom:6px}
-.result-row.proj{background:#eff6ff;border:1px solid #bfdbfe}
-.result-row.real{background:#f0fdf4;border:1px solid #bbf7d0}
-.result-row.be{background:#fffbeb;border:1px solid #fde68a}
-.result-lbl{font-size:11px;font-weight:600}
-.result-val{font-size:14px;font-weight:900}
-
-/* GAUGE */
-.gauge-wrap{margin:10px 0}
-.gauge-track{height:12px;background:var(--gray2);border-radius:10px;overflow:visible;position:relative}
-.gauge-fill{height:100%;border-radius:10px;transition:width .4s ease;max-width:100%}
-.gauge-needle{position:absolute;top:-5px;height:22px;width:3px;border-radius:2px;
-  background:#111;transform:translateX(-50%);transition:left .4s ease;z-index:2}
-.gauge-needle::after{content:'▼';position:absolute;top:-12px;left:50%;transform:translateX(-50%);
-  font-size:10px;color:#111;white-space:nowrap}
-.gauge-labels{display:flex;justify-content:space-between;font-size:9px;color:var(--muted);margin-top:4px;font-weight:600}
-
-/* SCENARIOS */
-.scenarios-section{background:#fff;border-radius:12px;padding:18px 20px;
-  box-shadow:0 2px 10px rgba(0,0,0,.06);margin-bottom:18px}
-.scenarios-title{font-size:13px;font-weight:800;margin-bottom:14px}
-.scenarios-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
-.sc-card{border-radius:10px;padding:12px;border:2px solid var(--gray2)}
-.sc-card.pessimista{border-color:#fecdd3;background:linear-gradient(135deg,#fff5f5,#fff)}
-.sc-card.realista{border-color:#fde68a;background:linear-gradient(135deg,#fffbeb,#fff)}
-.sc-card.otimista{border-color:#bbf7d0;background:linear-gradient(135deg,#f0fdf4,#fff)}
-.sc-card.custom{border-color:#bfdbfe;background:linear-gradient(135deg,#eff6ff,#fff)}
-.sc-label{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px}
-.sc-pct{font-size:24px;font-weight:900;line-height:1;margin-bottom:2px}
-.sc-pub{font-size:10px;color:var(--muted);margin-bottom:8px}
-.sc-row{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.05);font-size:10px}
-.sc-row:last-child{border-bottom:none;margin-top:3px;padding-top:5px;font-weight:800;font-size:11px}
-.sc-row .k{color:var(--muted)}
-.slider-row{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--gray);border-radius:10px}
-.slider-row label{font-size:11px;font-weight:700;white-space:nowrap}
-.slider-row input[type=range]{flex:1;accent-color:var(--blue)}
-.slider-pct{font-size:16px;font-weight:900;color:var(--blue);min-width:44px;text-align:center}
-.slider-note{font-size:10px;color:var(--muted);text-align:center;margin-top:5px;font-style:italic}
-
-/* CHARTS */
-.charts-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px}
-.chart-card{background:#fff;border-radius:12px;padding:16px;box-shadow:0 2px 10px rgba(0,0,0,.06)}
-.chart-title{font-size:12px;font-weight:800;margin-bottom:10px}
-.chart-wrap{height:200px;position:relative}
-
-/* UTIL */
-.sep{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);
-  margin:10px 0 8px;display:flex;align-items:center;gap:6px}
-.sep::after{content:'';flex:1;height:1px;background:var(--gray2)}
-.badge{display:inline-block;font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;background:var(--gray);color:var(--muted)}
-.reset-btn{margin-left:auto;font-size:10px;color:var(--muted);background:none;border:1px solid var(--gray2);
-  padding:4px 10px;border-radius:6px;cursor:pointer;font-family:inherit;transition:.15s}
-.reset-btn:hover{border-color:var(--red);color:var(--red)}
-.info-tag{font-size:9px;background:#fef9c3;color:#713f12;padding:2px 7px;border-radius:20px;font-weight:700}
 </style>
 </head>
 <body>
 
-<header>
-  <div><div class="logo">AXIS</div><div class="logo-sub">ENTRETENIMENTO</div></div>
-  <div class="hlinks">
-    <a href="index.html" class="hlink hlink-gray">&#8592; Dashboard</a>
-    <a href="custos.html" class="hlink hlink-gray">&#128176; Gastos</a>
-    <span class="hlink hlink-red">&#127919; Viabilidade</span>
-    <button class="hlink" onclick="savePDF()" style="background:#1a1a2e;color:#fff;border:none;cursor:pointer">&#128196; Salvar PDF</button>
+<div id="header">
+  <div class="logo-box">
+    <div class="logo-text">axis</div>
+    <div class="logo-badge">MÚSICA ENTRETENIMENTO CORPORATIVO</div>
   </div>
-  <div class="header-right" id="hdate">&#8212;<small>Análise de Viabilidade</small></div>
-</header>
+  <div class="evento-fields">
+    <input class="ef-nome" type="text" id="ev-nome" placeholder="Nome do Evento" oninput="D.evento.nome=this.value;sv()">
+    <input class="ef-sm" type="text" id="ev-data" placeholder="Data" oninput="D.evento.data=this.value;sv()">
+    <input class="ef-sm" type="text" id="ev-local" placeholder="Local / Cidade" oninput="D.evento.local=this.value;sv()">
+    <input class="ef-sm" type="number" id="ev-cap" placeholder="Capacidade total" oninput="D.evento.cap=+this.value;render()">
+  </div>
+  <div class="header-btns">
+    <button class="btn-pdf" onclick="savePDF()">🖨️ Salvar PDF</button>
+    <button class="btn-novo" onclick="showModal()">🗑️ Novo Evento</button>
+  </div>
+</div>
 
-<div class="container">
+<div id="kpis">
+  <div class="kpi"><div class="kpi-label">Receita Bruta Proj</div><div class="kpi-val" id="k-rp">R$ —</div><div class="kpi-sub">Bilheteria + Outras</div></div>
+  <div class="kpi"><div class="kpi-label">Custo Total Proj</div><div class="kpi-val" id="k-cp">R$ —</div><div class="kpi-sub">Manual + Taxas</div></div>
+  <div class="kpi"><div class="kpi-label">Resultado Proj</div><div class="kpi-val" id="k-resp">R$ —</div><div class="kpi-sub" id="k-marg">Margem —</div></div>
+  <div class="kpi"><div class="kpi-label">Receita Bruta Real</div><div class="kpi-val" id="k-rr">R$ —</div><div class="kpi-sub">Após evento</div></div>
+  <div class="kpi"><div class="kpi-label">Custo Total Real</div><div class="kpi-val" id="k-cr">R$ —</div><div class="kpi-sub">Manual + Taxas</div></div>
+  <div class="kpi"><div class="kpi-label">Resultado Real</div><div class="kpi-val" id="k-resr">R$ —</div><div class="kpi-sub" id="k-be">BE: —</div></div>
+</div>
 
-  <!-- PDF HEADER (only visible when printing) -->
-  <div class="pdf-header">
-    <div class="pdf-logo-wrap">
-      <div class="pdf-logo-text">axis</div>
-      <div class="pdf-logo-badge">MÚSICA<br>ENTRETENIMENTO<br>CORPORATIVO</div>
+<div id="tabs">
+  <div class="tab active" onclick="showTab('receitas',this)">🎟️ Receitas</div>
+  <div class="tab" onclick="showTab('custos',this)">💰 Custos</div>
+  <div class="tab" onclick="showTab('breakeven',this)">📊 Breakeven</div>
+</div>
+
+<div id="content">
+
+  <!-- RECEITAS -->
+  <div id="tab-receitas" class="tab-pane active">
+    <div class="section">
+      <div class="section-hdr">🎟️ BILHETERIA — SETORES E LOTES
+        <div class="totals"><span>Proj: <strong id="sh-bp">R$ 0</strong></span><span>Real: <strong id="sh-br">R$ 0</strong></span></div>
+      </div>
+      <div class="section-body" id="setores-ct"></div>
+      <div class="section-body" style="padding:8px 16px;border-top:1px solid var(--border)">
+        <button class="add-btn" onclick="addSetor()">+ Adicionar Setor</button>
+      </div>
     </div>
-    <div class="pdf-header-right">
-      <strong id="pdf-nome-evento">Análise de Viabilidade</strong>
-      <div>Gerado em: <span id="pdf-data-geracao"></span></div>
-      <div class="pdf-date">Axis Entretenimento · Gestão Financeira de Eventos</div>
+
+    <div class="section">
+      <div class="section-hdr">🍺 OUTRAS RECEITAS
+        <div class="totals"><span>Proj: <strong id="sh-op">R$ 0</strong></span><span>Real: <strong id="sh-or">R$ 0</strong></span></div>
+      </div>
+      <div class="section-body" style="padding:0">
+        <table class="outras-table" style="width:100%">
+          <thead><tr>
+            <th style="text-align:left">Fonte</th>
+            <th style="width:170px;background:#eff6ff">Projetado R$</th>
+            <th style="width:170px;background:#f0fdf4">Realizado R$</th>
+            <th style="width:40px"></th>
+          </tr></thead>
+          <tbody id="outras-ct"></tbody>
+          <tfoot><tr><td colspan="4" style="padding:8px 10px"><button class="add-btn" onclick="addOutra()">+ Adicionar Receita</button></td></tr></tfoot>
+        </table>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-hdr" style="background:#374151">ℹ️ DEDUÇÕES DA BILHETERIA — apenas informativo (deduzido uma vez nos custos)</div>
+      <div class="section-body" style="padding:0">
+        <table class="outras-table" style="width:100%">
+          <thead><tr>
+            <th style="text-align:left">Taxa</th>
+            <th style="width:60px;text-align:center">%</th>
+            <th style="width:170px;background:#eff6ff">Proj (auto)</th>
+            <th style="width:170px;background:#f0fdf4">Real (auto)</th>
+          </tr></thead>
+          <tbody>
+            <tr class="auto-row"><td>ISS</td><td style="text-align:center">5%</td><td id="d-iss-p" style="text-align:right;padding:6px 10px;font-weight:700">R$ 0</td><td id="d-iss-r" style="text-align:right;padding:6px 10px;font-weight:700">R$ 0</td></tr>
+            <tr class="auto-row"><td>ECAD</td><td style="text-align:center">5%</td><td id="d-ecad-p" style="text-align:right;padding:6px 10px;font-weight:700">R$ 0</td><td id="d-ecad-r" style="text-align:right;padding:6px 10px;font-weight:700">R$ 0</td></tr>
+            <tr class="auto-row"><td>Taxa Cartão</td><td style="text-align:center">3,2%</td><td id="d-cart-p" style="text-align:right;padding:6px 10px;font-weight:700">R$ 0</td><td id="d-cart-r" style="text-align:right;padding:6px 10px;font-weight:700">R$ 0</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="total-row">
+      <span>RECEITA LÍQUIDA (Bruta − Taxas)</span>
+      <div style="display:flex;gap:24px">
+        <span>Proj: <span class="tr-val" id="t-rlp">R$ 0</span></span>
+        <span>Real: <span class="tr-val" id="t-rlr">R$ 0</span></span>
+      </div>
     </div>
   </div>
 
-  <!-- EVENTO CONFIG -->
-  <div class="event-config">
-    <div class="config-top">
-      <div class="config-title">&#127926; Configuração do Evento</div>
-      <span class="info-tag">ISS 5% + ECAD 5% + Taxa Cartão 3,2% calculados automaticamente</span>
-      <button class="reset-btn" onclick="resetToMatue()">&#8635; Carregar Matuê + Brandão</button>
-    </div>
-    <div class="config-grid">
-      <div class="field"><label>Nome do Evento</label>
-        <input type="text" id="inp-nome" value="Matuê + Brandão · Park da Copa" oninput="calc()">
+  <!-- CUSTOS -->
+  <div id="tab-custos" class="tab-pane">
+    <div class="section">
+      <div class="section-hdr">💰 CUSTOS POR GRUPO
+        <div class="totals"><span>Proj: <strong id="sh-cp">R$ 0</strong></span><span>Real: <strong id="sh-cr">R$ 0</strong></span></div>
       </div>
-      <div class="field"><label>Capacidade Total</label>
-        <input type="number" id="inp-cap" value="5000" min="1" oninput="calc()">
-      </div>
-      <div class="field"><label>Ticket Médio Proj. (R$)</label>
-        <input type="number" id="inp-tm-proj" value="124" min="0" step="0.01" oninput="calc()">
-      </div>
-      <div class="field"><label>Ticket Médio Real. (R$)</label>
-        <input type="number" id="inp-tm-real" value="124" min="0" step="0.01" oninput="calc()">
-      </div>
-      <div class="field"><label>Consumação/Pessoa (R$)</label>
-        <input type="number" id="inp-cons" value="35" min="0" step="0.01" oninput="calc()">
-      </div>
-      <div class="field"><label>% Público Simulado</label>
-        <input type="number" id="inp-pct-ev" value="70" min="0" max="100" step="1" oninput="syncSlider();calc()">
-      </div>
-    </div>
-  </div>
-
-  <!-- KPIs -->
-  <div class="kpi-strip">
-    <div class="kpi red">
-      <div class="kpi-lbl">Custo Total</div>
-      <div class="kpi-val" id="kv-custo-proj" style="color:var(--red)">&#8212;</div>
-      <div class="kpi-sub">Projetado</div>
-      <div class="kpi-vs"><span class="kpi-proj">Real:</span><span class="kpi-real num-red" id="kv-custo-real">&#8212;</span></div>
-    </div>
-    <div class="kpi green">
-      <div class="kpi-lbl">Receita Bruta</div>
-      <div class="kpi-val" id="kv-rec-proj" style="color:var(--green)">&#8212;</div>
-      <div class="kpi-sub" id="kv-pub-sim">&#8212; pessoas</div>
-      <div class="kpi-vs"><span class="kpi-proj">Real:</span><span class="kpi-real" style="color:var(--green)" id="kv-rec-real">&#8212;</span></div>
-    </div>
-    <div class="kpi amber">
-      <div class="kpi-lbl">Resultado Projetado</div>
-      <div class="kpi-val" id="kv-res-proj">&#8212;</div>
-      <div class="kpi-sub" id="kv-roi-proj">ROI: &#8212;</div>
-    </div>
-    <div class="kpi blue">
-      <div class="kpi-lbl">Resultado Realizado</div>
-      <div class="kpi-val" id="kv-res-real">&#8212;</div>
-      <div class="kpi-sub" id="kv-roi-real">ROI: &#8212;</div>
-    </div>
-    <div class="kpi teal">
-      <div class="kpi-lbl">Breakeven — Pessoas</div>
-      <div class="kpi-val" id="kv-be-pub" style="color:var(--teal)">&#8212;</div>
-      <div class="kpi-sub">público mínimo</div>
-    </div>
-    <div class="kpi purple">
-      <div class="kpi-lbl">Breakeven — % Lotação</div>
-      <div class="kpi-val" id="kv-be-pct" style="color:var(--purple)">&#8212;</div>
-      <div class="kpi-sub" id="kv-be-sub">da capacidade</div>
-    </div>
-  </div>
-
-  <!-- MAIN GRID -->
-  <div class="main-grid">
-
-    <!-- CUSTOS -->
-    <div class="panel">
-      <div class="panel-title">&#128181; Custos por Categoria</div>
-      <div class="col-headers">
-        <div class="col-hdr">Categoria</div>
-        <div class="col-hdr" style="color:var(--blue)">Projetado</div>
-        <div class="col-hdr" style="color:var(--green)">Realizado</div>
-        <div class="col-hdr">&#916;</div>
-      </div>
-      <div id="custo-rows"></div>
-
-      <!-- AUTO TAXES -->
-      <div class="tax-section">
-        <div class="tax-label">&#9888;&#65039; Taxas automáticas (sobre bilheteria bruta)</div>
-        <div class="cost-row auto">
-          <div class="cost-lbl"><span class="cost-dot" style="background:#ef4444"></span>ISS (5%)</div>
-          <input type="text" class="cost-inp auto-val" id="tax-iss-proj" readonly>
-          <input type="text" class="cost-inp auto-val" id="tax-iss-real" readonly>
-          <span class="delta zero" id="tax-iss-d">&#8212;</span>
-        </div>
-        <div class="cost-row auto">
-          <div class="cost-lbl"><span class="cost-dot" style="background:#f97316"></span>ECAD (5%)</div>
-          <input type="text" class="cost-inp auto-val" id="tax-ecad-proj" readonly>
-          <input type="text" class="cost-inp auto-val" id="tax-ecad-real" readonly>
-          <span class="delta zero" id="tax-ecad-d">&#8212;</span>
-        </div>
-        <div class="cost-row auto">
-          <div class="cost-lbl"><span class="cost-dot" style="background:#a855f7"></span>Taxa Cartão (3,2%)</div>
-          <input type="text" class="cost-inp auto-val" id="tax-cart-proj" readonly>
-          <input type="text" class="cost-inp auto-val" id="tax-cart-real" readonly>
-          <span class="delta zero" id="tax-cart-d">&#8212;</span>
+      <div class="section-body" id="grupos-ct"></div>
+      <div class="section-body" style="padding:10px 16px;border-top:1px solid var(--border)">
+        <div class="add-grupo-wrap">
+          <input type="text" id="new-gn" placeholder="Nome do novo grupo...">
+          <input type="color" id="new-gc" value="#64748b" style="width:36px;height:36px;padding:2px;border:1px solid var(--border);border-radius:4px;cursor:pointer">
+          <button onclick="addGrupo()">+ Grupo</button>
         </div>
       </div>
-
-      <div class="cost-total-row" style="margin-top:10px">
-        <span class="lbl">TOTAL CUSTO</span>
-        <span class="val" id="custo-tot-proj">&#8212;</span>
-        <span class="val" id="custo-tot-real">&#8212;</span>
-        <span class="dlt" id="custo-tot-d">&#8212;</span>
-      </div>
     </div>
 
-    <!-- RECEITAS -->
-    <div class="panel">
-      <div class="panel-title">&#128200; Receitas</div>
-
-      <div class="rec-col-headers">
-        <div class="col-hdr">Fonte</div>
-        <div class="col-hdr" style="color:var(--blue)">Projetado</div>
-        <div class="col-hdr" style="color:var(--green)">Realizado</div>
+    <div class="taxas-section">
+      <div class="taxas-title">⚡ TAXAS AUTOMÁTICAS sobre Bilheteria Bruta — ISS 5% + ECAD 5% + Cartão 3,2%</div>
+      <div style="display:grid;grid-template-columns:1fr 150px 150px;gap:6px;padding-bottom:6px;border-bottom:1px solid #fcd34d;margin-bottom:4px">
+        <div style="font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:#78350f;font-weight:700">Item</div>
+        <div style="text-align:right;font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:#78350f;font-weight:700">Projetado</div>
+        <div style="text-align:right;font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:#78350f;font-weight:700">Realizado</div>
       </div>
-
-      <!-- BILHETERIA BRUTA -->
-      <div class="sep">Bilheteria</div>
-      <div class="rec-row">
-        <div class="rec-lbl">Bilheteria Bruta</div>
-        <input type="text" class="rec-inp auto-val proj" id="rec-bil-proj" readonly>
-        <input type="number" class="rec-inp real" id="rec-bil-real" value="649997" min="0" oninput="calc()">
-      </div>
-      <div class="rec-row">
-        <div class="rec-lbl deduc">(-) ISS (5%)</div>
-        <input type="text" class="rec-inp auto-val" id="ded-iss-proj" readonly style="color:var(--red)">
-        <input type="text" class="rec-inp auto-val" id="ded-iss-real" readonly style="color:var(--red)">
-      </div>
-      <div class="rec-row">
-        <div class="rec-lbl deduc">(-) ECAD (5%)</div>
-        <input type="text" class="rec-inp auto-val" id="ded-ecad-proj" readonly style="color:var(--red)">
-        <input type="text" class="rec-inp auto-val" id="ded-ecad-real" readonly style="color:var(--red)">
-      </div>
-      <div class="rec-row">
-        <div class="rec-lbl deduc">(-) Taxa Cartão (3,2%)</div>
-        <input type="text" class="rec-inp auto-val" id="ded-cart-proj" readonly style="color:var(--red)">
-        <input type="text" class="rec-inp auto-val" id="ded-cart-real" readonly style="color:var(--red)">
-      </div>
-      <div class="rec-row" style="margin-bottom:10px">
-        <div class="rec-lbl subtotal">= Bilheteria Líquida</div>
-        <input type="text" class="rec-inp subtotal-val" id="rec-bil-liq-proj" readonly>
-        <input type="text" class="rec-inp subtotal-val" id="rec-bil-liq-real" readonly>
-      </div>
-
-      <!-- OUTRAS RECEITAS -->
-      <div class="sep">Outras fontes</div>
-      <div class="rec-row">
-        <div class="rec-lbl">Bar / Consumação</div>
-        <input type="text" class="rec-inp auto-val proj" id="rec-bar-proj" readonly>
-        <input type="number" class="rec-inp real" id="rec-bar-real" value="0" min="0" oninput="calc()">
-      </div>
-      <div class="rec-row">
-        <div class="rec-lbl">Patrocínio</div>
-        <input type="number" class="rec-inp proj" id="rec-pat-proj" value="0" min="0" oninput="calc()">
-        <input type="number" class="rec-inp real" id="rec-pat-real" value="0" min="0" oninput="calc()">
-      </div>
-      <div class="rec-row">
-        <div class="rec-lbl">Outras Receitas</div>
-        <input type="number" class="rec-inp proj" id="rec-out-proj" value="0" min="0" oninput="calc()">
-        <input type="number" class="rec-inp real" id="rec-out-real" value="0" min="0" oninput="calc()">
-      </div>
-
-      <div class="rec-total-row">
-        <span class="lbl">RECEITA BRUTA TOTAL</span>
-        <span class="val" id="rec-tot-proj">&#8212;</span>
-        <span class="val" id="rec-tot-real">&#8212;</span>
-      </div>
-
-      <div class="rec-note">
-        &#9432; ISS, ECAD e Taxa Cartão aparecem como <strong>dedução informativa</strong> acima e como <strong>custo real</strong> no painel ao lado.
-        O resultado final debita apenas <strong>uma vez</strong> (via coluna de Custos).
-      </div>
+      <div class="taxa-row"><div class="taxa-label">ISS — 5% bilheteria bruta</div><div class="taxa-val" id="tx-iss-p">R$ 0</div><div class="taxa-val" id="tx-iss-r">R$ 0</div></div>
+      <div class="taxa-row"><div class="taxa-label">ECAD — 5% bilheteria bruta</div><div class="taxa-val" id="tx-ecad-p">R$ 0</div><div class="taxa-val" id="tx-ecad-r">R$ 0</div></div>
+      <div class="taxa-row"><div class="taxa-label">Taxa Cartão — 3,2% bilheteria bruta</div><div class="taxa-val" id="tx-cart-p">R$ 0</div><div class="taxa-val" id="tx-cart-r">R$ 0</div></div>
+      <div class="taxa-row" style="font-weight:700;margin-top:4px;border-top:1px solid #fcd34d;padding-top:6px"><div class="taxa-label" style="font-weight:700;color:#92400e">TOTAL TAXAS</div><div class="taxa-val" id="tx-tot-p">R$ 0</div><div class="taxa-val" id="tx-tot-r">R$ 0</div></div>
     </div>
 
+    <div class="total-row">
+      <span>CUSTO TOTAL (Manual + Taxas)</span>
+      <div style="display:flex;gap:24px">
+        <span>Proj: <span class="tr-val" id="t-cp">R$ 0</span></span>
+        <span>Real: <span class="tr-val" id="t-cr">R$ 0</span></span>
+      </div>
+    </div>
   </div>
 
-  <!-- RESULTADO + GAUGE -->
-  <div class="main-grid" style="margin-bottom:18px">
-    <div class="panel">
-      <div class="panel-title">&#128202; Resultado Final</div>
-      <div class="result-row proj">
+  <!-- BREAKEVEN -->
+  <div id="tab-breakeven" class="tab-pane">
+    <div class="be-summary">
+      <div class="be-summary-title">📊 Resumo Geral</div>
+      <div class="be-grid2">
+        <div class="be-stat"><div class="be-stat-val" id="be-tkt">—</div><div class="be-stat-label">Pagantes p/ Breakeven</div></div>
+        <div class="be-stat"><div class="be-stat-val" id="be-pct">—%</div><div class="be-stat-label">% Ocupação p/ Breakeven</div></div>
+        <div class="be-stat"><div class="be-stat-val" id="be-tm">R$ —</div><div class="be-stat-label">Ticket Médio Proj</div></div>
+        <div class="be-stat"><div class="be-stat-val" id="be-cap">—</div><div class="be-stat-label">Pagantes Proj Total</div></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-hdr">🎯 CENÁRIOS DE OCUPAÇÃO</div>
+      <div class="section-body"><div class="be-grid" id="scenarios"></div></div>
+    </div>
+
+    <div class="section">
+      <div class="section-hdr">📈 GAUGE DE BREAKEVEN</div>
+      <div class="section-body" style="display:flex;justify-content:center;padding:24px">
         <div>
-          <div class="result-lbl">&#128309; Resultado Projetado</div>
-          <div style="font-size:9px;color:var(--muted)">Receita Bruta Proj. − Custo Total Proj.</div>
-        </div>
-        <div class="result-val" id="res-proj-big">&#8212;</div>
-      </div>
-      <div class="result-row real" style="margin-top:6px">
-        <div>
-          <div class="result-lbl">&#128994; Resultado Realizado</div>
-          <div style="font-size:9px;color:var(--muted)">Receita Bruta Real. − Custo Total Real.</div>
-        </div>
-        <div class="result-val" id="res-real-big">&#8212;</div>
-      </div>
-      <div class="result-row be" style="margin-top:6px">
-        <div>
-          <div class="result-lbl">&#127919; Breakeven</div>
-          <div style="font-size:9px;color:var(--muted)" id="be-sub-text">&#8212;</div>
-        </div>
-        <div class="result-val" id="be-pct-big" style="color:var(--amber)">&#8212;</div>
-      </div>
-
-      <div class="gauge-wrap" style="margin-top:12px">
-        <div class="gauge-track">
-          <div class="gauge-fill" id="gauge-fill" style="width:0%;background:var(--amber)"></div>
-          <div class="gauge-needle" id="gauge-needle" style="left:0%"></div>
-        </div>
-        <div class="gauge-labels">
-          <span>0%</span><span id="g-be-label">Breakeven</span><span>100%</span>
+          <div class="gauge-wrap">
+            <canvas id="gauge-cv" width="240" height="130"></canvas>
+            <div class="gauge-text">
+              <div class="gauge-pct" id="g-pct">—%</div>
+              <div class="gauge-sub" id="g-sub">ocupação projetada</div>
+            </div>
+          </div>
+          <div style="text-align:center;margin-top:8px;font-size:11px;color:var(--muted)">
+            🔴 Prejuízo &nbsp;|&nbsp; 🟡 Breakeven &nbsp;|&nbsp; 🟢 Lucro
+          </div>
         </div>
       </div>
-      <div style="font-size:10px;color:var(--muted);margin-top:8px;line-height:1.5" id="gauge-explain"></div>
     </div>
-
-    <div class="panel">
-      <div class="panel-title">&#127829; Distribuição dos Custos (Projetado)</div>
-      <div class="chart-wrap"><canvas id="chartCusto"></canvas></div>
-      <div id="custo-legend" style="margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:3px"></div>
-    </div>
-  </div>
-
-  <!-- CENÁRIOS -->
-  <div class="scenarios-section">
-    <div class="scenarios-title">&#127937; Cenários de Público (baseado em Projetado)</div>
-    <div class="scenarios-grid">
-      <div class="sc-card pessimista">
-        <div class="sc-label" style="color:var(--red)">&#128308; Pessimista</div>
-        <div class="sc-pct" style="color:var(--red)" id="sc0-pct">50%</div>
-        <div class="sc-pub" id="sc0-pub">&#8212;</div>
-        <div class="sc-row"><span class="k">Bil. Bruta</span><span id="sc0-bil">&#8212;</span></div>
-        <div class="sc-row"><span class="k">(-) Taxas</span><span id="sc0-tax" style="color:var(--red)">&#8212;</span></div>
-        <div class="sc-row"><span class="k">Bar</span><span id="sc0-bar">&#8212;</span></div>
-        <div class="sc-row"><span class="k">Receita Bruta</span><span id="sc0-rec">&#8212;</span></div>
-        <div class="sc-row"><span class="k">Custo Total</span><span id="sc0-cus" style="color:var(--red)">&#8212;</span></div>
-        <div class="sc-row"><span class="k">Resultado</span><span id="sc0-res">&#8212;</span></div>
-        <div class="sc-row"><span class="k">ROI</span><span id="sc0-roi">&#8212;</span></div>
-      </div>
-      <div class="sc-card realista">
-        <div class="sc-label" style="color:var(--amber)">&#128992; Realista</div>
-        <div class="sc-pct" style="color:var(--amber)" id="sc1-pct">70%</div>
-        <div class="sc-pub" id="sc1-pub">&#8212;</div>
-        <div class="sc-row"><span class="k">Bil. Bruta</span><span id="sc1-bil">&#8212;</span></div>
-        <div class="sc-row"><span class="k">(-) Taxas</span><span id="sc1-tax" style="color:var(--red)">&#8212;</span></div>
-        <div class="sc-row"><span class="k">Bar</span><span id="sc1-bar">&#8212;</span></div>
-        <div class="sc-row"><span class="k">Receita Bruta</span><span id="sc1-rec">&#8212;</span></div>
-        <div class="sc-row"><span class="k">Custo Total</span><span id="sc1-cus" style="color:var(--red)">&#8212;</span></div>
-        <div class="sc-row"><span class="k">Resultado</span><span id="sc1-res">&#8212;</span></div>
-        <div class="sc-row"><span class="k">ROI</span><span id="sc1-roi">&#8212;</span></div>
-      </div>
-      <div class="sc-card otimista">
-        <div class="sc-label" style="color:var(--green)">&#128994; Otimista</div>
-        <div class="sc-pct" style="color:var(--green)" id="sc2-pct">90%</div>
-        <div class="sc-pub" id="sc2-pub">&#8212;</div>
-        <div class="sc-row"><span class="k">Bil. Bruta</span><span id="sc2-bil">&#8212;</span></div>
-        <div class="sc-row"><span class="k">(-) Taxas</span><span id="sc2-tax" style="color:var(--red)">&#8212;</span></div>
-        <div class="sc-row"><span class="k">Bar</span><span id="sc2-bar">&#8212;</span></div>
-        <div class="sc-row"><span class="k">Receita Bruta</span><span id="sc2-rec">&#8212;</span></div>
-        <div class="sc-row"><span class="k">Custo Total</span><span id="sc2-cus" style="color:var(--red)">&#8212;</span></div>
-        <div class="sc-row"><span class="k">Resultado</span><span id="sc2-res">&#8212;</span></div>
-        <div class="sc-row"><span class="k">ROI</span><span id="sc2-roi">&#8212;</span></div>
-      </div>
-      <div class="sc-card custom">
-        <div class="sc-label" style="color:var(--blue)">&#128309; Personalizado</div>
-        <div class="sc-pct" style="color:var(--blue)" id="sc3-pct">70%</div>
-        <div class="sc-pub" id="sc3-pub">&#8212;</div>
-        <div class="sc-row"><span class="k">Bil. Bruta</span><span id="sc3-bil">&#8212;</span></div>
-        <div class="sc-row"><span class="k">(-) Taxas</span><span id="sc3-tax" style="color:var(--red)">&#8212;</span></div>
-        <div class="sc-row"><span class="k">Bar</span><span id="sc3-bar">&#8212;</span></div>
-        <div class="sc-row"><span class="k">Receita Bruta</span><span id="sc3-rec">&#8212;</span></div>
-        <div class="sc-row"><span class="k">Custo Total</span><span id="sc3-cus" style="color:var(--red)">&#8212;</span></div>
-        <div class="sc-row"><span class="k">Resultado</span><span id="sc3-res">&#8212;</span></div>
-        <div class="sc-row"><span class="k">ROI</span><span id="sc3-roi">&#8212;</span></div>
-      </div>
-    </div>
-    <div class="slider-row">
-      <label>&#127918; Simular ocupação:</label>
-      <input type="range" id="sl-pct" min="0" max="100" value="70" oninput="syncPct();calc()">
-      <span class="slider-pct" id="sl-pct-display">70%</span>
-    </div>
-    <div class="slider-note" id="slider-note">Arraste para simular diferentes níveis de lotação</div>
-
-    <!-- Bar chart -->
-    <div style="margin-top:18px">
-      <div style="font-size:11px;font-weight:800;margin-bottom:8px">Receita Bruta vs. Custo Total por cenário</div>
-      <div style="height:180px"><canvas id="chartBar"></canvas></div>
-    </div>
-  </div>
-
-
-  <!-- PDF FOOTER -->
-  <div class="pdf-footer">
-    axis entretenimento · análise de viabilidade · documento confidencial · gerado automaticamente pelo sistema de gestão axis
   </div>
 
 </div>
 
+<div class="modal-overlay" id="modal-ov">
+  <div class="modal-box">
+    <h3>🗑️ Novo Evento</h3>
+    <p>Isso vai apagar todos os dados do evento atual. Certifique-se de ter salvo o PDF antes de continuar.</p>
+    <div class="modal-btns">
+      <button class="modal-cancel" onclick="hideModal()">Cancelar</button>
+      <button class="modal-confirm" onclick="novoEvento()">Limpar Tudo</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script>
-// ── DATA ──
-var MATUE = {
-  cache:376500, mkt:50260.50, estrutura:153874.40,
-  transporte:54749.27, hospedagem:9003.78, outros:6065.71
+// ============================================================
+// HELPERS
+// ============================================================
+var _id = 1;
+function uid(){ return 'u'+(Date.now()+_id++); }
+function R(v){ return 'R$ '+Math.round(v||0).toLocaleString('pt-BR'); }
+function pct(v){ return v.toFixed(1)+'%'; }
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function $(id){ return document.getElementById(id); }
+function set(id,v){ var e=$(id); if(e) e.textContent=v; }
+function deepClone(o){ return JSON.parse(JSON.stringify(o)); }
+function sv(){ localStorage.setItem('via_v4',JSON.stringify(D)); }
+
+// ============================================================
+// DEFAULTS
+// ============================================================
+function mkTipos(){ return [
+  {tipo:'Inteira',qp:0,val:0,qr:0},
+  {tipo:'Meia',qp:0,val:0,qr:0},
+  {tipo:'Promocional',qp:0,val:0,qr:0},
+  {tipo:'Cortesia',qp:0,val:0,qr:0}
+];}
+function mkLote(nome){ return {id:uid(),nome:nome,open:true,tipos:mkTipos()}; }
+function mkSetor(nome){ return {id:uid(),nome:nome,open:true,lotes:[mkLote('Lote 1')]}; }
+function mkItem(desc){ return {id:uid(),desc:desc,proj:0,real:0}; }
+function mkGrupo(nome,cor,descs){ return {id:uid(),nome:nome,cor:cor,open:true,itens:descs.map(mkItem)}; }
+
+var DEFAULTS = {
+  evento:{nome:'',data:'',local:'',cap:0},
+  setores:[mkSetor('Pista'),mkSetor('Área VIP'),mkSetor('Camarote'),mkSetor('Camarote Box')],
+  outras:[
+    {id:uid(),nome:'Bar / Consumação',proj:0,real:0},
+    {id:uid(),nome:'Patrocínio',proj:0,real:0},
+    {id:uid(),nome:'Outras Receitas',proj:0,real:0}
+  ],
+  grupos:[
+    mkGrupo('Artístico e Suas Despesas','#7c3aed',['Cache Principal','Despesas Logística Artista','Efeitos Especiais','Cache DJ Opening','Cache DJ Warm Up','Catering Camarim','VJ']),
+    mkGrupo('Despesas do Local','#2563eb',['Aluguel do Local','Limpeza do Local']),
+    mkGrupo('Legalização','#dc2626',['Planta Bombeiro + Xerox','Taxa Prefeitura / DAEM','Advogado','Posto Médico + UTI Móvel']),
+    mkGrupo('Estrutura','#d97706',['Som, Luz e Geradores','LED Painel','Palco + Camarins + Piso','Fechamento / Grades','Carregadores Banda','Carregadores Som/Luz','Eletricista','Banheiros Químicos','Adesivos / Identificação','Lonas / Decoração','Rádios HT','Lycra / Acabamento']),
+    mkGrupo('Mídia e Marketing','#0891b2',['Designer','Tráfego Pago (ADS)','Produção Audiovisual','Mídia LED Exterior','Material Gráfico','Adesivos Perfurados','Mídia Rádio','Panfletagem']),
+    mkGrupo('Pessoal e Equipe','#16a34a',['Segurança + PM + Limpeza','Brigadistas / Bombeiro Civil','Validadores / Portaria','Equipe Pulseira','Produtor de Montagem','Produtor de Campo','Estacionamento']),
+    mkGrupo('Ingressos e Ticketeria','#ea580c',['Pulseiras / Ingressos Físicos','Impressões / Cancelamentos','Técnico Ticketeria','Antecipação','Instalação PDVs']),
+    mkGrupo('Extras','#db2777',['Copos do Evento']),
+    mkGrupo('Logística e Reuniões','#64748b',['Reuniões e VTs','Refeições Equipe','Despesas Diversas'])
+  ]
 };
-var CAT = {
-  cache:{lbl:'Cachê / Artistas',color:'#7c3aed'},
-  mkt:{lbl:'Marketing',color:'#2563eb'},
-  estrutura:{lbl:'Estrutura / Produção',color:'#d97706'},
-  transporte:{lbl:'Transporte',color:'#16a34a'},
-  hospedagem:{lbl:'Hospedagem',color:'#0284c7'},
-  outros:{lbl:'Outros',color:'#6b7280'}
-};
-// ISS_PCT, ECAD_PCT, CART_PCT applied to bilheteria bruta
-var ISS_PCT=0.05, ECAD_PCT=0.05, CART_PCT=0.032;
-var custoProj={}, custoReal={};
-var chartCusto=null, chartBar=null;
 
-// ── FORMAT ──
-var fmt=function(v){return 'R$ '+Number(v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})};
-var fmtK=function(v){
-  var a=Math.abs(v);
-  if(a>=1000000)return (v<0?'-':'')+'R$ '+(a/1000000).toFixed(2).replace('.',',')+'M';
-  if(a>=1000)return (v<0?'-':'')+'R$ '+(a/1000).toFixed(0)+'k';
-  return fmt(v);
-};
-var fmtD=function(v){return (v>0?'+':'')+fmtK(v)};
-var clr=function(v){return v>=0?'var(--green)':'var(--red)'};
+// ============================================================
+// STATE
+// ============================================================
+var D = (function(){ try{ var s=localStorage.getItem('via_v4'); if(s) return JSON.parse(s); }catch(e){} return deepClone(DEFAULTS); })();
+var GC=null; // gauge chart
 
-// ── BUILD COST ROWS ──
-function buildRows(){
-  var html='';
-  Object.keys(CAT).forEach(function(c){
-    var pv=(MATUE[c]||0).toFixed(2);
-    html+='<div class="cost-row">'
-      +'<div class="cost-lbl"><span class="cost-dot" style="background:'+CAT[c].color+'"></span>'+CAT[c].lbl+'</div>'
-      +'<input type="number" class="cost-inp proj" id="cp-'+c+'" value="'+pv+'" min="0" step="0.01" oninput="custoProj[\''+c+'\']=parseFloat(this.value)||0;calc()">'
-      +'<input type="number" class="cost-inp real" id="cr-'+c+'" value="'+pv+'" min="0" step="0.01" oninput="custoReal[\''+c+'\']=parseFloat(this.value)||0;calc()">'
-      +'<span class="delta" id="cd-'+c+'">&#8212;</span>'
-      +'</div>';
-    custoProj[c]=MATUE[c]||0;
-    custoReal[c]=MATUE[c]||0;
-  });
-  document.getElementById('custo-rows').innerHTML=html;
-}
-
-// ── CALC TAXES ──
-function taxes(bilBruta){
-  return {
-    iss: bilBruta*ISS_PCT,
-    ecad: bilBruta*ECAD_PCT,
-    cart: bilBruta*CART_PCT,
-    total: bilBruta*(ISS_PCT+ECAD_PCT+CART_PCT)
-  };
-}
-
-// ── SCENARIO ──
-function calcSc(pct,totalCustoManual,tmProj,cons,patProj,outProj){
-  var cap=parseFloat(document.getElementById('inp-cap').value)||5000;
-  var pub=Math.round(cap*pct/100);
-  var bil=pub*tmProj;
-  var t=taxes(bil);
-  var totalCusto=totalCustoManual+t.total;
-  var bar=pub*cons;
-  var rec=bil+bar+patProj+outProj; // bruta
-  var res=rec-totalCusto;
-  var roi=totalCusto>0?res/totalCusto*100:0;
-  return {pub:pub,bil:bil,bar:bar,tax:t.total,rec:rec,cus:totalCusto,res:res,roi:roi};
-}
-function fillSc(id,pct,d){
-  document.getElementById(id+'-pct').textContent=Math.round(pct)+'%';
-  document.getElementById(id+'-pub').textContent=d.pub.toLocaleString('pt-BR')+' pessoas';
-  document.getElementById(id+'-bil').textContent=fmtK(d.bil);
-  document.getElementById(id+'-tax').textContent='-'+fmtK(d.tax);
-  document.getElementById(id+'-bar').textContent=fmtK(d.bar);
-  document.getElementById(id+'-rec').textContent=fmtK(d.rec);
-  document.getElementById(id+'-cus').textContent=fmtK(d.cus);
-  var rEl=document.getElementById(id+'-res');
-  rEl.textContent=fmtD(d.res); rEl.style.color=clr(d.res);
-  var roiEl=document.getElementById(id+'-roi');
-  roiEl.textContent=(d.roi>=0?'+':'')+d.roi.toFixed(1)+'%'; roiEl.style.color=clr(d.roi);
-}
-
-// ── MAIN CALC ──
+// ============================================================
+// CALC
+// ============================================================
 function calc(){
-  var cap=parseFloat(document.getElementById('inp-cap').value)||5000;
-  var tmP=parseFloat(document.getElementById('inp-tm-proj').value)||124;
-  var tmR=parseFloat(document.getElementById('inp-tm-real').value)||124;
-  var cons=parseFloat(document.getElementById('inp-cons').value)||35;
-  var pct=parseFloat(document.getElementById('inp-pct-ev').value)||70;
-
-  // bilheteria bruta
-  var bilP=Math.round(cap*pct/100)*tmP;
-  var bilR=parseFloat(document.getElementById('rec-bil-real').value)||0;
-  var tP=taxes(bilP), tR=taxes(bilR);
-
-  // revenues
-  var barP=Math.round(cap*pct/100)*cons;
-  var barR=parseFloat(document.getElementById('rec-bar-real').value)||0;
-  var patP=parseFloat(document.getElementById('rec-pat-proj').value)||0;
-  var patR=parseFloat(document.getElementById('rec-pat-real').value)||0;
-  var outP=parseFloat(document.getElementById('rec-out-proj').value)||0;
-  var outR=parseFloat(document.getElementById('rec-out-real').value)||0;
-
-  var recBrutaP=bilP+barP+patP+outP;
-  var recBrutaR=bilR+barR+patR+outR;
-
-  // manual costs
-  var manP=Object.keys(custoProj).reduce(function(s,c){return s+(custoProj[c]||0)},0);
-  var manR=Object.keys(custoReal).reduce(function(s,c){return s+(custoReal[c]||0)},0);
-
-  // total costs = manual + auto taxes
-  var totCP=manP+tP.total;
-  var totCR=manR+tR.total;
-
-  var resP=recBrutaP-totCP;
-  var resR=recBrutaR-totCR;
-  var roiP=totCP>0?resP/totCP*100:0;
-  var roiR=totCR>0?resR/totCR*100:0;
-
-  // BREAKEVEN (using proj TM & cons, manual costs proj)
-  // Solve: pub*(tmP+cons) + patP + outP - (manP + pub*tmP*(ISS+ECAD+CART)) = 0
-  // pub*(tmP+cons) - pub*tmP*taxRate = manP - patP - outP
-  // pub*(tmP+cons - tmP*taxRate) = manP - patP - outP
-  var taxRate=ISS_PCT+ECAD_PCT+CART_PCT;
-  var revPerPax=tmP+cons-tmP*taxRate;
-  var netFixed=patP+outP;
-  var bePub=(manP-netFixed)/revPerPax;
-  var bePct=cap>0?(bePub/cap*100):0;
-
-  // ── UPDATE DOM ──
-
-  // Tax fields in cost panel
-  ['proj','real'].forEach(function(m){
-    var t=m==='proj'?tP:tR;
-    document.getElementById('tax-iss-'+m).value=fmt(t.iss);
-    document.getElementById('tax-ecad-'+m).value=fmt(t.ecad);
-    document.getElementById('tax-cart-'+m).value=fmt(t.cart);
-  });
-  setDelta('tax-iss-d',tR.iss-tP.iss);
-  setDelta('tax-ecad-d',tR.ecad-tP.ecad);
-  setDelta('tax-cart-d',tR.cart-tP.cart);
-
-  // Cost deltas per category
-  Object.keys(CAT).forEach(function(c){
-    setDelta('cd-'+c,(custoReal[c]||0)-(custoProj[c]||0));
-  });
-
-  // Cost totals
-  document.getElementById('custo-tot-proj').textContent=fmt(totCP);
-  document.getElementById('custo-tot-real').textContent=fmt(totCR);
-  setDeltaEl('custo-tot-d',totCR-totCP,true);
-
-  // Revenue fields
-  document.getElementById('rec-bil-proj').value=fmt(bilP);
-  document.getElementById('rec-bar-proj').value=fmt(barP);
-  ['proj','real'].forEach(function(m){
-    var t=m==='proj'?tP:tR;
-    var bil=m==='proj'?bilP:bilR;
-    document.getElementById('ded-iss-'+m).value='-'+fmt(t.iss);
-    document.getElementById('ded-ecad-'+m).value='-'+fmt(t.ecad);
-    document.getElementById('ded-cart-'+m).value='-'+fmt(t.cart);
-    document.getElementById('rec-bil-liq-'+m).value=fmt(bil-t.total);
-  });
-  document.getElementById('rec-tot-proj').textContent=fmt(recBrutaP);
-  document.getElementById('rec-tot-real').textContent=fmt(recBrutaR);
-
-  // KPIs
-  document.getElementById('kv-custo-proj').textContent=fmtK(totCP);
-  document.getElementById('kv-custo-real').textContent=fmtK(totCR);
-  document.getElementById('kv-rec-proj').textContent=fmtK(recBrutaP);
-  document.getElementById('kv-rec-real').textContent=fmtK(recBrutaR);
-  document.getElementById('kv-pub-sim').textContent=Math.round(cap*pct/100).toLocaleString('pt-BR')+' pessoas ('+pct+'%)';
-
-  var rpEl=document.getElementById('kv-res-proj');
-  rpEl.textContent=fmtD(resP); rpEl.style.color=clr(resP);
-  document.getElementById('kv-roi-proj').textContent='ROI: '+(roiP>=0?'+':'')+roiP.toFixed(1)+'%';
-  var rrEl=document.getElementById('kv-res-real');
-  rrEl.textContent=fmtD(resR); rrEl.style.color=clr(resR);
-  document.getElementById('kv-roi-real').textContent='ROI: '+(roiR>=0?'+':'')+roiR.toFixed(1)+'%';
-
-  document.getElementById('kv-be-pub').textContent=Math.ceil(bePub).toLocaleString('pt-BR');
-  document.getElementById('kv-be-pct').textContent=bePct.toFixed(1)+'%';
-  document.getElementById('kv-be-sub').textContent=bePct<=100?'da capacidade (viável)':'ACIMA da capacidade!';
-
-  // Resultado panel
-  var rpbEl=document.getElementById('res-proj-big');
-  rpbEl.textContent=fmtD(resP); rpbEl.style.color=clr(resP);
-  var rrbEl=document.getElementById('res-real-big');
-  rrbEl.textContent=fmtD(resR); rrbEl.style.color=clr(resR);
-  document.getElementById('be-pct-big').textContent=bePct.toFixed(1)+'%';
-  document.getElementById('be-sub-text').textContent=Math.ceil(bePub).toLocaleString('pt-BR')+' pessoas / '+bePct.toFixed(1)+'% da capacidade';
-  document.getElementById('g-be-label').textContent='BE '+bePct.toFixed(0)+'%';
-
-  // Gauge (shows simulated %)
-  var fillPct=Math.min(pct,100);
-  var needlePct=Math.min(bePct,100);
-  var gaugeColor=pct>=bePct?'var(--green)':pct>=bePct*0.85?'var(--amber)':'var(--red)';
-  document.getElementById('gauge-fill').style.width=fillPct+'%';
-  document.getElementById('gauge-fill').style.background=gaugeColor;
-  document.getElementById('gauge-needle').style.left=needlePct+'%';
-  document.getElementById('gauge-explain').innerHTML=
-    'Breakeven: <strong>'+Math.ceil(bePub).toLocaleString('pt-BR')+' pessoas ('+bePct.toFixed(1)+'%)</strong><br>'
-    +'Simulado: <strong>'+Math.round(cap*pct/100).toLocaleString('pt-BR')+' pessoas ('+pct+'%)</strong> — '
-    +(pct>=bePct?'<span style="color:var(--green);font-weight:700">✓ Acima do breakeven</span>'
-      :'<span style="color:var(--red);font-weight:700">✗ Ainda no prejuízo</span>');
-
-  // SCENARIOS
-  var scPcts=[50,70,90,pct];
-  var scIds=['sc0','sc1','sc2','sc3'];
-  scIds.forEach(function(id,i){
-    fillSc(id,scPcts[i],calcSc(scPcts[i],manP,tmP,cons,patP,outP));
-  });
-  document.getElementById('slider-note').textContent=
-    'Ocupação simulada: '+pct+'% → '+Math.round(cap*pct/100).toLocaleString('pt-BR')+' pessoas · Resultado proj: '+fmtD(resP);
-
-  // Charts
-  updateCharts(totCP,bilP,tP,manP,cap,tmP,cons,patP,outP,pct,scPcts);
+  var bp=0,br=0,pp=0,pr=0,cortP=0;
+  D.setores.forEach(function(s){ s.lotes.forEach(function(l){ l.tipos.forEach(function(t){
+    if(t.tipo==='Cortesia'){ cortP+=t.qp; }
+    else{ bp+=t.qp*t.val; br+=t.qr*t.val; pp+=t.qp; pr+=t.qr; }
+  }); }); });
+  var op=0,or_=0; D.outras.forEach(function(o){ op+=o.proj; or_+=o.real; });
+  var ISS=.05,ECAD=.05,CART=.032;
+  var issp=bp*ISS,ecadp=bp*ECAD,cartp=bp*CART,txp=issp+ecadp+cartp;
+  var issr=br*ISS,ecadr=br*ECAD,cartr=br*CART,txr=issr+ecadr+cartr;
+  var rp=bp+op, rr=br+or_;
+  var rlp=rp-txp, rlr=rr-txr;
+  var mp=0,mr=0; D.grupos.forEach(function(g){ g.itens.forEach(function(i){ mp+=i.proj; mr+=i.real; }); });
+  var cp=mp+txp, cr=mr+txr;
+  var resp=rp-cp, resr=rr-cr;
+  var tm=pp>0?bp/pp:0;
+  var beT=tm>0?cp/tm:0;
+  var cap=D.evento.cap||(pp+cortP)||1;
+  var bePct=beT/cap*100;
+  var projOcc=pp/cap*100;
+  return {bp,br,pp,pr,cortP,op,or_,issp,ecadp,cartp,txp,issr,ecadr,cartr,txr,rp,rr,rlp,rlr,mp,mr,cp,cr,resp,resr,tm,beT,bePct,projOcc,cap};
 }
 
-function setDelta(id,v){
-  var el=document.getElementById(id);
-  if(!el)return;
-  el.textContent=v===0?'=':(v>0?'+':'')+fmtK(v);
-  el.className='delta '+(v>0?'neg':v<0?'pos':'zero'); // cost: lower real = better (pos = green)
-}
-function setDeltaEl(id,v,costMode){
-  var el=document.getElementById(id);
-  if(!el)return;
-  el.textContent=v===0?'=':(v>0?'+':'')+fmtK(v);
-  el.style.color=costMode?(v>0?'var(--red)':v<0?'var(--green)':'var(--muted)'):(v>0?'var(--green)':v<0?'var(--red)':'var(--muted)');
+// ============================================================
+// RENDER
+// ============================================================
+function render(){
+  var c=calc();
+  if(document.activeElement!=$('ev-nome')) $('ev-nome').value=D.evento.nome||'';
+  if(document.activeElement!=$('ev-data')) $('ev-data').value=D.evento.data||'';
+  if(document.activeElement!=$('ev-local')) $('ev-local').value=D.evento.local||'';
+  if(document.activeElement!=$('ev-cap')) $('ev-cap').value=D.evento.cap||'';
+
+  set('k-rp',R(c.rp)); set('k-cp',R(c.cp));
+  var kres=$('k-resp'); kres.textContent=R(c.resp); kres.className='kpi-val '+(c.resp>=0?'pos':'neg');
+  var marg=c.rp>0?c.resp/c.rp*100:0; set('k-marg','Margem '+pct(marg));
+  set('k-rr',R(c.rr)); set('k-cr',R(c.cr));
+  var kresr=$('k-resr'); kresr.textContent=R(c.resr); kresr.className='kpi-val '+(c.resr>=0?'pos':'neg');
+  set('k-be','BE: '+Math.round(c.beT).toLocaleString('pt-BR')+' pag ('+pct(c.bePct)+')');
+
+  renderSetores(c); renderOutras(c); renderDeducoes(c);
+  set('t-rlp',R(c.rlp)); set('t-rlr',R(c.rlr));
+  renderGrupos(c); renderTaxas(c);
+  set('t-cp',R(c.cp)); set('t-cr',R(c.cr));
+  renderBreakeven(c);
+  sv();
 }
 
-// ── CHARTS ──
-function initCharts(){
-  chartCusto=new Chart(document.getElementById('chartCusto').getContext('2d'),{
-    type:'doughnut',
-    data:{labels:[],datasets:[{data:[],backgroundColor:[],borderWidth:2,borderColor:'#fff'}]},
-    options:{responsive:true,maintainAspectRatio:true,cutout:'60%',
-      plugins:{legend:{display:false},tooltip:{callbacks:{
-        label:function(c){return ' '+c.label+': '+fmt(c.raw);}
-      }}}}
-  });
-  chartBar=new Chart(document.getElementById('chartBar').getContext('2d'),{
-    type:'bar',
-    data:{labels:['Pessimista (50%)','Realista (70%)','Otimista (90%)','Personalizado'],
-      datasets:[
-        {label:'Custo Total (c/ taxas)',data:[0,0,0,0],backgroundColor:'rgba(200,16,46,.2)',borderColor:'var(--red)',borderWidth:2},
-        {label:'Receita Bruta',data:[0,0,0,0],
-          backgroundColor:['rgba(220,38,38,.25)','rgba(217,119,6,.25)','rgba(22,163,74,.25)','rgba(37,99,235,.25)'],
-          borderColor:['var(--red)','var(--amber)','var(--green)','var(--blue)'],borderWidth:2}
-      ]},
-    options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{font:{size:10}}}},
-      scales:{y:{ticks:{callback:function(v){return 'R$'+(v/1000).toFixed(0)+'k';}},
-        grid:{color:'rgba(0,0,0,.05)'}}}
+function renderSetores(c){
+  var h='';
+  D.setores.forEach(function(s){
+    var sp=0,sr=0,spag=0;
+    s.lotes.forEach(function(l){ l.tipos.forEach(function(t){
+      if(t.tipo!=='Cortesia'){sp+=t.qp*t.val;sr+=t.qr*t.val;spag+=t.qp;}
+    });});
+    h+='<div class="setor">';
+    h+='<div class="setor-hdr">';
+    h+='<span class="chevron '+(s.open?'open':'')+' " onclick="toggleS(\''+s.id+'\')">▶</span>';
+    h+='<span class="setor-nome">'+esc(s.nome)+'</span>';
+    h+='<span style="font-size:11px;color:rgba(255,255,255,.4);margin-right:8px">'+spag+' pag</span>';
+    h+='<div class="setor-totals"><span class="st-val">Proj: <strong>'+R(sp)+'</strong></span><span class="st-val">Real: <strong>'+R(sr)+'</strong></span></div>';
+    h+='<button class="btn-s rename-btn" onclick="renameS(\''+s.id+'\')" style="margin-left:8px">✏️</button>';
+    h+='<button class="btn-s del-setor" onclick="delS(\''+s.id+'\')">✕</button>';
+    h+='</div>';
+    if(s.open){
+      h+='<div class="setor-body">';
+      s.lotes.forEach(function(l){
+        var lp=0,lr=0; l.tipos.forEach(function(t){ if(t.tipo!=='Cortesia'){lp+=t.qp*t.val;lr+=t.qr*t.val;} });
+        h+='<div class="lote">';
+        h+='<div class="lote-hdr">';
+        h+='<span class="lv-chevron '+(l.open?'open':'')+' " onclick="toggleL(\''+s.id+'\',\''+l.id+'\')">▶</span>';
+        h+='<input class="lote-nome-input" type="text" value="'+esc(l.nome)+'" oninput="loteNm(\''+s.id+'\',\''+l.id+'\',this.value)" onclick="event.stopPropagation()">';
+        h+='<div class="lote-totals"><span>Proj: <strong>'+R(lp)+'</strong></span><span>Real: <strong>'+R(lr)+'</strong></span></div>';
+        h+='<button class="del-lote" onclick="delL(\''+s.id+'\',\''+l.id+'\')">✕ lote</button>';
+        h+='</div>';
+        if(l.open){
+          h+='<div><table class="lote-table"><thead><tr>';
+          h+='<th>Tipo</th>';
+          h+='<th style="background:#eff6ff">Qtd Proj</th>';
+          h+='<th style="background:#eff6ff">Valor R$</th>';
+          h+='<th style="background:#eff6ff">Total Proj</th>';
+          h+='<th style="background:#f0fdf4">Qtd Real</th>';
+          h+='<th style="background:#f0fdf4">Total Real</th>';
+          h+='</tr></thead><tbody>';
+          l.tipos.forEach(function(t){
+            var tp=t.tipo!=='Cortesia'?t.qp*t.val:0;
+            var tr_=t.tipo!=='Cortesia'?t.qr*t.val:0;
+            h+='<tr>';
+            h+='<td><span class="tipo-label">'+t.tipo+'</span></td>';
+            h+='<td style="background:#f8fbff"><input type="number" min="0" value="'+t.qp+'" oninput="upT(\''+s.id+'\',\''+l.id+'\',\''+t.tipo+'\',\'qp\',this.value)"></td>';
+            if(t.tipo!=='Cortesia'){
+              h+='<td style="background:#f8fbff"><input type="number" min="0" step="0.01" value="'+t.val+'" oninput="upT(\''+s.id+'\',\''+l.id+'\',\''+t.tipo+'\',\'val\',this.value)"></td>';
+              h+='<td class="auto-val">'+R(tp)+'</td>';
+              h+='<td style="background:#f6fdf7"><input type="number" min="0" value="'+t.qr+'" oninput="upT(\''+s.id+'\',\''+l.id+'\',\''+t.tipo+'\',\'qr\',this.value)"></td>';
+              h+='<td class="real-val">'+R(tr_)+'</td>';
+            } else {
+              h+='<td colspan="2" style="color:var(--muted);font-size:11px;text-align:center">— sem receita</td>';
+              h+='<td style="background:#f6fdf7"><input type="number" min="0" value="'+t.qr+'" oninput="upT(\''+s.id+'\',\''+l.id+'\',\''+t.tipo+'\',\'qr\',this.value)"></td>';
+              h+='<td class="real-val" style="color:var(--muted)">—</td>';
+            }
+            h+='</tr>';
+          });
+          h+='</tbody></table></div>';
+        }
+        h+='</div>';
+      });
+      h+='<button class="add-btn" onclick="addL(\''+s.id+'\')">+ Lote</button>';
+      h+='</div>';
     }
+    h+='</div>';
   });
+  $('setores-ct').innerHTML=h;
+  set('sh-bp',R(c.bp)); set('sh-br',R(c.br));
 }
 
-function updateCharts(totCP,bilP,tP,manP,cap,tmP,cons,patP,outP,pct,scPcts){
-  if(!chartCusto||!chartBar)return;
-  // Donut: manual cats + taxes
-  var cats=Object.keys(CAT);
-  var labels=cats.map(function(c){return CAT[c].lbl;});
-  labels=labels.concat(['ISS (5%)','ECAD (5%)','Taxa Cartão (3,2%)']);
-  var vals=cats.map(function(c){return custoProj[c]||0;});
-  vals=vals.concat([tP.iss,tP.ecad,tP.cart]);
-  var colors=cats.map(function(c){return CAT[c].color;});
-  colors=colors.concat(['#ef4444','#f97316','#a855f7']);
-
-  chartCusto.data.labels=labels;
-  chartCusto.data.datasets[0].data=vals;
-  chartCusto.data.datasets[0].backgroundColor=colors;
-  chartCusto.update('none');
-
-  // Legend
-  document.getElementById('custo-legend').innerHTML=labels.map(function(l,i){
-    var pct2=totCP>0?(vals[i]/totCP*100).toFixed(1):0;
-    return '<div style="display:flex;align-items:center;gap:4px;font-size:9px;font-weight:600">'
-      +'<div style="width:8px;height:8px;border-radius:50%;background:'+colors[i]+';flex-shrink:0"></div>'
-      +'<span style="flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+l+'</span>'
-      +'<span style="color:var(--muted)">'+pct2+'%</span></div>';
-  }).join('');
-
-  // Bar
-  var recs=scPcts.map(function(p){
-    var d=calcSc(p,manP,tmP,cons,patP,outP);
-    return d.rec;
+function renderOutras(c){
+  var h='';
+  D.outras.forEach(function(o){
+    h+='<tr>';
+    h+='<td><input type="text" value="'+esc(o.nome)+'" oninput="outraNm(\''+o.id+'\',this.value)" style="background:transparent;border:none;font-size:12px"></td>';
+    h+='<td style="background:#f8fbff"><input type="number" min="0" value="'+o.proj+'" oninput="upO(\''+o.id+'\',\'proj\',this.value)"></td>';
+    h+='<td style="background:#f6fdf7"><input type="number" min="0" value="'+o.real+'" oninput="upO(\''+o.id+'\',\'real\',this.value)"></td>';
+    h+='<td><button onclick="delO(\''+o.id+'\')" style="background:none;color:#cbd5e1;border:none;cursor:pointer;font-size:14px;padding:2px 4px" onmouseover="this.style.color=\'#ef4444\'" onmouseout="this.style.color=\'#cbd5e1\'">✕</button></td>';
+    h+='</tr>';
   });
-  var costs=scPcts.map(function(p){
-    var d=calcSc(p,manP,tmP,cons,patP,outP);
-    return d.cus;
+  $('outras-ct').innerHTML=h;
+  set('sh-op',R(c.op)); set('sh-or',R(c.or_));
+}
+
+function renderDeducoes(c){
+  set('d-iss-p',R(c.issp)); set('d-iss-r',R(c.issr));
+  set('d-ecad-p',R(c.ecadp)); set('d-ecad-r',R(c.ecadr));
+  set('d-cart-p',R(c.cartp)); set('d-cart-r',R(c.cartr));
+}
+
+function lighten(hex){
+  var m={'#7c3aed':'#f5f3ff','#2563eb':'#eff6ff','#dc2626':'#fef2f2','#d97706':'#fffbeb','#0891b2':'#ecfeff','#16a34a':'#f0fdf4','#ea580c':'#fff7ed','#db2777':'#fdf4ff','#64748b':'#f8fafc'};
+  return m[hex]||'#f8fafc';
+}
+
+function renderGrupos(c){
+  var h='';
+  D.grupos.forEach(function(g){
+    var gp=0,gr=0; g.itens.forEach(function(i){gp+=i.proj;gr+=i.real;});
+    h+='<div class="grupo">';
+    h+='<div class="grupo-hdr" style="background:'+lighten(g.cor)+'" onclick="toggleG(\''+g.id+'\')">';
+    h+='<div class="grupo-dot" style="background:'+g.cor+'"></div>';
+    h+='<span class="grupo-nome">'+esc(g.nome)+'</span>';
+    h+='<div class="grupo-totals"><span class="gt-val">Proj: <strong>'+R(gp)+'</strong></span><span class="gt-val">Real: <strong>'+R(gr)+'</strong></span></div>';
+    h+='<button class="add-item-btn" onclick="event.stopPropagation();addI(\''+g.id+'\')" >+ Item</button>';
+    h+='<button class="del-grupo" onclick="event.stopPropagation();delG(\''+g.id+'\')">✕</button>';
+    h+='<span class="g-chevron '+(g.open?'open':'')+'">▶</span>';
+    h+='</div>';
+    if(g.open){
+      h+='<div class="grupo-body">';
+      h+='<div class="items-header"><div class="col-label" style="text-align:left">Descrição</div><div class="col-label" style="background:#eff6ff;padding:3px 6px;border-radius:4px">Projetado R$</div><div class="col-label" style="background:#f0fdf4;padding:3px 6px;border-radius:4px">Realizado R$</div><div class="col-label">Δ</div><div></div></div>';
+      if(!g.itens.length) h+='<div style="padding:12px 16px;color:var(--muted);font-size:12px;text-align:center">Nenhum item — clique "+ Item" para adicionar</div>';
+      g.itens.forEach(function(i){
+        var d=i.real-i.proj;
+        h+='<div class="item-row">';
+        h+='<div class="item-desc"><input type="text" value="'+esc(i.desc)+'" oninput="upID(\''+g.id+'\',\''+i.id+'\',this.value)"></div>';
+        h+='<div style="background:#f8fbff;padding:2px 4px;border-radius:4px"><input type="number" min="0" value="'+i.proj+'" oninput="upI(\''+g.id+'\',\''+i.id+'\',\'proj\',this.value)"></div>';
+        h+='<div style="background:#f6fdf7;padding:2px 4px;border-radius:4px"><input type="number" min="0" value="'+i.real+'" oninput="upI(\''+g.id+'\',\''+i.id+'\',\'real\',this.value)"></div>';
+        h+='<div class="item-delta '+(d>=0?'pos':'neg')+'">'+(d>0?'+':'')+R(d)+'</div>';
+        h+='<button class="del-item" onclick="delI(\''+g.id+'\',\''+i.id+'\')">✕</button>';
+        h+='</div>';
+      });
+      h+='</div>';
+    }
+    h+='</div>';
   });
-  chartBar.data.datasets[0].data=costs;
-  chartBar.data.datasets[1].data=recs;
-  chartBar.update('none');
+  $('grupos-ct').innerHTML=h;
+  set('sh-cp',R(c.mp)); set('sh-cr',R(c.mr));
 }
 
-// ── SYNC ──
-function syncSlider(){
-  var v=document.getElementById('inp-pct-ev').value;
-  document.getElementById('sl-pct').value=v;
-  document.getElementById('sl-pct-display').textContent=v+'%';
-}
-function syncPct(){
-  var v=document.getElementById('sl-pct').value;
-  document.getElementById('inp-pct-ev').value=v;
-  document.getElementById('sl-pct-display').textContent=v+'%';
+function renderTaxas(c){
+  set('tx-iss-p',R(c.issp)); set('tx-iss-r',R(c.issr));
+  set('tx-ecad-p',R(c.ecadp)); set('tx-ecad-r',R(c.ecadr));
+  set('tx-cart-p',R(c.cartp)); set('tx-cart-r',R(c.cartr));
+  set('tx-tot-p',R(c.txp)); set('tx-tot-r',R(c.txr));
 }
 
-// ── RESET ──
-function resetToMatue(){
-  Object.keys(MATUE).forEach(function(c){
-    custoProj[c]=MATUE[c]; custoReal[c]=MATUE[c];
-    var ep=document.getElementById('cp-'+c), er=document.getElementById('cr-'+c);
-    if(ep)ep.value=MATUE[c].toFixed(2);
-    if(er)er.value=MATUE[c].toFixed(2);
+function renderBreakeven(c){
+  set('be-tkt',Math.round(c.beT).toLocaleString('pt-BR'));
+  set('be-pct',pct(c.bePct));
+  set('be-tm',R(c.tm));
+  set('be-cap',c.pp.toLocaleString('pt-BR'));
+
+  var pcts=[50,70,85,100];
+  var h='';
+  pcts.forEach(function(p){
+    var bilSc=c.bp*(p/100);
+    var outSc=c.op;
+    var recSc=bilSc+outSc;
+    var txSc=bilSc*0.132;
+    var custSc=c.mp+txSc;
+    var resSc=recSc-custSc;
+    var pagSc=Math.round(c.pp*p/100);
+    var cls=p<c.bePct?'bad':(Math.abs(p-c.bePct)<6?'be':'ok');
+    var color=cls==='ok'?'#16a34a':cls==='bad'?'#dc2626':'#d97706';
+    h+='<div class="scenario-card '+cls+'">';
+    h+='<div class="sc-pct" style="color:'+color+'">'+p+'%</div>';
+    h+='<div class="sc-pag">'+pagSc.toLocaleString('pt-BR')+' pagantes</div>';
+    h+='<div class="sc-rec">'+R(recSc)+'</div>';
+    h+='<div class="sc-res '+(resSc>=0?'pos':'neg')+'">'+(resSc>=0?'+':'')+R(resSc)+'</div>';
+    h+='<div class="sc-lbl">'+(resSc>=0?'✅ Lucro':'❌ Prejuízo')+'</div>';
+    h+='</div>';
   });
-  document.getElementById('inp-nome').value='Matuê + Brandão · Park da Copa';
-  document.getElementById('inp-cap').value=5000;
-  document.getElementById('inp-tm-proj').value=124;
-  document.getElementById('inp-tm-real').value=124;
-  document.getElementById('inp-cons').value=35;
-  document.getElementById('inp-pct-ev').value=70;
-  document.getElementById('rec-bil-real').value=649997;
-  document.getElementById('rec-bar-real').value=0;
-  document.getElementById('rec-pat-proj').value=0; document.getElementById('rec-pat-real').value=0;
-  document.getElementById('rec-out-proj').value=0; document.getElementById('rec-out-real').value=0;
-  syncSlider(); calc();
+  $('scenarios').innerHTML=h;
+
+  set('g-pct',pct(c.projOcc));
+  set('g-sub','Ocupação proj · BE: '+pct(c.bePct));
+  drawGauge(c.projOcc,c.bePct);
 }
 
-// ── SAVE PDF ──
+function drawGauge(projPct,bePct){
+  var cv=$('gauge-cv'); if(!cv) return;
+  var ctx=cv.getContext('2d');
+  if(GC){GC.destroy();GC=null;}
+  var p=Math.min(Math.max(projPct,0),100);
+  var b=Math.min(Math.max(bePct,0),100);
+  var beforeBe=Math.min(b,p);
+  var afterBe=Math.max(0,p-b);
+  var beSlice=Math.min(1,100-p);
+  var empty=Math.max(0,100-p-beSlice);
+  GC=new Chart(ctx,{type:'doughnut',data:{datasets:[{data:[beforeBe,beSlice,afterBe,empty],backgroundColor:['#ef4444','#fbbf24','#4ade80','#e2e8f0'],borderWidth:0,hoverOffset:0}]},options:{circumference:180,rotation:-90,cutout:'68%',animation:{duration:300},plugins:{legend:{display:false},tooltip:{enabled:false}}}});
+}
+
+// ============================================================
+// MUTATIONS
+// ============================================================
+function fS(id){ return D.setores.find(function(s){return s.id===id;}); }
+function fL(sid,lid){ var s=fS(sid); return s?s.lotes.find(function(l){return l.id===lid;}):null; }
+function fG(id){ return D.grupos.find(function(g){return g.id===id;}); }
+function fI(gid,iid){ var g=fG(gid); return g?g.itens.find(function(i){return i.id===iid;}):null; }
+
+function toggleS(id){ var s=fS(id); if(s){s.open=!s.open;render();} }
+function toggleL(sid,lid){ var l=fL(sid,lid); if(l){l.open=!l.open;render();} }
+function toggleG(id){ var g=fG(id); if(g){g.open=!g.open;render();} }
+
+function addSetor(){ var n=prompt('Nome do setor:','Novo Setor'); if(n){D.setores.push(mkSetor(n));render();} }
+function delS(id){ if(confirm('Remover setor?')){D.setores=D.setores.filter(function(s){return s.id!==id;});render();} }
+function renameS(id){ var s=fS(id); if(!s) return; var n=prompt('Novo nome:',s.nome); if(n){s.nome=n;render();} }
+
+function addL(sid){ var s=fS(sid); if(!s) return; var n=s.lotes.length+1; s.lotes.push(mkLote('Lote '+n)); render(); }
+function delL(sid,lid){ if(confirm('Remover lote?')){ var s=fS(sid); if(s){s.lotes=s.lotes.filter(function(l){return l.id!==lid;});render();} } }
+function loteNm(sid,lid,v){ var l=fL(sid,lid); if(l){l.nome=v;sv();} }
+function upT(sid,lid,tipo,f,v){ var l=fL(sid,lid); if(!l) return; var t=l.tipos.find(function(x){return x.tipo===tipo;}); if(t){t[f]=parseFloat(v)||0;render();} }
+
+function addOutra(){ D.outras.push({id:uid(),nome:'Nova Receita',proj:0,real:0}); render(); }
+function delO(id){ D.outras=D.outras.filter(function(o){return o.id!==id;}); render(); }
+function upO(id,f,v){ var o=D.outras.find(function(x){return x.id===id;}); if(o){o[f]=parseFloat(v)||0;render();} }
+function outraNm(id,v){ var o=D.outras.find(function(x){return x.id===id;}); if(o){o.nome=v;sv();} }
+
+function addGrupo(){ var n=$('new-gn').value.trim(); if(!n){alert('Digite o nome.');return;} var c=$('new-gc').value; D.grupos.push(mkGrupo(n,c,[])); $('new-gn').value=''; render(); }
+function delG(id){ if(confirm('Remover grupo e todos os itens?')){D.grupos=D.grupos.filter(function(g){return g.id!==id;});render();} }
+
+function addI(gid){ var g=fG(gid); if(g){g.itens.push(mkItem('Novo Item'));render();} }
+function delI(gid,iid){ var g=fG(gid); if(g){g.itens=g.itens.filter(function(i){return i.id!==iid;});render();} }
+function upI(gid,iid,f,v){ var i=fI(gid,iid); if(i){i[f]=parseFloat(v)||0;render();} }
+function upID(gid,iid,v){ var i=fI(gid,iid); if(i){i.desc=v;sv();} }
+
+// ============================================================
+// TABS / MODAL / PDF
+// ============================================================
+function showTab(name,el){
+  document.querySelectorAll('.tab-pane').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
+  $('tab-'+name).classList.add('active');
+  el.classList.add('active');
+  if(name==='breakeven'){ setTimeout(function(){var c=calc();drawGauge(c.projOcc,c.bePct);},120); }
+}
+
+function showModal(){ $('modal-ov').classList.add('show'); }
+function hideModal(){ $('modal-ov').classList.remove('show'); }
+function novoEvento(){
+  localStorage.removeItem('via_v4');
+  D=deepClone(DEFAULTS);
+  hideModal();
+  render();
+}
+
 function savePDF(){
-  var nome=document.getElementById('inp-nome').value||'Evento';
-  document.getElementById('pdf-nome-evento').textContent='Análise de Viabilidade · '+nome;
-  var now=new Date();
-  document.getElementById('pdf-data-geracao').textContent=
-    now.toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'})+
-    ' às '+now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-  // Update page title to control PDF filename
-  var oldTitle=document.title;
-  document.title='Viabilidade · '+nome.replace(/[^a-zA-Z0-9 ]/g,' ')+' · Axis';
+  document.querySelectorAll('.tab-pane').forEach(function(p){p.style.display='block';});
+  var old=document.title;
+  document.title='Viabilidade · '+(D.evento.nome||'Evento')+' · Axis';
   window.print();
-  document.title=oldTitle;
+  document.title=old;
+  document.querySelectorAll('.tab-pane').forEach(function(p){p.style.display='';});
+  document.querySelector('.tab-pane.active').style.display='block';
 }
 
-// ── INIT ──
-var n=new Date();
-document.getElementById('hdate').innerHTML=
-  n.toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'})+'<small>Análise de Viabilidade</small>';
-buildRows();
-initCharts();
-calc();
-syncSlider();
+// INIT
+render();
 </script>
 </body>
 </html>
