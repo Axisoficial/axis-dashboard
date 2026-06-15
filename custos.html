@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gastos Felipe Brito — Axis</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--red:#C8102E;--gray:#f4f4f6;--gray2:#e8e8ec;--text:#1a1a2e;--muted:#6b7280;
+  --green:#16a34a;--amber:#d97706;--blue:#2563eb;color-scheme:light}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f7f7fa;color:var(--text);min-height:100vh}
+header{background:#fff;border-bottom:3px solid var(--red);padding:12px 24px;
+  display:flex;align-items:center;justify-content:space-between;
+  box-shadow:0 2px 8px rgba(0,0,0,.07);position:sticky;top:0;z-index:100}
+.logo{font-size:20px;font-weight:900;color:var(--red)}
+.logo-sub{font-size:9px;color:var(--muted);font-weight:600;letter-spacing:1px}
+.hlinks{display:flex;gap:8px}
+.hlink{padding:6px 14px;border-radius:8px;font-size:11px;font-weight:700;text-decoration:none;transition:.2s}
+.hlink:hover{transform:translateY(-1px)}
+.hlink-gray{background:var(--gray);color:var(--text)}
+.hlink-red{background:var(--red);color:#fff}
+.header-right{text-align:right;font-size:12px;font-weight:700;color:var(--red)}
+.header-right small{display:block;font-size:10px;color:var(--muted);font-weight:400}
+.container{max-width:1350px;margin:0 auto;padding:20px 18px}
+.kpi-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:22px}
+.kpi{background:#fff;border-radius:12px;padding:15px 18px;box-shadow:0 2px 10px rgba(0,0,0,.06);border-top:4px solid var(--red)}
+.kpi.green{border-top-color:var(--green)}.kpi.amber{border-top-color:var(--amber)}.kpi.blue{border-top-color:var(--blue)}
+.kpi-lbl{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:3px;font-weight:600}
+.kpi-val{font-size:20px;font-weight:800;line-height:1}
+.kpi-sub{font-size:10px;color:var(--muted);margin-top:3px}
+.filters{background:#fff;border-radius:12px;padding:14px 18px;box-shadow:0 2px 10px rgba(0,0,0,.06);
+  margin-bottom:18px;display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap}
+.filters label{font-size:10px;font-weight:700;color:var(--muted);display:flex;flex-direction:column;gap:4px}
+.filters select,.filters input[type=text]{border:1.5px solid var(--gray2);border-radius:8px;padding:7px 10px;
+  font-size:12px;font-family:inherit;outline:none;transition:.15s;min-width:140px}
+.filters select:focus,.filters input:focus{border-color:var(--red)}
+.filter-btns{display:flex;gap:8px;margin-left:auto}
+.tbl-wrap{background:#fff;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.06);overflow:hidden;margin-bottom:20px}
+.tbl-header{padding:13px 18px;border-bottom:1px solid var(--gray2);display:flex;align-items:center;justify-content:space-between}
+.tbl-title{font-size:13px;font-weight:800}
+table{width:100%;border-collapse:collapse;font-size:11.5px}
+thead th{background:var(--gray);padding:8px 12px;text-align:left;font-size:9px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.7px;color:var(--muted);white-space:nowrap}
+tbody tr{border-bottom:1px solid var(--gray2);transition:background .12s}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:#fafafa}
+td{padding:9px 12px;vertical-align:middle}
+.num{text-align:right;font-weight:700}
+.num-red{color:var(--red)}.num-green{color:var(--green)}.num-amber{color:var(--amber)}
+tfoot tr{background:var(--gray);font-weight:800;border-top:2px solid var(--gray2)}
+.status-btn{border:none;border-radius:20px;font-size:9px;font-weight:700;padding:3px 10px;cursor:pointer;transition:.2s}
+.status-pago{background:#dcfce7;color:#166534}
+.status-apagar{background:#fee2e2;color:#991b1b}
+.status-parcial{background:#fef3c7;color:#92400e}
+.cat-tag{display:inline-block;font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;white-space:nowrap}
+.cat-cache{background:#ede9fe;color:#5b21b6}
+.cat-mkt{background:#dbeafe;color:#1e40af}
+.cat-estrutura{background:#fef3c7;color:#92400e}
+.cat-transporte{background:#dcfce7;color:#166534}
+.cat-hospedagem{background:#e0f2fe;color:#075985}
+.cat-imposto{background:#fee2e2;color:#991b1b}
+.cat-alimentacao{background:#fef9c3;color:#713f12}
+.cat-outros{background:#f3f4f6;color:#374151}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:8px;
+  font-size:11px;font-weight:700;border:none;cursor:pointer;transition:.2s}
+.btn:hover{transform:translateY(-1px);box-shadow:0 3px 8px rgba(0,0,0,.12)}
+.btn-red{background:var(--red);color:#fff}.btn-gray{background:var(--gray);color:var(--text)}
+.btn-green{background:var(--green);color:#fff}.btn-sm{padding:4px 9px;font-size:10px}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:999;align-items:center;justify-content:center}
+.overlay.open{display:flex}
+.modal{background:#fff;border-radius:14px;padding:22px;max-width:540px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.modal-title{font-size:14px;font-weight:800;margin-bottom:16px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-grid .full{grid-column:1/-1}
+.field label{font-size:10px;font-weight:700;color:var(--muted);display:block;margin-bottom:3px}
+.field input,.field select{width:100%;border:1.5px solid var(--gray2);border-radius:8px;
+  padding:7px 10px;font-size:12px;font-family:inherit;outline:none;transition:.15s}
+.field input:focus,.field select:focus{border-color:var(--red)}
+.modal-footer{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
+.apagar-panel{background:linear-gradient(135deg,#fff5f5,#fff);border:2px solid #fecdd3;
+  border-radius:12px;padding:18px;margin-bottom:20px}
+.apagar-title{font-size:13px;font-weight:800;color:var(--red);margin-bottom:12px}
+.apagar-item{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;
+  background:#fff;border-radius:8px;margin-bottom:6px;border:1px solid #fecdd3}
+.apagar-item:last-child{margin-bottom:0}
+.apagar-item-name{font-weight:600;font-size:12px}
+.apagar-item-sub{font-size:10px;color:var(--muted)}
+.apagar-item-val{font-weight:800;color:var(--red);font-size:13px}
+.media-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
+.media-card{background:#fff;border-radius:12px;padding:14px 16px;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+.media-lbl{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-weight:600;margin-bottom:4px}
+.media-val{font-size:18px;font-weight:800}
+.sep{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);
+  margin:20px 0 12px;display:flex;align-items:center;gap:8px}
+.sep::after{content:'';flex:1;height:1px;background:var(--gray2)}
+.edit-ico{cursor:pointer;opacity:.35;transition:.2s;font-size:13px;padding:2px 4px}
+.edit-ico:hover{opacity:1}
+.fab{position:fixed;bottom:24px;right:24px;width:52px;height:52px;border-radius:50%;
+  background:var(--red);color:#fff;font-size:24px;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 20px rgba(200,16,46,.4);cursor:pointer;border:none;transition:.2s;z-index:90}
+.fab:hover{transform:scale(1.1)}
+</style>
+</head>
+<body>
+
+<header>
+  <div><div class="logo">AXIS</div><div class="logo-sub">ENTRETENIMENTO</div></div>
+  <div class="hlinks">
+    <a href="index.html" class="hlink hlink-gray">&#8592; Dashboard</a>
+    <span class="hlink hlink-red">&#128176; Gastos Felipe Brito</span>
+  </div>
+  <div class="header-right" id="hdate">&#8212;<small>Gestão de Gastos</small></div>
+</header>
+
+<div class="container">
+
+  <div class="kpi-grid">
+    <div class="kpi">
+      <div class="kpi-lbl">Total Gasto</div>
+      <div class="kpi-val num-red" id="kpi-total">&#8212;</div>
+      <div class="kpi-sub" id="kpi-count">&#8212; itens</div>
+    </div>
+    <div class="kpi green">
+      <div class="kpi-lbl">&#10003; Já Pago</div>
+      <div class="kpi-val num-green" id="kpi-pago">&#8212;</div>
+      <div class="kpi-sub" id="kpi-pago-ct">&#8212; itens</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-lbl">A Pagar</div>
+      <div class="kpi-val num-red" id="kpi-apagar">&#8212;</div>
+      <div class="kpi-sub" id="kpi-apagar-ct">&#8212; pendentes</div>
+    </div>
+    <div class="kpi amber">
+      <div class="kpi-lbl">Média por Item</div>
+      <div class="kpi-val num-amber" id="kpi-media">&#8212;</div>
+      <div class="kpi-sub">média de gasto</div>
+    </div>
+    <div class="kpi blue">
+      <div class="kpi-lbl">Receita Matuê + Brandão</div>
+      <div class="kpi-val" style="color:var(--blue)">R$ 649.997</div>
+      <div class="kpi-sub num-red" id="kpi-dif">Diferença: &#8212;</div>
+    </div>
+  </div>
+
+  <div class="apagar-panel" id="apagar-panel" style="display:none">
+    <div class="apagar-title">O que você ainda precisa pagar</div>
+    <div id="apagar-list"></div>
+  </div>
+
+  <div class="media-grid">
+    <div class="media-card">
+      <div class="media-lbl">Maior gasto único</div>
+      <div class="media-val num-red" id="med-maior">&#8212;</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:3px" id="med-maior-nome">&#8212;</div>
+    </div>
+    <div class="media-card">
+      <div class="media-lbl">Cachês / Artistas</div>
+      <div class="media-val num-red" id="med-cache">&#8212;</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:3px">% do total: <span id="med-cache-pct">&#8212;</span></div>
+    </div>
+    <div class="media-card">
+      <div class="media-lbl">Estrutura + Produção</div>
+      <div class="media-val num-amber" id="med-struct">&#8212;</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:3px">% do total: <span id="med-struct-pct">&#8212;</span></div>
+    </div>
+  </div>
+
+  <div class="filters">
+    <label>Buscar<input type="text" id="f-busca" placeholder="Nome do gasto..." oninput="render()"></label>
+    <label>Categoria
+      <select id="f-cat" onchange="render()">
+        <option value="">Todas</option>
+        <option value="cache">Cachê / Artistas</option>
+        <option value="mkt">Marketing</option>
+        <option value="estrutura">Estrutura / Produção</option>
+        <option value="transporte">Transporte / Logística</option>
+        <option value="hospedagem">Hospedagem</option>
+        <option value="imposto">Impostos / Taxas</option>
+        <option value="alimentacao">Alimentação</option>
+        <option value="outros">Outros</option>
+      </select>
+    </label>
+    <label>Status
+      <select id="f-status" onchange="render()">
+        <option value="">Todos</option>
+        <option value="pago">Pago</option>
+        <option value="apagar">A Pagar</option>
+        <option value="parcial">Parcial</option>
+      </select>
+    </label>
+    <div class="filter-btns">
+      <button class="btn btn-gray" onclick="clearFilters()">Limpar</button>
+      <button class="btn btn-red" onclick="openModal()">+ Novo gasto</button>
+    </div>
+  </div>
+
+  <div class="tbl-wrap">
+    <div class="tbl-header">
+      <div class="tbl-title">Todos os Gastos</div>
+      <span style="font-size:11px;color:var(--muted)" id="tbl-count">&#8212;</span>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Descricao</th><th>Categoria</th><th>Observacao</th>
+          <th style="text-align:right">Valor</th><th>Status</th><th></th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+      <tfoot>
+        <tr>
+          <td colspan="3"><strong>TOTAL</strong></td>
+          <td class="num num-red" id="tbl-total">&#8212;</td>
+          <td colspan="2"></td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <div class="sep">Resumo por categoria</div>
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Categoria</th>
+          <th style="text-align:right">Total</th>
+          <th style="text-align:right">Pago</th>
+          <th style="text-align:right">A Pagar</th>
+          <th>Participacao</th>
+          <th>Itens</th>
+        </tr>
+      </thead>
+      <tbody id="cat-tbody"></tbody>
+    </table>
+  </div>
+
+</div>
+
+<button class="fab" onclick="openModal()">+</button>
+
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="modal-title" id="modal-title">Novo Gasto</div>
+    <div class="form-grid">
+      <div class="field full"><label>Descricao *</label><input type="text" id="m-desc" placeholder="Ex: Cache Artista X"></div>
+      <div class="field"><label>Valor (R$) *</label><input type="number" id="m-valor" placeholder="0.00" min="0" step="0.01"></div>
+      <div class="field"><label>Categoria *</label>
+        <select id="m-cat">
+          <option value="cache">Cache / Artistas</option>
+          <option value="mkt">Marketing</option>
+          <option value="estrutura">Estrutura / Producao</option>
+          <option value="transporte">Transporte / Logistica</option>
+          <option value="hospedagem">Hospedagem</option>
+          <option value="imposto">Impostos / Taxas</option>
+          <option value="alimentacao">Alimentacao</option>
+          <option value="outros">Outros</option>
+        </select>
+      </div>
+      <div class="field"><label>Status</label>
+        <select id="m-status">
+          <option value="apagar">A Pagar</option>
+          <option value="pago">Pago</option>
+          <option value="parcial">Parcial</option>
+        </select>
+      </div>
+      <div class="field full"><label>Observacao</label><input type="text" id="m-obs" placeholder="Ex: Equipe Matue, 50%, Richard..."></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-gray" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-red" onclick="saveItem()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+var INITIAL=[
+  {desc:'Julia e Tawan',cat:'outros',obs:'',valor:2000,status:'pago'},
+  {desc:'ADS Facebook',cat:'mkt',obs:'',valor:37850.50,status:'pago'},
+  {desc:'Van Artistica',cat:'transporte',obs:'Matue + Brandao',valor:10000,status:'pago'},
+  {desc:'Aereo Equipe Matue',cat:'transporte',obs:'Equipe Matue',valor:26812.14,status:'pago'},
+  {desc:'Aereo Equipe Brandao',cat:'transporte',obs:'Equipe Brandao',valor:11738.06,status:'pago'},
+  {desc:'Van Carga',cat:'transporte',obs:'',valor:4500,status:'pago'},
+  {desc:'Aereo Producao',cat:'transporte',obs:'Nei',valor:1554.29,status:'pago'},
+  {desc:'Onibus Producao',cat:'transporte',obs:'Nei',valor:144.78,status:'pago'},
+  {desc:'Hospedagem Seleto',cat:'hospedagem',obs:'Seleto',valor:2240,status:'pago'},
+  {desc:'Hospedagem RJ',cat:'hospedagem',obs:'',valor:2677.50,status:'pago'},
+  {desc:'Hospedagem RJ Artista',cat:'hospedagem',obs:'Artista',valor:4086.28,status:'pago'},
+  {desc:'Taxa Site',cat:'imposto',obs:'',valor:1586.80,status:'pago'},
+  {desc:'Cache Matue',cat:'cache',obs:'',valor:300000,status:'pago'},
+  {desc:'Cache Brandao',cat:'cache',obs:'',valor:15000,status:'pago'},
+  {desc:'Cache Xininho',cat:'cache',obs:'',valor:1000,status:'pago'},
+  {desc:'ISS Matue',cat:'imposto',obs:'',valor:17710,status:'apagar'},
+  {desc:'ISS Park da Copa',cat:'imposto',obs:'',valor:14290.81,status:'apagar'},
+  {desc:'Estrutura Park da Copa',cat:'estrutura',obs:'',valor:50000,status:'pago'},
+  {desc:'Shopping Park Sul',cat:'estrutura',obs:'',valor:25000,status:'pago'},
+  {desc:'Taxa de Alvara Matue',cat:'imposto',obs:'',valor:154.20,status:'pago'},
+  {desc:'Gestor de Trafego',cat:'mkt',obs:'',valor:3200,status:'pago'},
+  {desc:'Design',cat:'mkt',obs:'',valor:3000,status:'pago'},
+  {desc:'Reconhecimento de Marca',cat:'mkt',obs:'',valor:1720,status:'pago'},
+  {desc:'Andaime Matue',cat:'estrutura',obs:'',valor:146.40,status:'pago'},
+  {desc:'Videos Matue',cat:'mkt',obs:'Richard',valor:1000,status:'apagar'},
+  {desc:'Seguro Civil',cat:'outros',obs:'',valor:1065.71,status:'pago'},
+  {desc:'Efeitos',cat:'estrutura',obs:'50%',valor:7500,status:'parcial'},
+  {desc:'ECAD',cat:'imposto',obs:'',valor:5207.57,status:'apagar'},
+  {desc:'Presskit',cat:'mkt',obs:'Caixas',valor:360,status:'pago'},
+  {desc:'Almoco Equipe',cat:'alimentacao',obs:'',valor:213.48,status:'pago'},
+  {desc:'Grafica Matue',cat:'mkt',obs:'',valor:2880,status:'pago'},
+  {desc:'Ilha Sao Joao',cat:'estrutura',obs:'',valor:30000,status:'pago'},
+  {desc:'Entrada Som Matue',cat:'estrutura',obs:'',valor:40000,status:'pago'},
+  {desc:'Julia Copa',cat:'alimentacao',obs:'',valor:600,status:'pago'},
+  {desc:'Rogerinho do Quero',cat:'outros',obs:'',valor:3000,status:'apagar'},
+  {desc:'Drone Copa',cat:'mkt',obs:'',valor:250,status:'pago'},
+  {desc:'Cracha Matue',cat:'estrutura',obs:'',valor:1228,status:'pago'},
+  {desc:'Helio Junior',cat:'cache',obs:'',valor:60000,status:'apagar'},
+  {desc:'Taxa Camisa do Brasil',cat:'imposto',obs:'',valor:147.65,status:'pago'},
+  {desc:'Sheila',cat:'cache',obs:'05/05',valor:500,status:'pago'}
+];
+
+var CAT_LBL={cache:'Cache / Artistas',mkt:'Marketing',estrutura:'Estrutura / Producao',
+  transporte:'Transporte / Logistica',hospedagem:'Hospedagem',imposto:'Impostos / Taxas',
+  alimentacao:'Alimentacao',outros:'Outros'};
+var CAT_CLS={cache:'cat-cache',mkt:'cat-mkt',estrutura:'cat-estrutura',
+  transporte:'cat-transporte',hospedagem:'cat-hospedagem',imposto:'cat-imposto',
+  alimentacao:'cat-alimentacao',outros:'cat-outros'};
+
+function getData(){try{var s=localStorage.getItem('axis_fb2');return s?JSON.parse(s):null}catch(e){return null}}
+function setData(d){localStorage.setItem('axis_fb2',JSON.stringify(d))}
+
+var DATA=getData()||INITIAL.map(function(d,i){return Object.assign({},d,{id:i})});
+var editId=null;
+
+var fmt=function(v){return 'R$ '+Number(v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})};
+
+function render(){
+  var busca=document.getElementById('f-busca').value.toLowerCase();
+  var cat=document.getElementById('f-cat').value;
+  var stat=document.getElementById('f-status').value;
+  var filtered=DATA.filter(function(d){
+    if(busca&&d.desc.toLowerCase().indexOf(busca)<0&&(d.obs||'').toLowerCase().indexOf(busca)<0)return false;
+    if(cat&&d.cat!==cat)return false;
+    if(stat&&d.status!==stat)return false;
+    return true;
+  });
+  var rows='',visTotal=0;
+  filtered.forEach(function(d){
+    visTotal+=d.valor;
+    var sCls=d.status==='pago'?'status-pago':d.status==='parcial'?'status-parcial':'status-apagar';
+    var sLbl=d.status==='pago'?'Pago':d.status==='parcial'?'Parcial':'A Pagar';
+    rows+='<tr><td style="font-weight:600">'+d.desc+'</td>'
+      +'<td><span class="cat-tag '+(CAT_CLS[d.cat]||'cat-outros')+'">'+(CAT_LBL[d.cat]||d.cat)+'</span></td>'
+      +'<td style="font-size:10px;color:var(--muted)">'+(d.obs||'&#8212;')+'</td>'
+      +'<td class="num num-red">'+fmt(d.valor)+'</td>'
+      +'<td><button class="status-btn '+sCls+'" onclick="cycleStatus('+d.id+')">'+sLbl+'</button></td>'
+      +'<td><span class="edit-ico" onclick="openModal('+d.id+')" title="Editar">&#9998;</span>'
+      +' <span class="edit-ico" onclick="deleteItem('+d.id+')" title="Excluir">&#128465;</span></td></tr>';
+  });
+  document.getElementById('tbody').innerHTML=rows||'<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--muted)">Nenhum registro.</td></tr>';
+  document.getElementById('tbl-count').textContent=filtered.length+' registro'+(filtered.length===1?'':'s');
+  document.getElementById('tbl-total').textContent=fmt(visTotal);
+
+  var total=DATA.reduce(function(s,d){return s+d.valor},0);
+  var pagos=DATA.filter(function(d){return d.status==='pago'});
+  var apagar=DATA.filter(function(d){return d.status==='apagar'||d.status==='parcial'});
+  var totPago=pagos.reduce(function(s,d){return s+d.valor},0);
+  var totAP=apagar.reduce(function(s,d){return s+d.valor},0);
+  document.getElementById('kpi-total').textContent=fmt(total);
+  document.getElementById('kpi-count').textContent=DATA.length+' itens';
+  document.getElementById('kpi-pago').textContent=fmt(totPago);
+  document.getElementById('kpi-pago-ct').textContent=pagos.length+' itens';
+  document.getElementById('kpi-apagar').textContent=fmt(totAP);
+  document.getElementById('kpi-apagar-ct').textContent=apagar.length+' pendentes';
+  document.getElementById('kpi-media').textContent=DATA.length>0?fmt(total/DATA.length):'&#8212;';
+  var dif=649997-total;
+  document.getElementById('kpi-dif').textContent='Diferenca: '+(dif>=0?'+':'')+fmt(dif);
+
+  if(apagar.length){
+    document.getElementById('apagar-panel').style.display='block';
+    var items=apagar.slice().sort(function(a,b){return b.valor-a.valor});
+    document.getElementById('apagar-list').innerHTML=items.map(function(d){
+      return '<div class="apagar-item">'
+        +'<div><div class="apagar-item-name">'+d.desc+'</div>'
+        +'<div class="apagar-item-sub">'+(CAT_LBL[d.cat]||d.cat)+(d.obs?' &middot; '+d.obs:'')
+        +' &middot; '+(d.status==='parcial'?'Parcialmente pago':'Nao pago')+'</div></div>'
+        +'<div style="display:flex;align-items:center;gap:10px">'
+        +'<div class="apagar-item-val">'+fmt(d.valor)+'</div>'
+        +'<button class="btn btn-sm btn-green" onclick="markPago('+d.id+')">Marcar pago</button>'
+        +'</div></div>';
+    }).join('');
+  } else {
+    document.getElementById('apagar-panel').style.display='none';
+  }
+
+  var maior=DATA.slice().sort(function(a,b){return b.valor-a.valor})[0];
+  document.getElementById('med-maior').textContent=maior?fmt(maior.valor):'&#8212;';
+  document.getElementById('med-maior-nome').textContent=maior?maior.desc:'&#8212;';
+  var cacheT=DATA.filter(function(d){return d.cat==='cache'}).reduce(function(s,d){return s+d.valor},0);
+  var structT=DATA.filter(function(d){return d.cat==='estrutura'}).reduce(function(s,d){return s+d.valor},0);
+  document.getElementById('med-cache').textContent=fmt(cacheT);
+  document.getElementById('med-cache-pct').textContent=total>0?(cacheT/total*100).toFixed(1)+'%':'&#8212;';
+  document.getElementById('med-struct').textContent=fmt(structT);
+  document.getElementById('med-struct-pct').textContent=total>0?(structT/total*100).toFixed(1)+'%':'&#8212;';
+
+  var byCat={};
+  DATA.forEach(function(d){
+    if(!byCat[d.cat])byCat[d.cat]={total:0,pago:0,apagar:0,count:0};
+    byCat[d.cat].total+=d.valor;
+    byCat[d.cat].count+=1;
+    if(d.status==='pago')byCat[d.cat].pago+=d.valor;
+    else byCat[d.cat].apagar+=d.valor;
+  });
+  var catRows=Object.entries(byCat).sort(function(a,b){return b[1].total-a[1].total}).map(function(e){
+    var cat=e[0],v=e[1],p=total>0?(v.total/total*100):0;
+    return '<tr><td><span class="cat-tag '+(CAT_CLS[cat]||'cat-outros')+'">'+(CAT_LBL[cat]||cat)+'</span></td>'
+      +'<td class="num num-red">'+fmt(v.total)+'</td>'
+      +'<td class="num num-green">'+fmt(v.pago)+'</td>'
+      +'<td class="num" style="color:'+(v.apagar>0?'var(--red)':'var(--muted)')+'">'+fmt(v.apagar)+'</td>'
+      +'<td><div style="display:flex;align-items:center;gap:6px">'
+      +'<div style="flex:1;height:5px;background:var(--gray2);border-radius:10px;overflow:hidden;min-width:60px">'
+      +'<div style="height:100%;width:'+p+'%;background:var(--red);border-radius:10px"></div></div>'
+      +'<span style="font-size:10px;font-weight:700;color:var(--muted)">'+p.toFixed(1)+'%</span></div></td>'
+      +'<td style="font-size:11px;color:var(--muted)">'+v.count+'</td></tr>';
+  }).join('');
+  document.getElementById('cat-tbody').innerHTML=catRows;
+}
+
+function cycleStatus(id){
+  var item=DATA.find(function(d){return d.id===id});
+  if(!item)return;
+  var cycle={pago:'apagar',apagar:'parcial',parcial:'pago'};
+  item.status=cycle[item.status]||'apagar';
+  setData(DATA);render();
+}
+function markPago(id){
+  var item=DATA.find(function(d){return d.id===id});
+  if(item){item.status='pago';setData(DATA);render();}
+}
+
+function openModal(id){
+  editId=(id!=null)?id:null;
+  var item=editId!=null?DATA.find(function(d){return d.id===editId}):null;
+  document.getElementById('modal-title').textContent=item?'Editar Gasto':'Novo Gasto';
+  document.getElementById('m-desc').value=item?item.desc:'';
+  document.getElementById('m-valor').value=item?item.valor:'';
+  document.getElementById('m-cat').value=item?item.cat:'cache';
+  document.getElementById('m-status').value=item?item.status:'apagar';
+  document.getElementById('m-obs').value=item?item.obs:'';
+  document.getElementById('overlay').classList.add('open');
+  document.getElementById('m-desc').focus();
+}
+function closeModal(){document.getElementById('overlay').classList.remove('open');editId=null}
+
+function saveItem(){
+  var desc=document.getElementById('m-desc').value.trim();
+  var valor=parseFloat(document.getElementById('m-valor').value);
+  if(!desc){alert('Informe a descricao');return}
+  if(!valor||valor<=0){alert('Informe um valor valido');return}
+  var obj={desc:desc,valor:valor,
+    cat:document.getElementById('m-cat').value,
+    status:document.getElementById('m-status').value,
+    obs:document.getElementById('m-obs').value.trim()};
+  if(editId!=null){
+    var idx=DATA.findIndex(function(d){return d.id===editId});
+    if(idx>=0)DATA[idx]=Object.assign({},DATA[idx],obj);
+  }else{
+    obj.id=Date.now();DATA.push(obj);
+  }
+  setData(DATA);closeModal();render();
+  toast(editId!=null?'Gasto atualizado!':'Gasto adicionado!');
+}
+
+function deleteItem(id){
+  if(!confirm('Excluir este gasto?'))return;
+  DATA=DATA.filter(function(d){return d.id!==id});
+  setData(DATA);render();
+}
+
+function clearFilters(){
+  document.getElementById('f-busca').value='';
+  document.getElementById('f-cat').value='';
+  document.getElementById('f-status').value='';
+  render();
+}
+
+function toast(msg){
+  var t=document.createElement('div');
+  t.textContent='OK: '+msg;
+  Object.assign(t.style,{position:'fixed',bottom:'80px',right:'24px',background:'#111',color:'#fff',
+    padding:'10px 18px',borderRadius:'10px',fontSize:'12px',fontWeight:'700',zIndex:'9999'});
+  document.body.appendChild(t);
+  setTimeout(function(){t.remove()},2200);
+}
+
+document.getElementById('overlay').addEventListener('click',function(e){if(e.target===e.currentTarget)closeModal()});
+var n=new Date();
+document.getElementById('hdate').innerHTML=n.toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'})+'<small>Gestão de Gastos Felipe Brito</small>';
+render();
+</script>
+</body>
+</html>
