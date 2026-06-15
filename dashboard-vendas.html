@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard de Vendas — Axis Entretenimento</title>
+<style>
+  :root {
+    --bg: #0f1117; --surface: #1a1d2e; --surface2: #252840;
+    --accent: #6c63ff; --accent2: #ff6584; --green: #43e97b;
+    --yellow: #f7971e; --red: #f64f59; --text: #e8eaf6;
+    --muted: #9098b1; --border: #2d3154;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; font-size: 14px; }
+  a { color: var(--accent); text-decoration: none; }
+
+  /* HEADER */
+  .header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; align-items: center; justify-content: space-between; }
+  .header-brand { font-size: 18px; font-weight: 700; color: var(--text); }
+  .header-brand span { color: var(--accent); }
+  .header-meta { color: var(--muted); font-size: 12px; text-align: right; }
+  .header-links { display: flex; gap: 12px; }
+  .plat-link { padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; border: 1px solid; }
+  .plat-t360 { color: #00d4ff; border-color: #00d4ff33; background: #00d4ff11; }
+  .plat-be { color: #ff9f43; border-color: #ff9f4333; background: #ff9f4311; }
+  .plat-id { color: #43e97b; border-color: #43e97b33; background: #43e97b11; }
+
+  /* LAYOUT */
+  .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+
+  /* HERO - BELO IN CONCERT */
+  .belo-hero { background: linear-gradient(135deg, #1a1d2e 0%, #252840 100%); border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: 12px; padding: 24px; margin-bottom: 24px; }
+  .belo-hero h2 { font-size: 20px; color: var(--accent); margin-bottom: 4px; }
+  .belo-hero .subtitle { color: var(--muted); font-size: 13px; margin-bottom: 20px; }
+  .belo-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; margin-bottom: 20px; }
+  .belo-stat { background: var(--bg); border-radius: 8px; padding: 14px; text-align: center; }
+  .belo-stat .val { font-size: 22px; font-weight: 700; color: var(--text); }
+  .belo-stat .lbl { font-size: 11px; color: var(--muted); margin-top: 4px; text-transform: uppercase; }
+  .belo-stat.alert .val { color: var(--red); }
+  .belo-stat.warn .val { color: var(--yellow); }
+  .belo-stat.ok .val { color: var(--green); }
+  .progress-wrap { margin-top: 8px; }
+  .progress-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+  .progress-bar { background: var(--border); border-radius: 4px; height: 8px; }
+  .progress-fill { height: 8px; border-radius: 4px; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+  .pace-alert { background: #f64f5911; border: 1px solid #f64f5933; color: var(--red); border-radius: 8px; padding: 10px 14px; font-size: 13px; margin-top: 14px; }
+
+  /* KPI CARDS */
+  .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+  .kpi { background: var(--surface); border-radius: 10px; padding: 18px; border: 1px solid var(--border); }
+  .kpi-label { font-size: 11px; color: var(--muted); text-transform: uppercase; margin-bottom: 8px; }
+  .kpi-value { font-size: 26px; font-weight: 700; }
+  .kpi-sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  .kpi-today { font-size: 12px; color: var(--green); margin-top: 4px; }
+  .kpi-value.green { color: var(--green); }
+  .kpi-value.yellow { color: var(--yellow); }
+  .kpi-value.blue { color: #00d4ff; }
+
+  /* SECTION HEADERS */
+  .section { margin-bottom: 28px; }
+  .section-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+  .section-header h3 { font-size: 16px; font-weight: 600; }
+  .badge { padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+  .badge-t360 { background: #00d4ff22; color: #00d4ff; }
+  .badge-be { background: #ff9f4322; color: #ff9f43; }
+  .badge-id { background: #43e97b22; color: #43e97b; }
+
+  /* TABLE */
+  .tbl-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; }
+  thead tr { background: var(--surface2); }
+  th { padding: 10px 12px; text-align: left; font-size: 11px; text-transform: uppercase; color: var(--muted); font-weight: 600; white-space: nowrap; }
+  td { padding: 10px 12px; border-top: 1px solid var(--border); font-size: 13px; }
+  tr:hover td { background: #ffffff06; }
+  .tfoot td { background: var(--surface2); font-weight: 700; border-top: 2px solid var(--border); }
+  .num { text-align: right; }
+  .today-num { color: var(--green); font-weight: 600; }
+  .status-ativo { color: var(--green); font-size: 11px; font-weight: 700; }
+  .status-realizado { color: var(--muted); font-size: 11px; }
+  .status-futuro { color: var(--yellow); font-size: 11px; font-weight: 700; }
+  .event-name { font-weight: 600; }
+  .event-date { font-size: 11px; color: var(--muted); }
+  .highlight-row td { border-left: 3px solid var(--accent); background: #6c63ff08; }
+
+  /* FOOTER */
+  footer { text-align: center; color: var(--muted); font-size: 12px; padding: 24px; border-top: 1px solid var(--border); }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div>
+    <div class="header-brand"><span>AXIS</span> ENTRETENIMENTO</div>
+    <div style="font-size:12px;color:var(--muted);">Dashboard Comercial</div>
+  </div>
+  <div class="header-links">
+    <a href="https://produtor.ticket360.com.br/produtor/vendas" target="_blank" class="plat-link plat-t360">Ticket360</a>
+    <a href="https://produtor.bilheteriaexpress.com.br/plays?pastevents=0" target="_blank" class="plat-link plat-be">Bilheteria Express</a>
+    <a href="https://sis.ingressodigital.com/adm/ven_sessao.php" target="_blank" class="plat-link plat-id">Ingresso Digital</a>
+  </div>
+  <div class="header-meta">
+    Atualizado em 15/06/2026<br>
+    <span style="color:var(--green)">● Dados frescos de hoje</span>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- BELO IN CONCERT HERO -->
+  <div class="belo-hero">
+    <h2>⭐ BELO IN CONCERT</h2>
+    <div class="subtitle">01/08/2026 · Shopping Park Sul · Meta: R$ 1.000.000 · Custo operacional coberto pela bilheteria</div>
+    <div class="belo-stats">
+      <div class="belo-stat ok">
+        <div class="val">1.162</div>
+        <div class="lbl">Ingressos Vendidos</div>
+      </div>
+      <div class="belo-stat">
+        <div class="val">R$ 118,44</div>
+        <div class="lbl">Ticket Médio</div>
+      </div>
+      <div class="belo-stat ok">
+        <div class="val">R$ 137.624,50</div>
+        <div class="lbl">Bilheteria Total</div>
+      </div>
+      <div class="belo-stat warn">
+        <div class="val">47 dias</div>
+        <div class="lbl">Até o Evento</div>
+      </div>
+      <div class="belo-stat">
+        <div class="val">8.443</div>
+        <div class="lbl">Meta de Ingressos</div>
+      </div>
+      <div class="belo-stat alert">
+        <div class="val">7.281</div>
+        <div class="lbl">Restam a Vender</div>
+      </div>
+      <div class="belo-stat alert">
+        <div class="val">155/dia</div>
+        <div class="lbl">Meta Diária Necessária</div>
+      </div>
+      <div class="belo-stat warn">
+        <div class="val">12 hoje</div>
+        <div class="lbl">Ritmo Atual (vendas hoje)</div>
+      </div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span>Progresso da Meta (13,8%)</span>
+        <span>1.162 / 8.443 ingressos</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" style="width:13.8%"></div></div>
+    </div>
+    <div class="pace-alert">
+      ⚠️ <strong>Ritmo crítico:</strong> com 12 vendas hoje vs. meta de 155/dia, o ritmo atual cobre apenas 7,7% do necessário. São precisos <strong>7.281 ingressos nos próximos 47 dias</strong>.
+    </div>
+  </div>
+
+  <!-- KPI CARDS -->
+  <div class="kpi-grid">
+    <div class="kpi">
+      <div class="kpi-label">Total Arrecadado (T360)</div>
+      <div class="kpi-value green">R$ 164.884</div>
+      <div class="kpi-sub">12 eventos no Ticket360</div>
+      <div class="kpi-today">↑ 758 vendas hoje</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Bilheteria Express</div>
+      <div class="kpi-value blue">R$ 157.690</div>
+      <div class="kpi-sub">4 Amigos + Matuê e Brandão</div>
+      <div class="kpi-today">↑ 8 vendas ontem</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Ingresso Digital</div>
+      <div class="kpi-value yellow">1.178 ingressos</div>
+      <div class="kpi-sub">4 eventos Teatro Gacemss/VR</div>
+      <div class="kpi-today">Pink Floyd + Abba + mais 2</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Belo In Concert</div>
+      <div class="kpi-value" style="color:var(--accent)">13,8%</div>
+      <div class="kpi-sub">da meta de R$ 1.000.000</div>
+      <div class="kpi-today">R$ 137.624,50 arrecadados</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Total Vendidos (T360)</div>
+      <div class="kpi-value">21.209</div>
+      <div class="kpi-sub">20.701 pagos + 508 cortesias</div>
+      <div class="kpi-today">↑ 634 ontem · 758 hoje</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Ticket Médio (T360)</div>
+      <div class="kpi-value">R$ 7,97</div>
+      <div class="kpi-sub">média ponderada todos eventos</div>
+    </div>
+  </div>
+
+  <!-- TICKET360 -->
+  <div class="section">
+    <div class="section-header">
+      <h3>Ticket360</h3>
+      <span class="badge badge-t360">12 eventos</span>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Evento</th>
+            <th>Data</th>
+            <th>Local</th>
+            <th>Status</th>
+            <th class="num">Vendas</th>
+            <th class="num">Cort.</th>
+            <th class="num">Total</th>
+            <th class="num">Ontem</th>
+            <th class="num">Hoje</th>
+            <th class="num">Arrecadado</th>
+            <th class="num">TM</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div class="event-name">La Casa de Papel A Festa</div></td>
+            <td><div class="event-date">04/06/2026</div></td>
+            <td>Tulum Restaurante</td>
+            <td><span class="status-realizado">Realizado</span></td>
+            <td class="num">24</td><td class="num">0</td><td class="num">24</td>
+            <td class="num">0</td><td class="num">0</td>
+            <td class="num">R$ 640,00</td><td class="num">R$ 26,67</td>
+          </tr>
+          <tr>
+            <td><div class="event-name">Kong Edition 001</div></td>
+            <td><div class="event-date">05/06/2026</div></td>
+            <td>Tulum Restaurante</td>
+            <td><span class="status-realizado">Realizado</span></td>
+            <td class="num">312</td><td class="num">30</td><td class="num">342</td>
+            <td class="num">0</td><td class="num">0</td>
+            <td class="num">R$ 435,00</td><td class="num">R$ 1,39</td>
+          </tr>
+          <tr>
+            <td><div class="event-name">Fun Fest — Pique Novo e Rogerinho</div></td>
+            <td><div class="event-date">13/06/2026</div></td>
+            <td>Shopping Park Sul</td>
+            <td><span class="status-realizado">Realizado</span></td>
+            <td class="num">5.744</td><td class="num">231</td><td class="num">5.975</td>
+            <td class="num">0</td><td class="num">0</td>
+            <td class="num">R$ 22.170,00</td><td class="num">R$ 3,86</td>
+          </tr>
+          <tr>
+            <td><div class="event-name">Passaporte 3 Dias Fun Fest</div></td>
+            <td><div class="event-date">13/06/2026</div></td>
+            <td>Shopping Park Sul</td>
+            <td><span class="status-realizado">Realizado</span></td>
+            <td class="num">8</td><td class="num">15</td><td class="num">23</td>
+            <td class="num">0</td><td class="num">0</td>
+            <td class="num">R$ 880,00</td><td class="num">R$ 110,00</td>
+          </tr>
+          <tr>
+            <td><div class="event-name">Fun Fest — DJ Zullu & Paredão do Pokemon</div></td>
+            <td><div class="event-date">19/06/2026</div></td>
+            <td>Shopping Park Sul</td>
+            <td><span class="status-ativo">● Ativo (faltam 4d)</span></td>
+            <td class="num">5.393</td><td class="num">132</td><td class="num">5.525</td>
+            <td class="num">22</td><td class="num today-num">361</td>
+            <td class="num">R$ 1.935,00</td><td class="num">R$ 0,36</td>
+          </tr>
+          <tr>
+            <td><div class="event-name">Fun Fest — Bruno Diegues</div></td>
+            <td><div class="event-date">24/06/2026</div></td>
+            <td>Shopping Park Sul</td>
+            <td><span class="status-ativo">● Ativo (faltam 9d)</span></td>
+            <td class="num">4.604</td><td class="num">100</td><td class="num">4.704</td>
+            <td class="num">0</td><td class="num">0</td>
+            <td class="num">R$ 465,00</td><td class="num">R$ 0,10</td>
+          </tr>
+          <tr>
+            <td><div class="event-name">Fun Fest — Gamadinho Resenha dos Amigos</div></td>
+            <td><div class="event-date">27/06/2026</div></td>
+            <td>Shopping Park Sul</td>
+            <td><span class="status-ativo">● Ativo (faltam 12d)</span></td>
+            <td class="num">1.965</td><td class="num">0</td><td class="num">1.965</td>
+            <td class="num">379</td><td class="num today-num">192</td>
+            <td class="num">R$ 135,00</td><td class="num">R$ 0,07</td>
+          </tr>
+          <tr>
+            <td><div class="event-name">Fun Fest — Tá Na Mente</div></td>
+            <td><div class="event-date">04/07/2026</div></td>
+            <td>Shopping Park Sul</td>
+            <td><span class="status-ativo">● Ativo (faltam 19d)</span></td>
+            <td class="num">1.489</td><td class="num">0</td><td class="num">1.489</td>
+            <td class="num">220</td><td class="num today-num">193</td>
+            <td class="num">R$ 600,00</td><td class="num">R$ 0,40</td>
+          </tr>
+          <tr>
+            <td><div class="event-name">Fun Fest 08/07</div></td>
+            <td><div class="event-date">08/07/2026</div></td>
+            <td>Shopping Park Sul</td>
+            <td><span class="status-futuro">● Futuro</span></td>
+            <td class="num">0</td><td class="num">0</td><td class="num">0</td>
+            <td class="num">0</td><td class="num">0</td>
+            <td class="num">R$ 0,00</td><td class="num">—</td>
+          </tr>
+          <tr>
+            <td><div class="event-name">Fun Fest 14/07</div></td>
+            <td><div class="event-date">14/07/2026</div></td>
+            <td>Shopping Park Sul</td>
+            <td><span class="status-futuro">● Futuro</span></td>
+            <td class="num">0</td><td class="num">0</td><td class="num">0</td>
+            <td class="num">0</td><td class="num">0</td>
+            <td class="num">R$ 0,00</td><td class="num">—</td>
+          </tr>
+          <tr>
+            <td><div class="event-name">Fun Fest 19/07</div></td>
+            <td><div class="event-date">19/07/2026</div></td>
+            <td>Shopping Park Sul</td>
+            <td><span class="status-futuro">● Futuro</span></td>
+            <td class="num">0</td><td class="num">0</td><td class="num">0</td>
+            <td class="num">0</td><td class="num">0</td>
+            <td class="num">R$ 0,00</td><td class="num">—</td>
+          </tr>
+          <tr class="highlight-row">
+            <td><div class="event-name">⭐ Belo In Concert</div></td>
+            <td><div class="event-date">01/08/2026</div></td>
+            <td>Shopping Park Sul</td>
+            <td><span class="status-ativo">● Ativo (faltam 47d)</span></td>
+            <td class="num">1.162</td><td class="num">0</td><td class="num">1.162</td>
+            <td class="num">13</td><td class="num today-num">12</td>
+            <td class="num">R$ 137.624,50</td><td class="num">R$ 118,44</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr class="tfoot">
+            <td colspan="4">TOTAL DA PÁGINA</td>
+            <td class="num">20.701</td><td class="num">508</td><td class="num">21.209</td>
+            <td class="num">634</td><td class="num today-num">758</td>
+            <td class="num">R$ 164.884,50</td><td class="num">R$ 7,97</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+
+  <!-- BILHETERIA EXPRESS -->
+  <div class="section">
+    <div class="section-header">
+      <h3>Bilheteria Express</h3>
+      <span class="badge badge-be">4 eventos</span>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Evento</th>
+            <th>Data</th>
+            <th>Local</th>
+            <th>Status</th>
+            <th class="num">Vendas</th>
+            <th class="num">Ontem</th>
+            <th class="num">Hoje</th>
+            <th class="num">Arrecadado</th>
+            <th class="num">TM</th>
+            <th class="num">Capacidade</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div class="event-name">4 Amigos 2026 — Niterói</div></td>
+            <td><div class="event-date">20/06/2026</div></td>
+            <td>Clube Naval Charitas</td>
+            <td><span class="status-ativo">● Ativo (faltam 6d)</span></td>
+            <td class="num">882</td>
+            <td class="num">8</td><td class="num today-num">6</td>
+            <td class="num">R$ 83.250,00</td><td class="num">R$ 94,39</td>
+            <td class="num">882 / 2.805</td>
+          </tr>
+          <tr>
+            <td><div class="event-name">Matuê e Brandão — Guarulhos</div></td>
+            <td><div class="event-date">10/07/2026</div></td>
+            <td>Espaço Inter</td>
+            <td><span class="status-ativo">● Ativo (faltam 26d)</span></td>
+            <td class="num">599</td>
+            <td class="num">20</td><td class="num today-num">2</td>
+            <td class="num">R$ 74.440,00</td><td class="num">R$ 124,27</td>
+            <td class="num">599 / 1.452</td>
+          </tr>
+          <tr>
+            <td><div class="event-name">Chico Chico — Turnê Let It Burn</div></td>
+            <td><div class="event-date">22/08/2026</div></td>
+            <td>Teatro Municipal - VR</td>
+            <td><span class="status-futuro">● Futuro (faltam 69d)</span></td>
+            <td class="num">0</td>
+            <td class="num">0</td><td class="num">0</td>
+            <td class="num">R$ 0,00</td><td class="num">—</td>
+            <td class="num">0 / 766</td>
+          </tr>
+          <tr>
+            <td><div class="event-name">ZOOM Music Festival — Veigh + Alee</div></td>
+            <td><div class="event-date">17/10/2026</div></td>
+            <td>Ilha São João - VR</td>
+            <td><span class="status-futuro">● Futuro (faltam 125d)</span></td>
+            <td class="num">0</td>
+            <td class="num">0</td><td class="num">0</td>
+            <td class="num">R$ 0,00</td><td class="num">—</td>
+            <td class="num">0 / 5.000</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr class="tfoot">
+            <td colspan="4">TOTAL</td>
+            <td class="num">1.481</td>
+            <td class="num">28</td><td class="num today-num">8</td>
+            <td class="num">R$ 157.690,00</td><td class="num">—</td>
+            <td class="num">—</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+
+  <!-- INGRESSO DIGITAL -->
+  <div class="section">
+    <div class="section-header">
+      <h3>Ingresso Digital</h3>
+      <span class="badge badge-id">4 eventos ativos</span>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Evento</th>
+            <th>Data</th>
+            <th>Local</th>
+            <th class="num">PDV</th>
+            <th class="num">Online</th>
+            <th class="num">Total Ingressos</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div class="event-name">Pink Floyd Experience</div></td>
+            <td><div class="event-date">27/06/2026 20:00</div></td>
+            <td>Teatro Gacemss — Volta Redonda</td>
+            <td class="num">24</td><td class="num">193</td><td class="num">217</td>
+          </tr>
+          <tr>
+            <td><div class="event-name">Abba Experience</div></td>
+            <td><div class="event-date">26/06/2026 21:30</div></td>
+            <td>Teatro Gacemss — Volta Redonda</td>
+            <td class="num">33</td><td class="num">321</td><td class="num">354</td>
+          </tr>
+          <tr>
+            <td><div class="event-name">Aventura Congelante | O Legado</div></td>
+            <td><div class="event-date">26/06/2026 19:00</div></td>
+            <td>Teatro Gacemss — Volta Redonda</td>
+            <td class="num">16</td><td class="num">178</td><td class="num">194</td>
+          </tr>
+          <tr>
+            <td><div class="event-name">Bruna Louise | Meus 15 Anos!</div></td>
+            <td><div class="event-date">27/06/2026 21:00</div></td>
+            <td>Teatro Maestro Franklin — Volta Redonda</td>
+            <td class="num">0</td><td class="num">413</td><td class="num">413</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr class="tfoot">
+            <td colspan="3">TOTAL</td>
+            <td class="num">73</td><td class="num">1.105</td><td class="num">1.178</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  Axis Entretenimento · Dashboard Comercial · Atualizado em 15/06/2026 às 
+  <script>document.write(new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}))</script>
+  <noscript>—</noscript>
+</footer>
+
+</body>
+</html>
