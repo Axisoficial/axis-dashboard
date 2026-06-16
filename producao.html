@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Produção & Marketing — Axis</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#f1f5f9;--panel:#fff;--nav:#0f172a;--red:#ef4444;--green:#16a34a;--amber:#d97706;--blue:#2563eb;--purple:#7c3aed;--text:#1e293b;--muted:#64748b;--border:#e2e8f0;--input-bg:#f8fafc}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);font-size:13px;min-height:100vh}
+input,select{border:1px solid var(--border);border-radius:4px;padding:5px 8px;background:var(--input-bg);color:var(--text);font-size:12px;font-family:inherit;transition:border .15s}
+input:focus,select:focus{outline:none;border-color:#3b82f6}
+button{cursor:pointer;border:none;border-radius:6px;font-size:12px;font-weight:600;transition:.15s;font-family:inherit}
+
+/* HEADER */
+#header{background:var(--nav);padding:12px 20px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.4)}
+.logo-box{display:flex;flex-direction:column;align-items:center;flex-shrink:0}
+.logo-text{color:#fff;font-size:22px;font-weight:900;font-style:italic;letter-spacing:-1px;line-height:1}
+.logo-badge{background:var(--red);color:#fff;font-size:7px;font-weight:700;letter-spacing:.5px;padding:2px 4px;border-radius:2px;margin-top:2px;white-space:nowrap}
+.page-title{color:#fff;font-size:15px;font-weight:700;flex:1;padding-left:4px;border-left:2px solid rgba(255,255,255,.2);margin-left:4px}
+.page-title span{color:rgba(255,255,255,.5);font-weight:400;font-size:12px;display:block}
+.nav-links{display:flex;gap:6px}
+.nav-link{background:rgba(255,255,255,.1);color:rgba(255,255,255,.8);padding:7px 14px;border-radius:6px;font-size:12px;font-weight:600;text-decoration:none;border:1px solid rgba(255,255,255,.15);transition:.15s}
+.nav-link:hover{background:rgba(255,255,255,.2);color:#fff}
+.nav-link.active{background:var(--red);color:#fff;border-color:var(--red)}
+
+/* SUMMARY BAR */
+#summary{background:var(--nav);border-top:1px solid rgba(255,255,255,.1);padding:8px 20px;display:flex;gap:24px;align-items:center}
+.sum-stat{display:flex;align-items:center;gap:8px}
+.sum-label{color:rgba(255,255,255,.5);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.sum-val{font-size:13px;font-weight:700}
+.sum-val.green{color:#4ade80}
+.sum-val.amber{color:#fbbf24}
+.sum-val.red{color:#f87171}
+.sum-val.white{color:#fff}
+
+/* MAIN CONTENT */
+#content{padding:20px;max-width:1200px;margin:0 auto}
+
+/* ADD EVENT */
+.add-event-bar{background:var(--panel);border-radius:10px;padding:14px 16px;margin-bottom:16px;display:flex;gap:10px;align-items:center;border:2px dashed var(--border);box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.add-event-bar input{flex:1;padding:8px 12px;font-size:13px}
+.btn-add-ev{background:var(--nav);color:#fff;padding:8px 18px}
+.btn-add-ev:hover{background:#1e293b}
+
+/* EVENT CARD */
+.event-card{background:var(--panel);border-radius:10px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,.07);overflow:hidden;border:1px solid var(--border)}
+.event-hdr{background:var(--nav);color:#fff;padding:12px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;user-select:none}
+.event-nome{flex:1;font-weight:700;font-size:14px}
+.event-progress-bar{width:160px;height:6px;background:rgba(255,255,255,.15);border-radius:3px;overflow:hidden;flex-shrink:0}
+.event-progress-fill{height:100%;border-radius:3px;transition:width .3s}
+.event-pct{font-size:12px;font-weight:700;min-width:38px;text-align:right}
+.event-chevron{font-size:12px;opacity:.6;transition:transform .2s}
+.event-chevron.open{transform:rotate(90deg)}
+.del-event{background:rgba(239,68,68,.2);color:#fca5a5;padding:4px 10px;border-radius:4px;font-size:11px}
+.del-event:hover{background:rgba(239,68,68,.4)}
+.event-body{padding:0}
+
+/* AREAS */
+.areas-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:0;border-top:1px solid var(--border)}
+@media(max-width:900px){.areas-grid{grid-template-columns:1fr}}
+.area-col{border-right:1px solid var(--border);min-width:0}
+.area-col:last-child{border-right:none}
+.area-hdr{padding:10px 12px;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.6px;display:flex;align-items:center;gap:6px;border-bottom:1px solid var(--border)}
+.area-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.area-count{margin-left:auto;font-size:10px;font-weight:600;opacity:.6}
+
+/* TASK ITEMS */
+.task-list{padding:6px}
+.task-item{background:#f8fafc;border:1px solid var(--border);border-radius:6px;padding:8px 10px;margin-bottom:5px;transition:border-color .15s}
+.task-item:hover{border-color:#94a3b8}
+.task-item.status-feito{background:#f0fdf4;border-color:#bbf7d0}
+.task-item.status-andamento{background:#fffbeb;border-color:#fde68a}
+.task-desc-row{display:flex;align-items:flex-start;gap:6px;margin-bottom:6px}
+.task-check{flex-shrink:0;width:16px;height:16px;border-radius:3px;border:2px solid #cbd5e1;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:10px;transition:.15s;margin-top:1px}
+.task-check.feito{background:var(--green);border-color:var(--green);color:#fff}
+.task-check.andamento{background:var(--amber);border-color:var(--amber);color:#fff}
+.task-desc{flex:1;font-size:12px;color:var(--text);background:transparent;border:none;padding:0;line-height:1.4;cursor:text;width:100%;resize:none;font-family:inherit}
+.task-desc:focus{outline:none}
+.task-desc.feito{text-decoration:line-through;color:var(--muted)}
+.del-task{background:none;color:#cbd5e1;padding:1px 4px;font-size:12px;flex-shrink:0}
+.del-task:hover{color:var(--red)}
+.task-meta{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.task-meta select{font-size:11px;padding:3px 5px;border-radius:4px}
+.task-meta input[type=text]{font-size:11px;padding:3px 6px}
+.task-meta input[type=date]{font-size:11px;padding:3px 5px;border-radius:4px}
+.resp-input{background:var(--input-bg);border:1px solid var(--border)}
+.status-select{font-size:11px}
+.status-select.pendente{border-color:#cbd5e1;color:var(--muted)}
+.status-select.andamento{border-color:#fcd34d;color:#92400e;background:#fffbeb}
+.status-select.feito{border-color:#86efac;color:#15803d;background:#f0fdf4}
+.add-task-btn{width:100%;background:none;color:var(--muted);border:1px dashed var(--border);border-radius:5px;padding:5px;font-size:11px;margin-top:4px;text-align:center}
+.add-task-btn:hover{background:#f1f5f9;color:var(--text);border-color:#94a3b8}
+
+/* STATUS BADGE */
+.status-badge{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px}
+.status-badge.pendente{background:#f1f5f9;color:var(--muted)}
+.status-badge.andamento{background:#fffbeb;color:#92400e}
+.status-badge.feito{background:#f0fdf4;color:#15803d}
+
+/* EMPTY */
+.empty-msg{padding:16px;text-align:center;color:var(--muted);font-size:12px}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1000;align-items:center;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal-box{background:#fff;border-radius:12px;padding:24px;max-width:360px;width:90%;text-align:center}
+.modal-box h3{font-size:16px;color:var(--nav);margin-bottom:8px}
+.modal-box p{color:var(--muted);font-size:12px;margin-bottom:16px;line-height:1.5}
+.modal-btns{display:flex;gap:8px;justify-content:center}
+.modal-cancel{background:#f1f5f9;color:var(--text);padding:8px 18px}
+.modal-confirm{background:var(--red);color:#fff;padding:8px 18px}
+
+/* PRINT */
+@media print{
+#header .nav-links,.add-event-bar,.del-event,.del-task,.add-task-btn{display:none!important}
+#header{position:relative}
+body{background:#fff}
+.area-col{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+
+<div id="header">
+  <div class="logo-box">
+    <div class="logo-text">axis</div>
+    <div class="logo-badge">MÚSICA ENTRETENIMENTO CORPORATIVO</div>
+  </div>
+  <div class="page-title">
+    Produção & Marketing
+    <span>Checklist por evento — Status · Responsável · Prazo</span>
+  </div>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">📊 Dashboard</a>
+    <a href="viabilidade.html" class="nav-link">💹 Viabilidade</a>
+    <a href="producao.html" class="nav-link active">🎬 Produção</a>
+  </div>
+</div>
+
+<div id="summary">
+  <div class="sum-stat"><span class="sum-label">Eventos</span><span class="sum-val white" id="s-total">—</span></div>
+  <div class="sum-stat"><span class="sum-label">Tarefas totais</span><span class="sum-val white" id="s-tasks">—</span></div>
+  <div class="sum-stat"><span class="sum-label">✅ Feitas</span><span class="sum-val green" id="s-done">—</span></div>
+  <div class="sum-stat"><span class="sum-label">⏳ Em andamento</span><span class="sum-val amber" id="s-prog">—</span></div>
+  <div class="sum-stat"><span class="sum-label">🔴 Pendentes</span><span class="sum-val red" id="s-pend">—</span></div>
+  <div style="margin-left:auto">
+    <button onclick="window.print()" style="background:rgba(255,255,255,.15);color:#fff;padding:7px 14px;border:1px solid rgba(255,255,255,.3)">🖨️ Imprimir</button>
+  </div>
+</div>
+
+<div id="content">
+  <div class="add-event-bar">
+    <input type="text" id="new-ev-nome" placeholder="Nome do novo evento (ex: Fun Fest — Gamadinho 2026)..." onkeydown="if(event.key==='Enter')addEvento()">
+    <button class="btn-add-ev" onclick="addEvento()">+ Adicionar Evento</button>
+  </div>
+  <div id="eventos-ct"></div>
+</div>
+
+<div class="modal-overlay" id="modal-ov">
+  <div class="modal-box">
+    <h3 id="modal-title">Confirmar</h3>
+    <p id="modal-msg"></p>
+    <div class="modal-btns">
+      <button class="modal-cancel" onclick="hideModal()">Cancelar</button>
+      <button class="modal-confirm" id="modal-ok" onclick="">OK</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ================================================================
+// UTILS
+// ================================================================
+var _id = 1;
+function uid(){ return 'u' + Date.now() + (_id++); }
+function $(id){ return document.getElementById(id); }
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function sv(){ localStorage.setItem('prod_v1', JSON.stringify(D)); }
+function deepClone(o){ return JSON.parse(JSON.stringify(o)); }
+
+// ================================================================
+// AREAS CONFIG
+// ================================================================
+var AREAS = [
+  {
+    id: 'pre',
+    nome: 'Pré-Produção',
+    cor: '#7c3aed',
+    emoji: '📋',
+    defaults: [
+      'Contrato do artista assinado',
+      'Rider técnico recebido',
+      'Assessoria de imprensa contratada',
+      'Seguro do evento',
+      'Licença prefeitura / DAEM',
+      'Posto médico confirmado'
+    ]
+  },
+  {
+    id: 'mkt',
+    nome: 'Marketing',
+    cor: '#dc2626',
+    emoji: '📣',
+    defaults: [
+      'Identidade visual criada',
+      'Artes para redes sociais',
+      'Foto/vídeo do artista',
+      'Release de imprensa',
+      'Parcerias confirmadas',
+      'Stories e Reels planejados'
+    ]
+  },
+  {
+    id: 'trafego',
+    nome: 'Tráfego Pago',
+    cor: '#0891b2',
+    emoji: '🎯',
+    defaults: [
+      'Budget aprovado',
+      'Meta Ads configurado',
+      'Google Ads configurado',
+      'Pixel instalado e testado',
+      'Campanha ativa',
+      'Relatório semanal'
+    ]
+  },
+  {
+    id: 'prod',
+    nome: 'Produção',
+    cor: '#d97706',
+    emoji: '🔧',
+    defaults: [
+      'Som e luz contratados',
+      'Palco confirmado',
+      'Catering / camarim definido',
+      'Equipe de segurança',
+      'Credenciais emitidas',
+      'Logística de palco e desmontagem'
+    ]
+  },
+  {
+    id: 'op',
+    nome: 'Operacional',
+    cor: '#16a34a',
+    emoji: '⚙️',
+    defaults: [
+      'Ingresso cadastrado nas plataformas',
+      'PDVs instalados e testados',
+      'Equipe de portaria confirmada',
+      'Comunicação interna enviada',
+      'Checklist dia do evento',
+      'Pós-evento: fechamento de caixa'
+    ]
+  }
+];
+
+// ================================================================
+// DEFAULTS — eventos pré-carregados
+// ================================================================
+function mkTask(desc){
+  return { id: uid(), desc: desc, status: 'pendente', resp: '', prazo: '' };
+}
+function mkArea(areaCfg){
+  return { id: areaCfg.id, tarefas: areaCfg.defaults.map(mkTask) };
+}
+function mkEvento(nome){
+  return {
+    id: uid(),
+    nome: nome,
+    open: true,
+    areas: AREAS.map(mkArea)
+  };
+}
+
+var DEFAULT_EVENTOS = [
+  'Belo In Concert',
+  'Fun Fest — Pique Novo & Rogerinho',
+  'Fun Fest — DJ Zullu & Pokémon DJ',
+  'Fun Fest — Bruno Diegues',
+  'Fun Fest — Gamadinho',
+  'Fun Fest — Tá Na Mente',
+  'Fun Fest — 3 datas (08, 14, 19/07)',
+  '4 Amigos 2026',
+  'Matuê e Brandão — Guarulhos',
+  'Chico Chico — Deixa Arder',
+  'ZOOM Music Festival'
+];
+
+// ================================================================
+// STATE
+// ================================================================
+var D = (function(){
+  try {
+    var s = localStorage.getItem('prod_v1');
+    if(s) return JSON.parse(s);
+  } catch(e) {}
+  return { eventos: DEFAULT_EVENTOS.map(mkEvento) };
+})();
+
+// ================================================================
+// CALC
+// ================================================================
+function calcEvento(ev){
+  var total=0, feito=0, andamento=0, pendente=0;
+  ev.areas.forEach(function(a){
+    a.tarefas.forEach(function(t){
+      total++;
+      if(t.status==='feito') feito++;
+      else if(t.status==='andamento') andamento++;
+      else pendente++;
+    });
+  });
+  var pct = total > 0 ? Math.round(feito/total*100) : 0;
+  return { total, feito, andamento, pendente, pct };
+}
+
+function calcGlobal(){
+  var ev=D.eventos.length, tasks=0, done=0, prog=0, pend=0;
+  D.eventos.forEach(function(e){
+    var c = calcEvento(e);
+    tasks += c.total; done += c.feito; prog += c.andamento; pend += c.pendente;
+  });
+  return { ev, tasks, done, prog, pend };
+}
+
+// ================================================================
+// RENDER
+// ================================================================
+function render(){
+  var g = calcGlobal();
+  $('s-total').textContent = g.ev;
+  $('s-tasks').textContent = g.tasks;
+  $('s-done').textContent = g.done;
+  $('s-prog').textContent = g.prog;
+  $('s-pend').textContent = g.pend;
+
+  var h = '';
+  D.eventos.forEach(function(ev){
+    var c = calcEvento(ev);
+    var barColor = c.pct >= 80 ? '#4ade80' : c.pct >= 40 ? '#fbbf24' : '#f87171';
+    h += '<div class="event-card" id="ec-'+ev.id+'">';
+    h += '<div class="event-hdr" onclick="toggleEv(\''+ev.id+'\')">';
+    h += '<span class="event-chevron '+(ev.open?'open':'')+' " id="chev-'+ev.id+'">▶</span>';
+    h += '<span class="event-nome">'+esc(ev.nome)+'</span>';
+    h += '<div class="event-progress-bar"><div class="event-progress-fill" style="width:'+c.pct+'%;background:'+barColor+'"></div></div>';
+    h += '<span class="event-pct" style="color:'+barColor+'">'+c.pct+'%</span>';
+    h += '<span style="font-size:11px;color:rgba(255,255,255,.4);min-width:90px;text-align:right">'+c.feito+'/'+c.total+' feitas</span>';
+    h += '<button class="del-event" onclick="event.stopPropagation();confirmDelEv(\''+ev.id+'\')">✕</button>';
+    h += '</div>';
+
+    if(ev.open){
+      h += '<div class="event-body"><div class="areas-grid">';
+      ev.areas.forEach(function(area){
+        var cfg = AREAS.find(function(a){ return a.id===area.id; }) || AREAS[0];
+        var aFei = area.tarefas.filter(function(t){ return t.status==='feito'; }).length;
+        h += '<div class="area-col">';
+        h += '<div class="area-hdr" style="background:'+cfg.cor+'18;border-bottom-color:'+cfg.cor+'30">';
+        h += '<div class="area-dot" style="background:'+cfg.cor+'"></div>';
+        h += '<span style="color:'+cfg.cor+'">'+cfg.emoji+' '+cfg.nome+'</span>';
+        h += '<span class="area-count">'+aFei+'/'+area.tarefas.length+'</span>';
+        h += '</div>';
+        h += '<div class="task-list">';
+        if(!area.tarefas.length){
+          h += '<div class="empty-msg">Nenhuma tarefa</div>';
+        }
+        area.tarefas.forEach(function(t){
+          var checkCls = t.status==='feito' ? 'feito' : t.status==='andamento' ? 'andamento' : '';
+          var checkIcon = t.status==='feito' ? '✓' : t.status==='andamento' ? '●' : '';
+          h += '<div class="task-item status-'+t.status+'" id="ti-'+t.id+'">';
+          h += '<div class="task-desc-row">';
+          h += '<div class="task-check '+checkCls+'" onclick="cycleStatus(\''+ev.id+'\',\''+area.id+'\',\''+t.id+'\')">'+ checkIcon+'</div>';
+          h += '<input class="task-desc '+(t.status==='feito'?'feito':'')+' " type="text" value="'+esc(t.desc)+'" oninput="upDesc(\''+ev.id+'\',\''+area.id+'\',\''+t.id+'\',this.value)" placeholder="Descrição da tarefa...">';
+          h += '<button class="del-task" onclick="delTask(\''+ev.id+'\',\''+area.id+'\',\''+t.id+'\')" title="Remover">✕</button>';
+          h += '</div>';
+          h += '<div class="task-meta">';
+          h += '<select class="status-select '+t.status+'" onchange="setStatus(\''+ev.id+'\',\''+area.id+'\',\''+t.id+'\',this.value)">';
+          h += '<option value="pendente"'+(t.status==='pendente'?' selected':'')+'>⚪ Pendente</option>';
+          h += '<option value="andamento"'+(t.status==='andamento'?' selected':'')+'>🟡 Em andamento</option>';
+          h += '<option value="feito"'+(t.status==='feito'?' selected':'')+'>✅ Feito</option>';
+          h += '</select>';
+          h += '<input type="text" class="resp-input" value="'+esc(t.resp)+'" placeholder="👤 Responsável" oninput="upResp(\''+ev.id+'\',\''+area.id+'\',\''+t.id+'\',this.value)">';
+          h += '</div>';
+          h += '<div style="margin-top:4px">';
+          h += '<input type="date" style="width:100%;font-size:11px;padding:3px 5px;border-radius:4px;border:1px solid var(--border);background:var(--input-bg);color:var(--text)" value="'+esc(t.prazo)+'" oninput="upPrazo(\''+ev.id+'\',\''+area.id+'\',\''+t.id+'\',this.value)" title="Prazo">';
+          h += '</div>';
+          h += '</div>';
+        });
+        h += '<button class="add-task-btn" onclick="addTask(\''+ev.id+'\',\''+area.id+'\')" >+ Tarefa</button>';
+        h += '</div></div>';
+      });
+      h += '</div></div>';
+    }
+    h += '</div>';
+  });
+
+  if(!D.eventos.length){
+    h = '<div style="text-align:center;padding:40px;color:var(--muted)">Nenhum evento ainda — adicione um acima 👆</div>';
+  }
+  $('eventos-ct').innerHTML = h;
+  sv();
+}
+
+// ================================================================
+// MUTATIONS
+// ================================================================
+function fEv(evId){ return D.eventos.find(function(e){ return e.id===evId; }); }
+function fArea(evId,aId){ var e=fEv(evId); return e?e.areas.find(function(a){ return a.id===aId; }):null; }
+function fTask(evId,aId,tId){ var a=fArea(evId,aId); return a?a.tarefas.find(function(t){ return t.id===tId; }):null; }
+
+function toggleEv(evId){
+  var e = fEv(evId); if(!e) return;
+  e.open = !e.open;
+  render();
+}
+
+function addEvento(){
+  var n = $('new-ev-nome').value.trim();
+  if(!n){ alert('Digite o nome do evento.'); return; }
+  D.eventos.unshift(mkEvento(n));
+  $('new-ev-nome').value = '';
+  render();
+}
+
+var _delEvId = null;
+function confirmDelEv(evId){
+  var e = fEv(evId); if(!e) return;
+  _delEvId = evId;
+  $('modal-title').textContent = 'Remover evento?';
+  $('modal-msg').textContent = 'Isso vai apagar o evento "' + e.nome + '" e todos os seus checklists. Essa ação não pode ser desfeita.';
+  $('modal-ok').onclick = function(){ delEvento(_delEvId); hideModal(); };
+  $('modal-ov').classList.add('show');
+}
+function delEvento(evId){
+  D.eventos = D.eventos.filter(function(e){ return e.id!==evId; });
+  render();
+}
+
+function addTask(evId, aId){
+  var a = fArea(evId, aId); if(!a) return;
+  a.tarefas.push(mkTask('Nova tarefa'));
+  render();
+}
+
+function delTask(evId, aId, tId){
+  var a = fArea(evId, aId); if(!a) return;
+  a.tarefas = a.tarefas.filter(function(t){ return t.id!==tId; });
+  render();
+}
+
+function cycleStatus(evId, aId, tId){
+  var t = fTask(evId, aId, tId); if(!t) return;
+  var cycle = { pendente: 'andamento', andamento: 'feito', feito: 'pendente' };
+  t.status = cycle[t.status] || 'pendente';
+  render();
+}
+
+function setStatus(evId, aId, tId, val){
+  var t = fTask(evId, aId, tId); if(!t) return;
+  t.status = val;
+  render();
+}
+
+function upDesc(evId, aId, tId, val){
+  var t = fTask(evId, aId, tId); if(!t) return;
+  t.desc = val; sv();
+}
+
+function upResp(evId, aId, tId, val){
+  var t = fTask(evId, aId, tId); if(!t) return;
+  t.resp = val; sv();
+}
+
+function upPrazo(evId, aId, tId, val){
+  var t = fTask(evId, aId, tId); if(!t) return;
+  t.prazo = val; sv();
+}
+
+// ================================================================
+// MODAL
+// ================================================================
+function hideModal(){ $('modal-ov').classList.remove('show'); }
+
+// ================================================================
+// INIT
+// ================================================================
+render();
+</script>
+</body>
+</html>
