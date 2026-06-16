@@ -27,6 +27,9 @@ button{cursor:pointer;border:none;border-radius:6px;font-size:13px;font-weight:6
 .header-btns{display:flex;gap:8px;flex-shrink:0}
 .btn-pdf{background:var(--red);color:#fff;padding:8px 16px}
 .btn-pdf:hover{background:#dc2626}
+.btn-pdf-float{position:fixed;bottom:24px;right:24px;z-index:9999;background:#ef4444;color:#fff;border:none;border-radius:50px;padding:12px 22px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 16px rgba(239,68,68,.45);display:flex;align-items:center;gap:8px;transition:.15s}
+.btn-pdf-float:hover{background:#dc2626;transform:scale(1.04)}
+@media print{.btn-pdf-float{display:none!important}}
 .btn-novo{background:rgba(255,255,255,.15);color:#fff;padding:8px 16px;border:1px solid rgba(255,255,255,.3)}
 .btn-novo:hover{background:rgba(255,255,255,.25)}
 
@@ -739,5 +742,6 @@ function savePDF(){
 // INIT
 render();
 </script>
+<button class="btn-pdf-float" onclick="savePDF()" title="Salvar como PDF">🖨️ Salvar PDF</button>
 </body>
 </html>
