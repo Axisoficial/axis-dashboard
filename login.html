@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login · Axis</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--red:#ef4444;--dark:#0f172a;--card:#1e293b;--border:#334155;--text:#f1f5f9;--muted:#94a3b8;--input:#0f172a}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--dark);color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;}
+.wrap{width:100%;max-width:420px;padding:24px;}
+.logo{text-align:center;margin-bottom:40px;}
+.logo-text{font-size:32px;font-weight:900;font-style:italic;letter-spacing:-1px;color:#fff;}
+.logo-badge{display:inline-block;background:var(--red);color:#fff;font-size:9px;font-weight:700;letter-spacing:.5px;padding:2px 6px;border-radius:3px;margin-left:6px;vertical-align:middle;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:32px;}
+h2{font-size:18px;font-weight:700;margin-bottom:6px;}
+.subtitle{color:var(--muted);font-size:13px;margin-bottom:28px;}
+label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;}
+input{width:100%;background:var(--input);border:1px solid var(--border);border-radius:8px;padding:11px 14px;color:var(--text);font-size:14px;outline:none;transition:.15s;}
+input:focus{border-color:#3b82f6;}
+.field{margin-bottom:18px;}
+.btn{width:100%;background:var(--red);color:#fff;border:none;border-radius:8px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;transition:.15s;margin-top:8px;}
+.btn:hover{background:#dc2626;}
+.btn:disabled{opacity:.6;cursor:not-allowed;}
+.error{background:#450a0a;border:1px solid #7f1d1d;border-radius:8px;padding:12px 14px;font-size:13px;color:#fca5a5;margin-bottom:18px;display:none;}
+.footer{text-align:center;color:var(--muted);font-size:12px;margin-top:28px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="logo">
+    <span class="logo-text">axis</span><span class="logo-badge">ENTRETENIMENTO</span>
+  </div>
+  <div class="card">
+    <h2>Entrar no Dashboard</h2>
+    <p class="subtitle">Use seu e-mail corporativo para acessar.</p>
+    <div class="error" id="err">E-mail ou senha incorretos.</div>
+    <div class="field">
+      <label>E-mail</label>
+      <input type="email" id="email" placeholder="seu@axisentretenimento.com" autocomplete="username">
+    </div>
+    <div class="field">
+      <label>Senha</label>
+      <input type="password" id="pwd" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <button class="btn" id="btn" onclick="doLogin()">Entrar</button>
+  </div>
+  <p class="footer">Axis Entretenimento · Dashboard interno</p>
+</div>
+<script>
+var USERS = {
+  'pedrolemos@axisentretensimento.com':'4d2d6a327abde8b50abe1b6a65af6d73f16a653b608166d448fb5905ecfda558',
+  'richardpitzer@axisentretenimento.com':'544d795ee202077196dd5a8def229b6c57741f9e4e6a800011ead8f66d871d6b',
+  'stefanistagi@axisentretenimento.com':'e67b27bb6b3d93cf2a876e5f161ae2189705fb87d1a37ef88938a503e88629e6',
+  'stefaniesales@axisentretenimento.com':'37865c485dced8eb922dbc6a159b83c4a5b05dd18c74c3b1a2ff2e10eaec6f0d',
+  'lizlopes@axisentretenimento.com':'594485ff78cd6e6cb52c9cf46964574747b45483ed2379a1c7f60fa841c2aa05',
+  'railainybueno@axisentretenimento.com':'2706a5245bddeb2f3a6d21b1e95570da3e4d12e75c2a733158e73aa10b523dd3',
+  'heliopeixoto@axisentretenimento.com':'9d6bac226d7b674e243249b4196fe8c346eb5244aa0a33aedb941f75379f6d4f',
+  'lucasdessupoio@axisentretenimento.com':'fc98549921454ed909c0743e147e21e9cb4d862b903ffdf628f47212c60b75a8',
+  'hugodias@axisentretenimento.com':'cd6b6c45b91ea7fb43ac58db4b19879a5079764886e28e10c2c975c358d191cb',
+  'andremingau@axisentretenimento.com':'bb512826c9e4e605f475b7d70ee4f4270a84db5bac50c8c234f77ea5cab74261',
+  'felipebrito@axisentretenimento.com':'f4c7414bd7f5989e540bcf2b83fd40b9bb367495d0dd93b17ebd9a0c2d00ebeb',
+  'milenaferraz@axisentretenimento.com':'eddf5a75bdb2bad02c5d558d59c9f35f465c5c46d05de6602733110c7fc23bec'
+};
+
+document.getElementById('pwd').addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
+document.getElementById('email').addEventListener('keydown',function(e){if(e.key==='Enter')document.getElementById('pwd').focus();});
+
+async function sha256(str){
+  var buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,'0');}).join('');
+}
+
+async function doLogin(){
+  var email=document.getElementById('email').value.trim().toLowerCase();
+  var pwd=document.getElementById('pwd').value;
+  var btn=document.getElementById('btn');
+  var err=document.getElementById('err');
+  err.style.display='none';
+  btn.disabled=true;
+  btn.textContent='Verificando...';
+  try{
+    var hash=await sha256(pwd);
+    if(USERS[email]&&USERS[email]===hash){
+      var session={email:email,ts:Date.now(),token:btoa(email+':axis2026:'+Date.now())};
+      localStorage.setItem('axis_session',JSON.stringify(session));
+      var next=new URLSearchParams(location.search).get('next')||'index.html';
+      location.href=next;
+    }else{
+      err.style.display='block';
+      btn.disabled=false;
+      btn.textContent='Entrar';
+    }
+  }catch(ex){
+    err.style.display='block';
+    btn.disabled=false;
+    btn.textContent='Entrar';
+  }
+}
+</script>
+</body>
+</html>
