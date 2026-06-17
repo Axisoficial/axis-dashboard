@@ -31,10 +31,8 @@ button{cursor:pointer;border:none;border-radius:6px;font-size:13px;font-weight:6
 @media print{.btn-pdf-float{display:none!important}}
 .btn-novo{background:rgba(255,255,255,.15);color:#fff;padding:8px 16px;border:1px solid rgba(255,255,255,.3)}
 .btn-novo:hover{background:rgba(255,255,255,.25)}
-.btn-gcal{background:#1a73e8;color:#fff;padding:8px 16px}
-.btn-gcal:hover{background:#1557b0}
-.btn-prod{background:#16a34a;color:#fff;padding:8px 16px}
-.btn-prod:hover{background:#15803d}
+.btn-salvar{background:#16a34a;color:#fff;padding:8px 18px;font-size:13px;font-weight:700}
+.btn-salvar:hover{background:#15803d}
 #kpis{background:var(--nav);border-top:1px solid rgba(255,255,255,.1);padding:10px 20px;display:grid;grid-template-columns:repeat(6,1fr);gap:10px;position:sticky;top:57px;z-index:99}
 .kpi{background:rgba(255,255,255,.07);border-radius:6px;padding:8px 10px;text-align:center}
 .kpi-label{color:rgba(255,255,255,.5);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
@@ -211,8 +209,7 @@ body{background:#fff;font-size:11px}
 </div>
 <div class="header-btns">
 <button class="btn-pdf" onclick="savePDF()">🖨️ Salvar PDF</button>
-<button class="btn-gcal" onclick="openGoogleCalendar()">📅 Google Agenda</button>
-<button class="btn-prod" onclick="enviarProducao()">📋 Produção</button>
+<button class="btn-salvar" onclick="salvarEvento()">✅ Salvar Evento</button>
 <button class="btn-novo" onclick="showModal()">🗑️ Novo Evento</button>
 </div>
 </div>
@@ -812,35 +809,26 @@ function openGoogleCalendar(){
   window.open(url,'_blank');
 }
 
-function enviarProducao(){
+function salvarEvento(){
 var nome=(D.evento.nome||'').trim();
 if(!nome){alert('Preencha o nome do evento primeiro.');return;}
+openGoogleCalendar();
 var prod;
 try{prod=JSON.parse(localStorage.getItem('prod_v1')||'{"eventos":[]}');}catch(e){prod={eventos:[]};}
 if(!prod.eventos)prod.eventos=[];
 var ex=null;
 if(D.evento.prodId)ex=prod.eventos.find(function(e){return e.id===D.evento.prodId;});
 if(!ex)ex=prod.eventos.find(function(e){return e.nome===nome;});
-if(ex){
-ex.nome=nome;D.evento.prodId=ex.id;
-localStorage.setItem('prod_v1',JSON.stringify(prod));
-sv();window.location.href='producao.html';return;
-}
+if(ex){ex.nome=nome;D.evento.prodId=ex.id;localStorage.setItem('prod_v1',JSON.stringify(prod));sv();setTimeout(function(){window.location.href='producao.html';},800);return;}
 var pid='u'+Date.now();
 D.evento.prodId=pid;
-var AD=[
-{id:'pre',tasks:['Contrato do artista assinado','Rider técnico recebido','Assessoria de imprensa contratada','Seguro do evento','Licença prefeitura / DAEM','Posto médico confirmado']},
-{id:'mkt',tasks:['Identidade visual criada','Artes para redes sociais','Foto/vídeo do artista','Release de imprensa','Parcerias confirmadas','Stories e Reels planejados']},
-{id:'trafego',tasks:['Budget aprovado','Meta Ads configurado','Google Ads configurado','Pixel instalado e testado','Campanha ativa','Relatório semanal']},
-{id:'prod',tasks:['Som e luz contratados','Palco confirmado','Catering / camarim definido','Equipe de segurança','Credenciais emitidas','Logística de palco e desmontagem']},
-{id:'op',tasks:['Ingresso cadastrado nas plataformas','PDVs instalados e testados','Equipe de portaria confirmada','Comunicação interna enviada','Checklist dia do evento','Pós-evento: fechamento de caixa']}
-];
-var newEv={id:pid,nome:nome,open:true,areas:AD.map(function(a){
-return {id:a.id,tarefas:a.tasks.map(function(d){return {id:'u'+Date.now()+Math.floor(Math.random()*9999),desc:d,status:'pendente',resp:'',prazo:''};})};} )};
+var AD=[{id:'pre',tasks:['Contrato do artista assinado','Rider técnico recebido','Assessoria de imprensa contratada','Seguro do evento','Licença prefeitura / DAEM','Posto médico confirmado']},{id:'mkt',tasks:['Identidade visual criada','Artes para redes sociais','Foto/vídeo do artista','Release de imprensa','Parcerias confirmadas','Stories e Reels planejados']},{id:'trafego',tasks:['Budget aprovado','Meta Ads configurado','Google Ads configurado','Pixel instalado e testado','Campanha ativa','Relatório semanal']},{id:'prod',tasks:['Som e luz contratados','Palco confirmado','Catering / camarim definido','Equipe de segurança','Credenciais emitidas','Logística de palco e desmontagem']},{id:'op',tasks:['Ingresso cadastrado nas plataformas','PDVs instalados e testados','Equipe de portaria confirmada','Comunicação interna enviada','Checklist dia do evento','Pós-evento: fechamento de caixa']}];
+var newEv={id:pid,nome:nome,open:true,areas:AD.map(function(a){return {id:a.id,tarefas:a.tasks.map(function(d){return {id:'u'+Date.now()+Math.floor(Math.random()*9999),desc:d,status:'pendente',resp:'',prazo:''};})};} )};
 prod.eventos.unshift(newEv);
 localStorage.setItem('prod_v1',JSON.stringify(prod));
-sv();window.location.href='producao.html';
+sv();setTimeout(function(){window.location.href='producao.html';},800);
 }
+
 render();
 </script>
 </body>
