@@ -8,100 +8,40 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:#0f172a;height:100vh;overflow:hidden}
-#tab-bar{
-position:fixed;top:0;left:0;right:0;
-height:46px;
-background:#0f172a;
-display:flex;align-items:center;
-gap:4px;padding:0 16px;
-border-bottom:2px solid #ef4444;
-z-index:9999;
-box-shadow:0 2px 12px rgba(0,0,0,.5)
-}
+#tab-bar{position:fixed;top:0;left:0;right:0;height:46px;background:#0f172a;display:flex;align-items:center;gap:4px;padding:0 16px;border-bottom:2px solid #ef4444;z-index:9999;box-shadow:0 2px 12px rgba(0,0,0,.5)}
 .logo-wrap{display:flex;flex-direction:column;align-items:center;margin-right:12px;padding-right:14px;border-right:1px solid rgba(255,255,255,.15)}
 .logo-text{color:#fff;font-size:20px;font-weight:900;font-style:italic;letter-spacing:-1px;line-height:1}
 .logo-badge{background:#ef4444;color:#fff;font-size:6px;font-weight:700;letter-spacing:.5px;padding:1px 4px;border-radius:2px;margin-top:1px;white-space:nowrap}
-.tab{
-background:rgba(255,255,255,.07);
-color:rgba(255,255,255,.55);
-border:none;border-radius:6px;
-padding:6px 18px;
-font-size:13px;font-weight:600;
-cursor:pointer;transition:.15s;
-display:flex;align-items:center;gap:7px
-}
+.tab{background:rgba(255,255,255,.07);color:rgba(255,255,255,.55);border:none;border-radius:6px;padding:6px 18px;font-size:13px;font-weight:600;cursor:pointer;transition:.15s;display:flex;align-items:center;gap:7px}
 .tab:hover{background:rgba(255,255,255,.14);color:rgba(255,255,255,.85)}
 .tab.active{background:#ef4444;color:#fff}
 .tab-emoji{font-size:14px}
 #frames{position:fixed;top:46px;left:0;right:0;bottom:0}
-.frame-wrap{
-position:absolute;top:0;left:0;right:0;bottom:0;
-display:none;
-}
+.frame-wrap{position:absolute;top:0;left:0;right:0;bottom:0;display:none}
 .frame-wrap.active{display:block}
 iframe{width:100%;height:100%;border:none}
-.loading-overlay{
-position:absolute;inset:0;
-background:#f1f5f9;
-display:flex;flex-direction:column;align-items:center;justify-content:center;
-gap:12px;z-index:10;
-transition:opacity .3s;
-}
+.loading-overlay{position:absolute;inset:0;background:#f1f5f9;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;z-index:10;transition:opacity .3s}
 .loading-overlay.hidden{opacity:0;pointer-events:none}
-.spinner{
-width:36px;height:36px;
-border:3px solid #e2e8f0;
-border-top-color:#ef4444;
-border-radius:50%;
-animation:spin .7s linear infinite
-}
+.spinner{width:36px;height:36px;border:3px solid #e2e8f0;border-top-color:#ef4444;border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loading-overlay p{color:#64748b;font-size:13px;font-weight:600}
 </style>
 </head>
 <body>
 <div id="tab-bar">
-<div class="logo-wrap">
-<div class="logo-text">axis</div>
-<div class="logo-badge">ENTRETENIMENTO</div>
-</div>
-<button class="tab active" onclick="showTab('dashboard',this)" id="btn-dashboard">
-<span class="tab-emoji">📊</span> Dashboard
-</button>
-<button class="tab" onclick="showTab('custos',this)" id="btn-custos">
-<span class="tab-emoji">💰</span> Custos
-</button>
-<button class="tab" onclick="showTab('viabilidade',this)" id="btn-viabilidade">
-<span class="tab-emoji">📉</span> Viabilidade
-</button>
-<button class="tab" onclick="showTab('producao',this)" id="btn-producao">
-<span class="tab-emoji">🎬</span> Produção
-</button>
-<button class="tab" onclick="showTab('vendas',this)" id="btn-vendas">
-<span class="tab-emoji">📈</span> Vendas
-</button>
+<div class="logo-wrap"><div class="logo-text">axis</div><div class="logo-badge">ENTRETENIMENTO</div></div>
+<button class="tab active" onclick="showTab('dashboard',this)" id="btn-dashboard"><span class="tab-emoji">📊</span> Dashboard</button>
+<button class="tab" onclick="showTab('custos',this)" id="btn-custos"><span class="tab-emoji">💰</span> Custos</button>
+<button class="tab" onclick="showTab('viabilidade',this)" id="btn-viabilidade"><span class="tab-emoji">📉</span> Viabilidade</button>
+<button class="tab" onclick="showTab('producao',this)" id="btn-producao"><span class="tab-emoji">🎬</span> Produção</button>
+<button class="tab" onclick="showTab('vendas',this)" id="btn-vendas"><span class="tab-emoji">📈</span> Vendas</button>
 </div>
 <div id="frames">
-<div class="frame-wrap active" id="fw-dashboard">
-<div class="loading-overlay" id="ld-dashboard"><div class="spinner"></div><p>Carregando Dashboard...</p></div>
-<iframe id="fr-dashboard" src="index.html" onload="frameLoaded('dashboard')"></iframe>
-</div>
-<div class="frame-wrap" id="fw-custos">
-<div class="loading-overlay" id="ld-custos"><div class="spinner"></div><p>Carregando Custos...</p></div>
-<iframe id="fr-custos" src="custos.html" onload="frameLoaded('custos')"></iframe>
-</div>
-<div class="frame-wrap" id="fw-viabilidade">
-<div class="loading-overlay" id="ld-viabilidade"><div class="spinner"></div><p>Carregando Viabilidade...</p></div>
-<iframe id="fr-viabilidade" src="viabilidade.html" onload="frameLoaded('viabilidade')"></iframe>
-</div>
-<div class="frame-wrap" id="fw-producao">
-<div class="loading-overlay" id="ld-producao"><div class="spinner"></div><p>Carregando Produção...</p></div>
-<iframe id="fr-producao" src="producao.html" onload="frameLoaded('producao')"></iframe>
-</div>
-<div class="frame-wrap" id="fw-vendas">
-<div class="loading-overlay" id="ld-vendas"><div class="spinner"></div><p>Carregando Vendas...</p></div>
-<iframe id="fr-vendas" src="dashboard-vendas.html" onload="frameLoaded('vendas')"></iframe>
-</div>
+<div class="frame-wrap active" id="fw-dashboard"><div class="loading-overlay" id="ld-dashboard"><div class="spinner"></div><p>Carregando Dashboard...</p></div><iframe id="fr-dashboard" src="dashboard-vendas.html" onload="frameLoaded('dashboard')"></iframe></div>
+<div class="frame-wrap" id="fw-custos"><div class="loading-overlay" id="ld-custos"><div class="spinner"></div><p>Carregando Custos...</p></div><iframe id="fr-custos" src="custos.html" onload="frameLoaded('custos')"></iframe></div>
+<div class="frame-wrap" id="fw-viabilidade"><div class="loading-overlay" id="ld-viabilidade"><div class="spinner"></div><p>Carregando Viabilidade...</p></div><iframe id="fr-viabilidade" src="viabilidade.html" onload="frameLoaded('viabilidade')"></iframe></div>
+<div class="frame-wrap" id="fw-producao"><div class="loading-overlay" id="ld-producao"><div class="spinner"></div><p>Carregando Produção...</p></div><iframe id="fr-producao" src="producao.html" onload="frameLoaded('producao')"></iframe></div>
+<div class="frame-wrap" id="fw-vendas"><div class="loading-overlay" id="ld-vendas"><div class="spinner"></div><p>Carregando Vendas...</p></div><iframe id="fr-vendas" src="dashboard-vendas.html" onload="frameLoaded('vendas')"></iframe></div>
 </div>
 <script>
 var TABS=['dashboard','custos','viabilidade','producao','vendas'];
@@ -109,10 +49,7 @@ var _loaded={};
 function showTab(name,btn){
 document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
 btn.classList.add('active');
-TABS.forEach(function(t){
-var fw=document.getElementById('fw-'+t);
-if(fw)fw.classList.toggle('active',t===name);
-});
+TABS.forEach(function(t){var fw=document.getElementById('fw-'+t);if(fw)fw.classList.toggle('active',t===name);});
 location.hash=name==='dashboard'?'':name;
 hideSubHeader(name);
 }
@@ -126,32 +63,22 @@ function hideSubHeader(name){
 if(!_loaded[name])return;
 try{
 var doc=document.getElementById('fr-'+name).contentDocument;
-['#header','header','#tab-bar'].forEach(function(sel){
+['#header','header','#tab-bar','#topbar','nav'].forEach(function(sel){
 var el=doc.querySelector(sel);
 if(el){
 var btns=el.querySelector('.header-btns');
-if(btns&&!btns._rescued){
-btns._rescued=true;
-btns.style.cssText='position:fixed;top:6px;right:16px;z-index:9999;display:flex;gap:8px;';
-doc.body.appendChild(btns);
-}
+if(btns&&!btns._rescued){btns._rescued=true;btns.style.cssText='position:fixed;top:6px;right:16px;z-index:9999;display:flex;gap:8px;';doc.body.appendChild(btns);}
 el.style.display='none';
 }
 });
-['#kpis','#summary','#tabs'].forEach(function(sel){
-var el=doc.querySelector(sel);
-if(el)el.style.top='0';
-});
+['#kpis','#summary','#tabs'].forEach(function(sel){var el=doc.querySelector(sel);if(el)el.style.top='0';});
 var frames=doc.querySelector('#frames');
 if(frames)frames.style.top='0';
 }catch(e){}
 }
 (function(){
 var hash=location.hash.replace('#','');
-if(hash&&TABS.indexOf(hash)!==-1){
-var btn=document.getElementById('btn-'+hash);
-if(btn)showTab(hash,btn);
-}
+if(hash&&TABS.indexOf(hash)!==-1){var btn=document.getElementById('btn-'+hash);if(btn)showTab(hash,btn);}
 })();
 </script>
 </body>
