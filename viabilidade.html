@@ -33,6 +33,8 @@ button{cursor:pointer;border:none;border-radius:6px;font-size:13px;font-weight:6
 .btn-novo:hover{background:rgba(255,255,255,.25)}
 .btn-gcal{background:#1a73e8;color:#fff;padding:8px 16px}
 .btn-gcal:hover{background:#1557b0}
+.btn-prod{background:#16a34a;color:#fff;padding:8px 16px}
+.btn-prod:hover{background:#15803d}
 #kpis{background:var(--nav);border-top:1px solid rgba(255,255,255,.1);padding:10px 20px;display:grid;grid-template-columns:repeat(6,1fr);gap:10px;position:sticky;top:57px;z-index:99}
 .kpi{background:rgba(255,255,255,.07);border-radius:6px;padding:8px 10px;text-align:center}
 .kpi-label{color:rgba(255,255,255,.5);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
@@ -210,6 +212,7 @@ body{background:#fff;font-size:11px}
 <div class="header-btns">
 <button class="btn-pdf" onclick="savePDF()">🖨️ Salvar PDF</button>
 <button class="btn-gcal" onclick="openGoogleCalendar()">📅 Google Agenda</button>
+<button class="btn-prod" onclick="enviarProducao()">📋 Produção</button>
 <button class="btn-novo" onclick="showModal()">🗑️ Novo Evento</button>
 </div>
 </div>
@@ -442,7 +445,12 @@ function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').
 function $(id){return document.getElementById(id);}
 function set(id,v){var e=$(id);if(e)e.textContent=v;}
 function deepClone(o){return JSON.parse(JSON.stringify(o));}
-function sv(){localStorage.setItem('via_v4',JSON.stringify(D));}
+function sv(){
+localStorage.setItem('via_v4',JSON.stringify(D));
+if(D.evento.prodId&&D.evento.nome){
+try{var prod=JSON.parse(localStorage.getItem('prod_v1')||'{"eventos":[]}');var pev=prod.eventos.find(function(e){return e.id===D.evento.prodId;});if(pev){pev.nome=D.evento.nome;localStorage.setItem('prod_v1',JSON.stringify(prod));}}catch(e){}
+}
+}
 
 function mkTipos(){return [{tipo:'Inteira',qp:0,val:0,qr:0},{tipo:'Meia',qp:0,val:0,qr:0},{tipo:'Promocional',qp:0,val:0,qr:0},{tipo:'Cortesia',qp:0,val:0,qr:0}];}
 function mkLote(nome){return {id:uid(),nome:nome,open:true,tipos:mkTipos()};}
@@ -451,7 +459,7 @@ function mkItem(desc){return {id:uid(),desc:desc,proj:0,real:0};}
 function mkGrupo(nome,cor,descs){return {id:uid(),nome:nome,cor:cor,open:true,itens:descs.map(mkItem)};}
 
 var DEFAULTS={
-evento:{nome:'',data:'',local:'',cap:0,prevenda:'',vgeral:''},
+evento:{nome:'',data:'',local:'',cap:0,prevenda:'',vgeral:'',prodId:''},
 setores:[mkSetor('Pista'),mkSetor('Área VIP'),mkSetor('Camarote'),mkSetor('Camarote Box')],
 descontos:[],
 split:{axis:100,artista:0,socio:0},
@@ -477,6 +485,7 @@ if(!p.descontos)p.descontos=[];
 if(!p.split)p.split={axis:100,artista:0,socio:0};
 if(!p.evento.prevenda)p.evento.prevenda='';
 if(!p.evento.vgeral)p.evento.vgeral='';
+if(!p.evento.prodId)p.evento.prodId='';
 return p;
 }
 }catch(e){}
@@ -761,7 +770,18 @@ function hideModal(){$('modal-ov').classList.remove('show');}
 function novoEvento(){localStorage.removeItem('via_v4');D=deepClone(DEFAULTS);hideModal();render();}
 
 function savePDF(){
-window.open(location.protocol+'//'+location.host+location.pathname+'?print=1','_blank');
+document.querySelectorAll('.tab-pane').forEach(function(p){p.style.display='block';});
+var old=document.title;
+document.title='Viabilidade · '+(D.evento.nome||'Evento')+' · Axis';
+setTimeout(function(){
+window.print();
+setTimeout(function(){
+document.title=old;
+document.querySelectorAll('.tab-pane').forEach(function(p){p.style.display='';});
+var a=document.querySelector('.tab-pane.active');
+if(a)a.style.display='block';
+},500);
+},200);
 }
 
 if(location.search.indexOf('print=1')!==-1){
@@ -790,6 +810,36 @@ function openGoogleCalendar(){
     +'&details='+encodeURIComponent('Evento Axis · '+nome+(local?' em '+local:''))
     +'&add=axis.entretenimento%40gmail.com';
   window.open(url,'_blank');
+}
+
+function enviarProducao(){
+var nome=(D.evento.nome||'').trim();
+if(!nome){alert('Preencha o nome do evento primeiro.');return;}
+var prod;
+try{prod=JSON.parse(localStorage.getItem('prod_v1')||'{"eventos":[]}');}catch(e){prod={eventos:[]};}
+if(!prod.eventos)prod.eventos=[];
+var ex=null;
+if(D.evento.prodId)ex=prod.eventos.find(function(e){return e.id===D.evento.prodId;});
+if(!ex)ex=prod.eventos.find(function(e){return e.nome===nome;});
+if(ex){
+ex.nome=nome;D.evento.prodId=ex.id;
+localStorage.setItem('prod_v1',JSON.stringify(prod));
+sv();window.location.href='producao.html';return;
+}
+var pid='u'+Date.now();
+D.evento.prodId=pid;
+var AD=[
+{id:'pre',tasks:['Contrato do artista assinado','Rider técnico recebido','Assessoria de imprensa contratada','Seguro do evento','Licença prefeitura / DAEM','Posto médico confirmado']},
+{id:'mkt',tasks:['Identidade visual criada','Artes para redes sociais','Foto/vídeo do artista','Release de imprensa','Parcerias confirmadas','Stories e Reels planejados']},
+{id:'trafego',tasks:['Budget aprovado','Meta Ads configurado','Google Ads configurado','Pixel instalado e testado','Campanha ativa','Relatório semanal']},
+{id:'prod',tasks:['Som e luz contratados','Palco confirmado','Catering / camarim definido','Equipe de segurança','Credenciais emitidas','Logística de palco e desmontagem']},
+{id:'op',tasks:['Ingresso cadastrado nas plataformas','PDVs instalados e testados','Equipe de portaria confirmada','Comunicação interna enviada','Checklist dia do evento','Pós-evento: fechamento de caixa']}
+];
+var newEv={id:pid,nome:nome,open:true,areas:AD.map(function(a){
+return {id:a.id,tarefas:a.tasks.map(function(d){return {id:'u'+Date.now()+Math.floor(Math.random()*9999),desc:d,status:'pendente',resp:'',prazo:''};})};} )};
+prod.eventos.unshift(newEv);
+localStorage.setItem('prod_v1',JSON.stringify(prod));
+sv();window.location.href='producao.html';
 }
 render();
 </script>
