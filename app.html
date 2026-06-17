@@ -126,7 +126,7 @@ function hideSubHeader(name){
 if(!_loaded[name])return;
 try{
 var doc=document.getElementById('fr-'+name).contentDocument;
-['#header','header'].forEach(function(sel){
+['#header','header','#tab-bar'].forEach(function(sel){
 var el=doc.querySelector(sel);
 if(el){
 var btns=el.querySelector('.header-btns');
@@ -142,6 +142,8 @@ el.style.display='none';
 var el=doc.querySelector(sel);
 if(el)el.style.top='0';
 });
+var frames=doc.querySelector('#frames');
+if(frames)frames.style.top='0';
 }catch(e){}
 }
 (function(){
