@@ -761,19 +761,7 @@ function hideModal(){$('modal-ov').classList.remove('show');}
 function novoEvento(){localStorage.removeItem('via_v4');D=deepClone(DEFAULTS);hideModal();render();}
 
 function savePDF(){
-// Se estiver em iframe, abre nova aba standalone para imprimir
-if(window.self!==window.top){
 window.open(location.protocol+'//'+location.host+location.pathname+'?print=1','_blank');
-return;
-}
-document.querySelectorAll('.tab-pane').forEach(function(p){p.style.display='block';});
-var old=document.title;
-document.title='Viabilidade · '+(D.evento.nome||'Evento')+' · Axis';
-window.print();
-document.title=old;
-document.querySelectorAll('.tab-pane').forEach(function(p){p.style.display='';});
-var active=document.querySelector('.tab-pane.active');
-if(active)active.style.display='block';
 }
 
 if(location.search.indexOf('print=1')!==-1){
