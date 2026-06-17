@@ -4,7 +4,7 @@
   <script src="auth.js"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Viabilidade · Axis</title>
+<title>Viabilidade Â· Axis</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--bg:#f1f5f9;--panel:#fff;--nav:#0f172a;--red:#ef4444;--green:#16a34a;--text:#1e293b;--muted:#64748b;--border:#e2e8f0;--input-bg:#f8fafc}
@@ -191,46 +191,52 @@ body{background:#fff;font-size:11px}
 .grupo{break-inside:avoid}
 .setor{break-inside:avoid}
 }
+
+#event-bar{background:var(--nav,#12122a);padding:8px 200px 8px 20px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:97;border-bottom:1px solid #2a2a4a;}
+#event-bar label{color:#aaa;font-size:11px;white-space:nowrap;}
+#event-bar input[type=text]{background:#1e1e38;border:1px solid #444;color:#fff;padding:5px 10px;border-radius:6px;font-size:13px;width:220px;}
+#event-bar input[type=date]{background:#1e1e38;border:1px solid #444;color:#fff;padding:5px 10px;border-radius:6px;font-size:13px;width:155px;color-scheme:dark;}
 </style>
 </head>
 <body>
 <div id="header">
 <div class="logo-box">
 <div class="logo-text">axis</div>
-<div class="logo-badge">MÚSICA ENTRETENIMENTO CORPORATIVO</div>
+<div class="logo-badge">MÃSICA ENTRETENIMENTO CORPORATIVO</div>
 </div>
 <div class="evento-fields">
 <input class="ef-nome" type="text" id="ev-nome" placeholder="Nome do Evento" oninput="D.evento.nome=this.value;sv()">
 <input class="ef-sm" type="text" id="ev-data" placeholder="Data do Evento" oninput="D.evento.data=this.value;sv()">
-<input class="ef-sm" type="text" id="ev-prevenda" placeholder="Início Pré-Venda" oninput="D.evento.prevenda=this.value;sv()">
-<input class="ef-sm" type="text" id="ev-vgeral" placeholder="Início Venda Geral" oninput="D.evento.vgeral=this.value;sv()">
+<input class="ef-sm" type="text" id="ev-prevenda" placeholder="InÃ­cio PrÃ©-Venda" oninput="D.evento.prevenda=this.value;sv()">
+<input class="ef-sm" type="text" id="ev-vgeral" placeholder="InÃ­cio Venda Geral" oninput="D.evento.vgeral=this.value;sv()">
 <input class="ef-sm" type="text" id="ev-local" placeholder="Local / Cidade" oninput="D.evento.local=this.value;sv()">
 <input class="ef-sm" type="number" id="ev-cap" placeholder="Capacidade total" oninput="D.evento.cap=+this.value;render()">
 </div>
 <div class="header-btns">
-<button class="btn-pdf" onclick="savePDF()">🖨️ Salvar PDF</button>
-<button class="btn-salvar" onclick="salvarEvento()">✅ Salvar Evento</button>
-<button class="btn-novo" onclick="showModal()">🗑️ Novo Evento</button>
+<button class="btn-pdf" onclick="savePDF()">ð¨ï¸ Salvar PDF</button>
+<button class="btn-salvar" onclick="salvarEvento()">â Salvar Evento</button>
+<button class="btn-novo" onclick="showModal()">ðï¸ Novo Evento</button>
 </div>
 </div>
+<div id="event-bar"><label>Nome do Evento</label><input type="text" id="input-nome" placeholder="Ex: Belo in Concert"><label>Data</label><input type="date" id="input-data"></div>
 <div id="kpis">
-<div class="kpi"><div class="kpi-label">Receita Bruta Proj</div><div class="kpi-val" id="k-rp">R$ —</div><div class="kpi-sub">Bilheteria + Outras</div></div>
-<div class="kpi"><div class="kpi-label">Custo Total Proj</div><div class="kpi-val" id="k-cp">R$ —</div><div class="kpi-sub">Manual + Taxas</div></div>
-<div class="kpi"><div class="kpi-label">Resultado Proj</div><div class="kpi-val" id="k-resp">R$ —</div><div class="kpi-sub" id="k-marg">Margem —</div></div>
-<div class="kpi"><div class="kpi-label">Receita Bruta Real</div><div class="kpi-val" id="k-rr">R$ —</div><div class="kpi-sub">Após evento</div></div>
-<div class="kpi"><div class="kpi-label">Custo Total Real</div><div class="kpi-val" id="k-cr">R$ —</div><div class="kpi-sub">Manual + Taxas</div></div>
-<div class="kpi"><div class="kpi-label">Resultado Real</div><div class="kpi-val" id="k-resr">R$ —</div><div class="kpi-sub" id="k-be">BE: —</div></div>
+<div class="kpi"><div class="kpi-label">Receita Bruta Proj</div><div class="kpi-val" id="k-rp">R$ â</div><div class="kpi-sub">Bilheteria + Outras</div></div>
+<div class="kpi"><div class="kpi-label">Custo Total Proj</div><div class="kpi-val" id="k-cp">R$ â</div><div class="kpi-sub">Manual + Taxas</div></div>
+<div class="kpi"><div class="kpi-label">Resultado Proj</div><div class="kpi-val" id="k-resp">R$ â</div><div class="kpi-sub" id="k-marg">Margem â</div></div>
+<div class="kpi"><div class="kpi-label">Receita Bruta Real</div><div class="kpi-val" id="k-rr">R$ â</div><div class="kpi-sub">ApÃ³s evento</div></div>
+<div class="kpi"><div class="kpi-label">Custo Total Real</div><div class="kpi-val" id="k-cr">R$ â</div><div class="kpi-sub">Manual + Taxas</div></div>
+<div class="kpi"><div class="kpi-label">Resultado Real</div><div class="kpi-val" id="k-resr">R$ â</div><div class="kpi-sub" id="k-be">BE: â</div></div>
 </div>
 <div id="tabs">
-<div class="tab active" onclick="showTab('receitas',this)">🎟️ Receitas</div>
-<div class="tab" onclick="showTab('custos',this)">💰 Custos</div>
-<div class="tab" onclick="showTab('breakeven',this)">📊 Breakeven</div>
+<div class="tab active" onclick="showTab('receitas',this)">ðï¸ Receitas</div>
+<div class="tab" onclick="showTab('custos',this)">ð° Custos</div>
+<div class="tab" onclick="showTab('breakeven',this)">ð Breakeven</div>
 </div>
 <div id="content">
 <!-- RECEITAS -->
 <div id="tab-receitas" class="tab-pane active">
 <div class="section">
-<div class="section-hdr">🎟️ BILHETERIA — SETORES E LOTES
+<div class="section-hdr">ðï¸ BILHETERIA â SETORES E LOTES
 <div class="totals"><span>Proj: <strong id="sh-bp">R$ 0</strong></span><span>Real: <strong id="sh-br">R$ 0</strong></span></div>
 </div>
 <div class="section-body" id="setores-ct"></div>
@@ -241,13 +247,13 @@ body{background:#fff;font-size:11px}
 
 <!-- DESCONTOS DA BILHETERIA BRUTA -->
 <div class="section">
-<div class="section-hdr" style="background:#7f1d1d">🏷️ DESCONTOS DA BILHETERIA BRUTA
+<div class="section-hdr" style="background:#7f1d1d">ð·ï¸ DESCONTOS DA BILHETERIA BRUTA
 <div class="totals"><span>Proj: <strong id="sh-dp">R$ 0</strong></span><span>Real: <strong id="sh-dr">R$ 0</strong></span></div>
 </div>
 <div class="section-body" style="padding:0">
 <table class="outras-table" style="width:100%">
 <thead><tr>
-<th style="text-align:left">Descrição do Desconto</th>
+<th style="text-align:left">DescriÃ§Ã£o do Desconto</th>
 <th style="width:170px;background:#eff6ff">Projetado R$</th>
 <th style="width:170px;background:#fef2f2">Realizado R$</th>
 <th style="width:40px"></th>
@@ -262,7 +268,7 @@ body{background:#fff;font-size:11px}
 
 <!-- BILHETERIA LIQUIDA -->
 <div style="background:#1e3a5f;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:13px;border-radius:8px;margin-bottom:12px">
-<span>💳 BILHETERIA LÍQUIDA (Bruta − Descontos)</span>
+<span>ð³ BILHETERIA LÃQUIDA (Bruta â Descontos)</span>
 <div style="display:flex;gap:24px">
 <span>Proj: <span style="color:#93c5fd" id="t-blp">R$ 0</span></span>
 <span>Real: <span style="color:#4ade80" id="t-blr">R$ 0</span></span>
@@ -271,32 +277,32 @@ body{background:#fff;font-size:11px}
 
 <!-- DIVISAO ENTRE PARTES -->
 <div class="split-section">
-<div class="split-hdr">🤝 DIVISÃO — % da Bilheteria Líquida entre as Partes
+<div class="split-hdr">ð¤ DIVISÃO â % da Bilheteria LÃ­quida entre as Partes
 <span style="font-size:11px;font-weight:400;opacity:.7">A soma deve ser 100%</span>
 </div>
 <div class="split-body">
 <div class="split-base-info">
-<span>Base de cálculo: <strong>Bilheteria Líquida (após descontos)</strong></span>
+<span>Base de cÃ¡lculo: <strong>Bilheteria LÃ­quida (apÃ³s descontos)</strong></span>
 <span>Proj: <strong id="sp-base-p">R$ 0</strong> &nbsp;|&nbsp; Real: <strong id="sp-base-r">R$ 0</strong></span>
 </div>
-<div id="split-warn" class="split-total-warn split-total-ok">✅ Total: 100%</div>
+<div id="split-warn" class="split-total-warn split-total-ok">â Total: 100%</div>
 <div class="split-pct-row">
 <div class="split-card" style="border-color:#ef4444">
-<div class="split-card-label" style="color:#ef4444">🏢 Axis</div>
+<div class="split-card-label" style="color:#ef4444">ð¢ Axis</div>
 <input class="split-pct-input" type="number" min="0" max="100" id="sp-axis" value="100" oninput="D.split.axis=+this.value;render()">
 <div class="split-pct-symbol">%</div>
 <div class="split-result-proj" id="sp-axis-p">R$ 0</div>
 <div class="split-result-real" id="sp-axis-r">R$ 0</div>
 </div>
 <div class="split-card" style="border-color:#7c3aed">
-<div class="split-card-label" style="color:#7c3aed">🎤 Artista</div>
+<div class="split-card-label" style="color:#7c3aed">ð¤ Artista</div>
 <input class="split-pct-input" type="number" min="0" max="100" id="sp-artista" value="0" oninput="D.split.artista=+this.value;render()">
 <div class="split-pct-symbol">%</div>
 <div class="split-result-proj" id="sp-artista-p">R$ 0</div>
 <div class="split-result-real" id="sp-artista-r">R$ 0</div>
 </div>
 <div class="split-card" style="border-color:#0891b2">
-<div class="split-card-label" style="color:#0891b2">🤝 Sócio</div>
+<div class="split-card-label" style="color:#0891b2">ð¤ SÃ³cio</div>
 <input class="split-pct-input" type="number" min="0" max="100" id="sp-socio" value="0" oninput="D.split.socio=+this.value;render()">
 <div class="split-pct-symbol">%</div>
 <div class="split-result-proj" id="sp-socio-p">R$ 0</div>
@@ -307,7 +313,7 @@ body{background:#fff;font-size:11px}
 </div>
 
 <div class="section">
-<div class="section-hdr">🍺 OUTRAS RECEITAS
+<div class="section-hdr">ðº OUTRAS RECEITAS
 <div class="totals"><span>Proj: <strong id="sh-op">R$ 0</strong></span><span>Real: <strong id="sh-or">R$ 0</strong></span></div>
 </div>
 <div class="section-body" style="padding:0">
@@ -325,7 +331,7 @@ body{background:#fff;font-size:11px}
 </div>
 
 <div class="section">
-<div class="section-hdr" style="background:#374151">ℹ️ DEDUÇÕES DA BILHETERIA — apenas informativo</div>
+<div class="section-hdr" style="background:#374151">â¹ï¸ DEDUÃÃES DA BILHETERIA â apenas informativo</div>
 <div class="section-body" style="padding:0">
 <table class="outras-table" style="width:100%">
 <thead><tr>
@@ -337,14 +343,14 @@ body{background:#fff;font-size:11px}
 <tbody>
 <tr class="auto-row"><td>ISS</td><td style="text-align:center">5%</td><td id="d-iss-p" style="text-align:right;padding:6px 10px;font-weight:700">R$ 0</td><td id="d-iss-r" style="text-align:right;padding:6px 10px;font-weight:700">R$ 0</td></tr>
 <tr class="auto-row"><td>ECAD</td><td style="text-align:center">5%</td><td id="d-ecad-p" style="text-align:right;padding:6px 10px;font-weight:700">R$ 0</td><td id="d-ecad-r" style="text-align:right;padding:6px 10px;font-weight:700">R$ 0</td></tr>
-<tr class="auto-row"><td>Taxa Cartão</td><td style="text-align:center">3,2%</td><td id="d-cart-p" style="text-align:right;padding:6px 10px;font-weight:700">R$ 0</td><td id="d-cart-r" style="text-align:right;padding:6px 10px;font-weight:700">R$ 0</td></tr>
+<tr class="auto-row"><td>Taxa CartÃ£o</td><td style="text-align:center">3,2%</td><td id="d-cart-p" style="text-align:right;padding:6px 10px;font-weight:700">R$ 0</td><td id="d-cart-r" style="text-align:right;padding:6px 10px;font-weight:700">R$ 0</td></tr>
 </tbody>
 </table>
 </div>
 </div>
 
 <div class="total-row">
-<span>RECEITA LÍQUIDA (Bruta − Taxas)</span>
+<span>RECEITA LÃQUIDA (Bruta â Taxas)</span>
 <div style="display:flex;gap:24px">
 <span>Proj: <span class="tr-val" id="t-rlp">R$ 0</span></span>
 <span>Real: <span class="tr-val" id="t-rlr">R$ 0</span></span>
@@ -355,7 +361,7 @@ body{background:#fff;font-size:11px}
 <!-- CUSTOS -->
 <div id="tab-custos" class="tab-pane">
 <div class="section">
-<div class="section-hdr">💰 CUSTOS POR GRUPO
+<div class="section-hdr">ð° CUSTOS POR GRUPO
 <div class="totals"><span>Proj: <strong id="sh-cp">R$ 0</strong></span><span>Real: <strong id="sh-cr">R$ 0</strong></span></div>
 </div>
 <div class="section-body" id="grupos-ct"></div>
@@ -368,15 +374,15 @@ body{background:#fff;font-size:11px}
 </div>
 </div>
 <div class="taxas-section">
-<div class="taxas-title">⚡ TAXAS AUTOMÁTICAS sobre Bilheteria Bruta — ISS 5% + ECAD 5% + Cartão 3,2%</div>
+<div class="taxas-title">â¡ TAXAS AUTOMÃTICAS sobre Bilheteria Bruta â ISS 5% + ECAD 5% + CartÃ£o 3,2%</div>
 <div style="display:grid;grid-template-columns:1fr 150px 150px;gap:6px;padding-bottom:6px;border-bottom:1px solid #fcd34d;margin-bottom:4px">
 <div style="font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:#78350f;font-weight:700">Item</div>
 <div style="text-align:right;font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:#78350f;font-weight:700">Projetado</div>
 <div style="text-align:right;font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:#78350f;font-weight:700">Realizado</div>
 </div>
-<div class="taxa-row"><div class="taxa-label">ISS — 5% bilheteria bruta</div><div class="taxa-val" id="tx-iss-p">R$ 0</div><div class="taxa-val" id="tx-iss-r">R$ 0</div></div>
-<div class="taxa-row"><div class="taxa-label">ECAD — 5% bilheteria bruta</div><div class="taxa-val" id="tx-ecad-p">R$ 0</div><div class="taxa-val" id="tx-ecad-r">R$ 0</div></div>
-<div class="taxa-row"><div class="taxa-label">Taxa Cartão — 3,2% bilheteria bruta</div><div class="taxa-val" id="tx-cart-p">R$ 0</div><div class="taxa-val" id="tx-cart-r">R$ 0</div></div>
+<div class="taxa-row"><div class="taxa-label">ISS â 5% bilheteria bruta</div><div class="taxa-val" id="tx-iss-p">R$ 0</div><div class="taxa-val" id="tx-iss-r">R$ 0</div></div>
+<div class="taxa-row"><div class="taxa-label">ECAD â 5% bilheteria bruta</div><div class="taxa-val" id="tx-ecad-p">R$ 0</div><div class="taxa-val" id="tx-ecad-r">R$ 0</div></div>
+<div class="taxa-row"><div class="taxa-label">Taxa CartÃ£o â 3,2% bilheteria bruta</div><div class="taxa-val" id="tx-cart-p">R$ 0</div><div class="taxa-val" id="tx-cart-r">R$ 0</div></div>
 <div class="taxa-row" style="font-weight:700;margin-top:4px;border-top:1px solid #fcd34d;padding-top:6px"><div class="taxa-label" style="font-weight:700;color:#92400e">TOTAL TAXAS</div><div class="taxa-val" id="tx-tot-p">R$ 0</div><div class="taxa-val" id="tx-tot-r">R$ 0</div></div>
 </div>
 <div class="total-row">
@@ -391,30 +397,30 @@ body{background:#fff;font-size:11px}
 <!-- BREAKEVEN -->
 <div id="tab-breakeven" class="tab-pane">
 <div class="be-summary">
-<div class="be-summary-title">📊 Resumo Geral</div>
+<div class="be-summary-title">ð Resumo Geral</div>
 <div class="be-grid2">
-<div class="be-stat"><div class="be-stat-val" id="be-tkt">—</div><div class="be-stat-label">Pagantes p/ Breakeven</div></div>
-<div class="be-stat"><div class="be-stat-val" id="be-pct">—%</div><div class="be-stat-label">% Ocupação p/ Breakeven</div></div>
-<div class="be-stat"><div class="be-stat-val" id="be-tm">R$ —</div><div class="be-stat-label">Ticket Médio Proj</div></div>
-<div class="be-stat"><div class="be-stat-val" id="be-cap">—</div><div class="be-stat-label">Pagantes Proj Total</div></div>
+<div class="be-stat"><div class="be-stat-val" id="be-tkt">â</div><div class="be-stat-label">Pagantes p/ Breakeven</div></div>
+<div class="be-stat"><div class="be-stat-val" id="be-pct">â%</div><div class="be-stat-label">% OcupaÃ§Ã£o p/ Breakeven</div></div>
+<div class="be-stat"><div class="be-stat-val" id="be-tm">R$ â</div><div class="be-stat-label">Ticket MÃ©dio Proj</div></div>
+<div class="be-stat"><div class="be-stat-val" id="be-cap">â</div><div class="be-stat-label">Pagantes Proj Total</div></div>
 </div>
 </div>
 <div class="section">
-<div class="section-hdr">🎯 CENÁRIOS DE OCUPAÇÃO</div>
+<div class="section-hdr">ð¯ CENÃRIOS DE OCUPAÃÃO</div>
 <div class="section-body"><div class="be-grid" id="scenarios"></div></div>
 </div>
 <div class="section">
-<div class="section-hdr">📈 GAUGE DE BREAKEVEN</div>
+<div class="section-hdr">ð GAUGE DE BREAKEVEN</div>
 <div class="section-body" style="display:flex;justify-content:center;padding:24px">
 <div>
 <div class="gauge-wrap">
 <canvas id="gauge-cv" width="240" height="130"></canvas>
 <div class="gauge-text">
-<div class="gauge-pct" id="g-pct">—%</div>
-<div class="gauge-sub" id="g-sub">ocupação projetada</div>
+<div class="gauge-pct" id="g-pct">â%</div>
+<div class="gauge-sub" id="g-sub">ocupaÃ§Ã£o projetada</div>
 </div>
 </div>
-<div style="text-align:center;margin-top:8px;font-size:11px;color:var(--muted)">🔴 Prejuízo &nbsp;|&nbsp; 🟡 Breakeven &nbsp;|&nbsp; 🟢 Lucro</div>
+<div style="text-align:center;margin-top:8px;font-size:11px;color:var(--muted)">ð´ PrejuÃ­zo &nbsp;|&nbsp; ð¡ Breakeven &nbsp;|&nbsp; ð¢ Lucro</div>
 </div>
 </div>
 </div>
@@ -423,7 +429,7 @@ body{background:#fff;font-size:11px}
 
 <div class="modal-overlay" id="modal-ov">
 <div class="modal-box">
-<h3>🗑️ Novo Evento</h3>
+<h3>ðï¸ Novo Evento</h3>
 <p>Isso vai apagar todos os dados do evento atual. Certifique-se de ter salvo o PDF antes de continuar.</p>
 <div class="modal-btns">
 <button class="modal-cancel" onclick="hideModal()">Cancelar</button>
@@ -457,20 +463,20 @@ function mkGrupo(nome,cor,descs){return {id:uid(),nome:nome,cor:cor,open:true,it
 
 var DEFAULTS={
 evento:{nome:'',data:'',local:'',cap:0,prevenda:'',vgeral:'',prodId:''},
-setores:[mkSetor('Pista'),mkSetor('Área VIP'),mkSetor('Camarote'),mkSetor('Camarote Box')],
+setores:[mkSetor('Pista'),mkSetor('Ãrea VIP'),mkSetor('Camarote'),mkSetor('Camarote Box')],
 descontos:[],
 split:{axis:100,artista:0,socio:0},
-outras:[{id:uid(),nome:'Bar / Consumação',proj:0,real:0},{id:uid(),nome:'Patrocínio',proj:0,real:0},{id:uid(),nome:'Outras Receitas',proj:0,real:0}],
+outras:[{id:uid(),nome:'Bar / ConsumaÃ§Ã£o',proj:0,real:0},{id:uid(),nome:'PatrocÃ­nio',proj:0,real:0},{id:uid(),nome:'Outras Receitas',proj:0,real:0}],
 grupos:[
-mkGrupo('Artístico e Suas Despesas','#7c3aed',['Cache Principal','Despesas Logística Artista','Efeitos Especiais','Cache DJ Opening','Cache DJ Warm Up','Catering Camarim','VJ']),
+mkGrupo('ArtÃ­stico e Suas Despesas','#7c3aed',['Cache Principal','Despesas LogÃ­stica Artista','Efeitos Especiais','Cache DJ Opening','Cache DJ Warm Up','Catering Camarim','VJ']),
 mkGrupo('Despesas do Local','#2563eb',['Aluguel do Local','Limpeza do Local']),
-mkGrupo('Legalização','#dc2626',['Planta Bombeiro + Xerox','Taxa Prefeitura / DAEM','Advogado','Posto Médico + UTI Móvel']),
-mkGrupo('Estrutura','#d97706',['Som, Luz e Geradores','LED Painel','Palco + Camarins + Piso','Fechamento / Grades','Carregadores Banda','Carregadores Som/Luz','Eletricista','Banheiros Químicos','Adesivos / Identificação','Lonas / Decoração','Rádios HT','Lycra / Acabamento']),
-mkGrupo('Mídia e Marketing','#0891b2',['Designer','Tráfego Pago (ADS)','Produção Audiovisual','Mídia LED Exterior','Material Gráfico','Adesivos Perfurados','Mídia Rádio','Panfletagem']),
-mkGrupo('Pessoal e Equipe','#16a34a',['Segurança + PM + Limpeza','Brigadistas / Bombeiro Civil','Validadores / Portaria','Equipe Pulseira','Produtor de Montagem','Produtor de Campo','Estacionamento']),
-mkGrupo('Ingressos e Ticketeria','#ea580c',['Pulseiras / Ingressos Físicos','Impressões / Cancelamentos','Técnico Ticketeria','Antecipação','Instalação PDVs']),
+mkGrupo('LegalizaÃ§Ã£o','#dc2626',['Planta Bombeiro + Xerox','Taxa Prefeitura / DAEM','Advogado','Posto MÃ©dico + UTI MÃ³vel']),
+mkGrupo('Estrutura','#d97706',['Som, Luz e Geradores','LED Painel','Palco + Camarins + Piso','Fechamento / Grades','Carregadores Banda','Carregadores Som/Luz','Eletricista','Banheiros QuÃ­micos','Adesivos / IdentificaÃ§Ã£o','Lonas / DecoraÃ§Ã£o','RÃ¡dios HT','Lycra / Acabamento']),
+mkGrupo('MÃ­dia e Marketing','#0891b2',['Designer','TrÃ¡fego Pago (ADS)','ProduÃ§Ã£o Audiovisual','MÃ­dia LED Exterior','Material GrÃ¡fico','Adesivos Perfurados','MÃ­dia RÃ¡dio','Panfletagem']),
+mkGrupo('Pessoal e Equipe','#16a34a',['SeguranÃ§a + PM + Limpeza','Brigadistas / Bombeiro Civil','Validadores / Portaria','Equipe Pulseira','Produtor de Montagem','Produtor de Campo','Estacionamento']),
+mkGrupo('Ingressos e Ticketeria','#ea580c',['Pulseiras / Ingressos FÃ­sicos','ImpressÃµes / Cancelamentos','TÃ©cnico Ticketeria','AntecipaÃ§Ã£o','InstalaÃ§Ã£o PDVs']),
 mkGrupo('Extras','#db2777',['Copos do Evento']),
-mkGrupo('Logística e Reuniões','#64748b',['Reuniões e VTs','Refeições Equipe','Despesas Diversas'])
+mkGrupo('LogÃ­stica e ReuniÃµes','#64748b',['ReuniÃµes e VTs','RefeiÃ§Ãµes Equipe','Despesas Diversas'])
 ]};
 
 var D=(function(){
@@ -548,22 +554,22 @@ D.setores.forEach(function(s){
 var sp=0,sr=0,spag=0;
 s.lotes.forEach(function(l){l.tipos.forEach(function(t){if(t.tipo!=='Cortesia'){sp+=t.qp*t.val;sr+=t.qr*t.val;spag+=t.qp;}});});
 h+='<div class="setor"><div class="setor-hdr">';
-h+='<span class="chevron '+(s.open?'open':'')+'" onclick="toggleS(\''+s.id+'\')">▶</span>';
+h+='<span class="chevron '+(s.open?'open':'')+'" onclick="toggleS(\''+s.id+'\')">â¶</span>';
 h+='<span class="setor-nome">'+esc(s.nome)+'</span>';
 h+='<span style="font-size:11px;color:rgba(255,255,255,.4);margin-right:8px">'+spag+' pag</span>';
 h+='<div class="setor-totals"><span class="st-val">Proj: <strong>'+R(sp)+'</strong></span><span class="st-val">Real: <strong>'+R(sr)+'</strong></span></div>';
-h+='<button class="btn-s rename-btn" onclick="renameS(\''+s.id+'\')" style="margin-left:8px">✏️</button>';
-h+='<button class="btn-s del-setor" onclick="delS(\''+s.id+'\')">✕</button>';
+h+='<button class="btn-s rename-btn" onclick="renameS(\''+s.id+'\')" style="margin-left:8px">âï¸</button>';
+h+='<button class="btn-s del-setor" onclick="delS(\''+s.id+'\')">â</button>';
 h+='</div>';;
 if(s.open){
 h+='<div class="setor-body">';
 s.lotes.forEach(function(l){
 var lp=0,lr=0;l.tipos.forEach(function(t){if(t.tipo!=='Cortesia'){lp+=t.qp*t.val;lr+=t.qr*t.val;}});
 h+='<div class="lote"><div class="lote-hdr">';
-h+='<span class="lv-chevron '+(l.open?'open':'')+'" onclick="toggleL(\''+s.id+'\',\''+l.id+'\')">▶</span>';
+h+='<span class="lv-chevron '+(l.open?'open':'')+'" onclick="toggleL(\''+s.id+'\',\''+l.id+'\')">â¶</span>';
 h+='<input class="lote-nome-input" type="text" value="'+esc(l.nome)+'" oninput="loteNm(\''+s.id+'\',\''+l.id+'\',this.value)" onclick="event.stopPropagation()">';
 h+='<div class="lote-totals"><span>Proj: <strong>'+R(lp)+'</strong></span><span>Real: <strong>'+R(lr)+'</strong></span></div>';
-h+='<button class="del-lote" onclick="delL(\''+s.id+'\',\''+l.id+'\')">✕ lote</button>';
+h+='<button class="del-lote" onclick="delL(\''+s.id+'\',\''+l.id+'\')">â lote</button>';
 h+='</div>';
 if(l.open){
 h+='<div><table class="lote-table"><thead><tr><th>Tipo</th><th style="background:#eff6ff">Qtd Proj</th><th style="background:#eff6ff">Valor R$</th><th style="background:#eff6ff">Total Proj</th><th style="background:#f0fdf4">Qtd Real</th><th style="background:#f0fdf4">Total Real</th></tr></thead><tbody>';
@@ -577,9 +583,9 @@ h+='<td class="auto-val">'+R(tp)+'</td>';
 h+='<td style="background:#f6fdf7"><input type="number" min="0" value="'+t.qr+'" oninput="upT(\''+s.id+'\',\''+l.id+'\',\''+t.tipo+'\',\'qr\',this.value)"></td>';
 h+='<td class="real-val">'+R(tr_)+'</td>';
 }else{
-h+='<td colspan="2" style="color:var(--muted);font-size:11px;text-align:center">— sem receita</td>';
+h+='<td colspan="2" style="color:var(--muted);font-size:11px;text-align:center">â sem receita</td>';
 h+='<td style="background:#f6fdf7"><input type="number" min="0" value="'+t.qr+'" oninput="upT(\''+s.id+'\',\''+l.id+'\',\''+t.tipo+'\',\'qr\',this.value)"></td>';
-h+='<td class="real-val" style="color:var(--muted)">—</td>';
+h+='<td class="real-val" style="color:var(--muted)">â</td>';
 }
 h+='</tr>';
 });
@@ -602,7 +608,7 @@ var h='';
 h+='<tr><td><input type="text" value="'+esc(d.nome)+'" oninput="descontoNm(\''+d.id+'\',this.value)" style="background:transparent;border:none;font-size:12px"></td>';
 h+='<td style="background:#f8fbff"><input type="number" min="0" value="'+(d.proj||0)+'" oninput="upD(\''+d.id+'\',\'proj\',this.value)"></td>';
 h+='<td style="background:#fff5f5"><input type="number" min="0" value="'+(d.real||0)+'" oninput="upD(\''+d.id+'\',\'real\',this.value)"></td>';
-h+='<td><button onclick="delDesconto(\''+d.id+'\')" style="background:none;color:#cbd5e1;border:none;cursor:pointer;font-size:14px;padding:2px 4px" onmouseover="this.style.color=\'#ef4444\'" onmouseout="this.style.color=\'#cbd5e1\'">✕</button></td></tr>';
+h+='<td><button onclick="delDesconto(\''+d.id+'\')" style="background:none;color:#cbd5e1;border:none;cursor:pointer;font-size:14px;padding:2px 4px" onmouseover="this.style.color=\'#ef4444\'" onmouseout="this.style.color=\'#cbd5e1\'">â</button></td></tr>';
 });
 $('descontos-ct').innerHTML=h;
 set('sh-dp',R(c.dp));set('sh-dr',R(c.dr));
@@ -620,8 +626,8 @@ set('sp-socio-p',R(c.splitSocP));set('sp-socio-r',R(c.splitSocR));
 var w=$('split-warn');
 if(w){
 var t=c.splitTotal;
-if(Math.abs(t-100)<0.01){w.className='split-total-warn split-total-ok';w.textContent='✅ Total: 100%';}
-else{w.className='split-total-warn split-total-bad';w.textContent='⚠️ Total: '+t.toFixed(1)+'% — deve somar 100%';}
+if(Math.abs(t-100)<0.01){w.className='split-total-warn split-total-ok';w.textContent='â Total: 100%';}
+else{w.className='split-total-warn split-total-bad';w.textContent='â ï¸ Total: '+t.toFixed(1)+'% â deve somar 100%';}
 }
 }
 
@@ -631,7 +637,7 @@ D.outras.forEach(function(o){
 h+='<tr><td><input type="text" value="'+esc(o.nome)+'" oninput="outraNm(\''+o.id+'\',this.value)" style="background:transparent;border:none;font-size:12px"></td>';
 h+='<td style="background:#f8fbff"><input type="number" min="0" value="'+o.proj+'" oninput="upO(\''+o.id+'\',\'proj\',this.value)"></td>';
 h+='<td style="background:#f6fdf7"><input type="number" min="0" value="'+o.real+'" oninput="upO(\''+o.id+'\',\'real\',this.value)"></td>';
-h+='<td><button onclick="delO(\''+o.id+'\')" style="background:none;color:#cbd5e1;border:none;cursor:pointer;font-size:14px;padding:2px 4px" onmouseover="this.style.color=\'#ef4444\'" onmouseout="this.style.color=\'#cbd5e1\'">✕</button></td></tr>';
+h+='<td><button onclick="delO(\''+o.id+'\')" style="background:none;color:#cbd5e1;border:none;cursor:pointer;font-size:14px;padding:2px 4px" onmouseover="this.style.color=\'#ef4444\'" onmouseout="this.style.color=\'#cbd5e1\'">â</button></td></tr>';
 });
 $('outras-ct').innerHTML=h;
 set('sh-op',R(c.op));set('sh-or',R(c.or_));
@@ -657,19 +663,19 @@ h+='<div class="grupo-dot" style="background:'+g.cor+'"></div>';
 h+='<span class="grupo-nome">'+esc(g.nome)+'</span>';
 h+='<div class="grupo-totals"><span class="gt-val">Proj: <strong>'+R(gp)+'</strong></span><span class="gt-val">Real: <strong>'+R(gr)+'</strong></span></div>';
 h+='<button class="add-item-btn" onclick="event.stopPropagation();addI(\''+g.id+'\')">+ Item</button>';
-h+='<button class="del-grupo" onclick="event.stopPropagation();delG(\''+g.id+'\')">✕</button>';
-h+='<span class="g-chevron '+(g.open?'open':'')+'">▶</span>';
+h+='<button class="del-grupo" onclick="event.stopPropagation();delG(\''+g.id+'\')">â</button>';
+h+='<span class="g-chevron '+(g.open?'open':'')+'">â¶</span>';
 h+='</div>';
 if(g.open){
-h+='<div class="grupo-body"><div class="items-header"><div class="col-label" style="text-align:left">Descrição</div><div class="col-label" style="background:#eff6ff;padding:3px 6px;border-radius:4px">Projetado R$</div><div class="col-label" style="background:#f0fdf4;padding:3px 6px;border-radius:4px">Realizado R$</div><div class="col-label">Δ</div><div></div></div>';
-if(!g.itens.length)h+='<div style="padding:12px 16px;color:var(--muted);font-size:12px;text-align:center">Nenhum item — clique "+ Item" para adicionar</div>';
+h+='<div class="grupo-body"><div class="items-header"><div class="col-label" style="text-align:left">DescriÃ§Ã£o</div><div class="col-label" style="background:#eff6ff;padding:3px 6px;border-radius:4px">Projetado R$</div><div class="col-label" style="background:#f0fdf4;padding:3px 6px;border-radius:4px">Realizado R$</div><div class="col-label">Î</div><div></div></div>';
+if(!g.itens.length)h+='<div style="padding:12px 16px;color:var(--muted);font-size:12px;text-align:center">Nenhum item â clique "+ Item" para adicionar</div>';
 g.itens.forEach(function(i){
 var d=i.real-i.proj;
 h+='<div class="item-row"><div class="item-desc"><input type="text" value="'+esc(i.desc)+'" oninput="upID(\''+g.id+'\',\''+i.id+'\',this.value)"></div>';
 h+='<div style="background:#f8fbff;padding:2px 4px;border-radius:4px"><input type="number" min="0" value="'+i.proj+'" oninput="upI(\''+g.id+'\',\''+i.id+'\',\'proj\',this.value)"></div>';
 h+='<div style="background:#f6fdf7;padding:2px 4px;border-radius:4px"><input type="number" min="0" value="'+i.real+'" oninput="upI(\''+g.id+'\',\''+i.id+'\',\'real\',this.value)"></div>';
 h+='<div class="item-delta '+(d>=0?'pos':'neg')+'">'+(d>0?'+':'')+R(d)+'</div>';
-h+='<button class="del-item" onclick="delI(\''+g.id+'\',\''+i.id+'\')">✕</button>';
+h+='<button class="del-item" onclick="delI(\''+g.id+'\',\''+i.id+'\')">â</button>';
 h+='</div>';
 });
 h+='</div>';
@@ -702,11 +708,11 @@ h+='<div class="scenario-card '+cls+'"><div class="sc-pct" style="color:'+color+
 h+='<div class="sc-pag">'+pagSc.toLocaleString('pt-BR')+' pagantes</div>';
 h+='<div class="sc-rec">'+R(recSc)+'</div>';
 h+='<div class="sc-res '+(resSc>=0?'pos':'neg')+'">'+(resSc>=0?'+':'')+R(resSc)+'</div>';
-h+='<div class="sc-lbl">'+(resSc>=0?'✅ Lucro':'❌ Prejuízo')+'</div></div>';
+h+='<div class="sc-lbl">'+(resSc>=0?'â Lucro':'â PrejuÃ­zo')+'</div></div>';
 });
 $('scenarios').innerHTML=h;
 set('g-pct',pct(c.projOcc));
-set('g-sub','Ocupação proj · BE: '+pct(c.bePct));
+set('g-sub','OcupaÃ§Ã£o proj Â· BE: '+pct(c.bePct));
 drawGauge(c.projOcc,c.bePct);
 }
 
@@ -769,7 +775,7 @@ function novoEvento(){localStorage.removeItem('via_v4');D=deepClone(DEFAULTS);hi
 function savePDF(){
 document.querySelectorAll('.tab-pane').forEach(function(p){p.style.display='block';});
 var old=document.title;
-document.title='Viabilidade · '+(D.evento.nome||'Evento')+' · Axis';
+document.title='Viabilidade Â· '+(D.evento.nome||'Evento')+' Â· Axis';
 setTimeout(function(){
 window.print();
 setTimeout(function(){
@@ -784,7 +790,7 @@ if(a)a.style.display='block';
 if(location.search.indexOf('print=1')!==-1){
 setTimeout(function(){
 document.querySelectorAll('.tab-pane').forEach(function(p){p.style.display='block';});
-document.title='Viabilidade · '+(D.evento.nome||'Evento')+' · Axis';
+document.title='Viabilidade Â· '+(D.evento.nome||'Evento')+' Â· Axis';
 window.print();
 },1200);
 }
@@ -804,29 +810,20 @@ function openGoogleCalendar(){
     +'&text='+encodeURIComponent(nome)
     +'&dates='+fmt+'/'+fmt
     +'&location='+encodeURIComponent(local)
-    +'&details='+encodeURIComponent('Evento Axis · '+nome+(local?' em '+local:''))
+    +'&details='+encodeURIComponent('Evento Axis Â· '+nome+(local?' em '+local:''))
     +'&add=axis.entretenimento%40gmail.com';
   window.open(url,'_blank');
 }
 
 function salvarEvento(){
-var nome=(D.evento.nome||'').trim();
-if(!nome){alert('Preencha o nome do evento primeiro.');return;}
-openGoogleCalendar();
-var prod;
-try{prod=JSON.parse(localStorage.getItem('prod_v1')||'{"eventos":[]}');}catch(e){prod={eventos:[]};}
-if(!prod.eventos)prod.eventos=[];
-var ex=null;
-if(D.evento.prodId)ex=prod.eventos.find(function(e){return e.id===D.evento.prodId;});
-if(!ex)ex=prod.eventos.find(function(e){return e.nome===nome;});
-if(ex){ex.nome=nome;D.evento.prodId=ex.id;localStorage.setItem('prod_v1',JSON.stringify(prod));sv();setTimeout(function(){window.location.href='producao.html';},800);return;}
-var pid='u'+Date.now();
-D.evento.prodId=pid;
-var AD=[{id:'pre',tasks:['Contrato do artista assinado','Rider técnico recebido','Assessoria de imprensa contratada','Seguro do evento','Licença prefeitura / DAEM','Posto médico confirmado']},{id:'mkt',tasks:['Identidade visual criada','Artes para redes sociais','Foto/vídeo do artista','Release de imprensa','Parcerias confirmadas','Stories e Reels planejados']},{id:'trafego',tasks:['Budget aprovado','Meta Ads configurado','Google Ads configurado','Pixel instalado e testado','Campanha ativa','Relatório semanal']},{id:'prod',tasks:['Som e luz contratados','Palco confirmado','Catering / camarim definido','Equipe de segurança','Credenciais emitidas','Logística de palco e desmontagem']},{id:'op',tasks:['Ingresso cadastrado nas plataformas','PDVs instalados e testados','Equipe de portaria confirmada','Comunicação interna enviada','Checklist dia do evento','Pós-evento: fechamento de caixa']}];
-var newEv={id:pid,nome:nome,open:true,areas:AD.map(function(a){return {id:a.id,tarefas:a.tasks.map(function(d){return {id:'u'+Date.now()+Math.floor(Math.random()*9999),desc:d,status:'pendente',resp:'',prazo:''};})};} )};
-prod.eventos.unshift(newEv);
-localStorage.setItem('prod_v1',JSON.stringify(prod));
-sv();setTimeout(function(){window.location.href='producao.html';},800);
+  var nome = (document.getElementById('input-nome')||{}).value||'';
+  nome = nome.trim();
+  var data = (document.getElementById('input-data')||{}).value||'';
+  if(!nome){alert('Preencha o nome do evento primeiro.');return;}
+  if(!data){alert('Preencha a data do evento.');return;}
+  var d=data.replace(/-/g,'');
+  var url='https://calendar.google.com/calendar/render?action=TEMPLATE&text='+encodeURIComponent(nome)+'&dates='+d+'/'+d+'&add=axis.entretenimento%40gmail.com';
+  window.open(url,'_blank');
 }
 
 render();
