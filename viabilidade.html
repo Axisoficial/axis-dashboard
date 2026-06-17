@@ -527,7 +527,7 @@ var kres=$('k-resp');kres.textContent=R(c.resp);kres.className='kpi-val '+(c.res
 var marg=c.rp>0?c.resp/c.rp*100:0;set('k-marg','Margem '+pct(marg));
 set('k-rr',R(c.rr));set('k-cr',R(c.cr));
 var kresr=$('k-resr');kresr.textContent=R(c.resr);kresr.className='kpi-val '+(c.resr>=0?'pos':'neg');
-set('k-be','BE: '+Math.round(c.beT).toLocaleString('pt-BR')+' pag ('+pct(c.bePct)+)');
+set('k-be','BE: '+Math.round(c.beT).toLocaleString('pt-BR')+' pag ('+pct(c.bePct)+')');
 renderSetores(c);renderDescontos(c);renderSplit(c);renderOutras(c);renderDeducoes(c);
 set('t-rlp',R(c.rlp));set('t-rlr',R(c.rlr));
 renderGrupos(c);renderTaxas(c);
