@@ -84,7 +84,7 @@ animation:spin .7s linear infinite
 <div id="frames">
 <div class="frame-wrap active" id="fw-dashboard">
 <div class="loading-overlay" id="ld-dashboard"><div class="spinner"></div><p>Carregando Dashboard...</p></div>
-<iframe id="fr-dashboard" src="dashboard-vendas.html" onload="frameLoaded('dashboard')"></iframe>
+<iframe id="fr-dashboard" src="index.html" onload="frameLoaded('dashboard')"></iframe>
 </div>
 <div class="frame-wrap" id="fw-custos">
 <div class="loading-overlay" id="ld-custos"><div class="spinner"></div><p>Carregando Custos...</p></div>
@@ -128,7 +128,15 @@ try{
 var doc=document.getElementById('fr-'+name).contentDocument;
 ['#header','header'].forEach(function(sel){
 var el=doc.querySelector(sel);
-if(el)el.style.display='none';
+if(el){
+var btns=el.querySelector('.header-btns');
+if(btns&&!btns._rescued){
+btns._rescued=true;
+btns.style.cssText='position:fixed;top:6px;right:16px;z-index:9999;display:flex;gap:8px;';
+doc.body.appendChild(btns);
+}
+el.style.display='none';
+}
 });
 ['#kpis','#summary','#tabs'].forEach(function(sel){
 var el=doc.querySelector(sel);
@@ -145,4 +153,4 @@ if(btn)showTab(hash,btn);
 })();
 </script>
 </body>
-                                                                   </html>
+</html>
