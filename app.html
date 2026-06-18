@@ -38,6 +38,8 @@ iframe{width:100%;height:100%;border:none}
           <button class="nav-btn" id="btn-agenciamento" onclick="showPage('agenciamento')">
             <span>🎤 Agenciamento</span>
           </button>
+
+          <button class="nav-btn" id="btn-logout" onclick="doLogout()" style="margin-left:auto;background:rgba(255,60,60,0.15);border-color:rgba(255,60,60,0.4);color:#ff6b6b;" title="Sair"><span>⏻ Sair</span></button>
 </div>
 <div id="frames">
 <div class="frame-wrap active" id="fw-dashboard"><div class="loading-overlay" id="ld-dashboard"><div class="spinner"></div><p>Carregando Dashboard...</p></div><iframe id="fr-dashboard" src="dashboard-vendas.html" onload="frameLoaded('dashboard')"></iframe></div>
@@ -86,6 +88,13 @@ if(frames)frames.style.top='0';
 var hash=location.hash.replace('#','');
 if(hash&&TABS.indexOf(hash)!==-1){var btn=document.getElementById('btn-'+hash);if(btn)showTab(hash,btn);}
 })();
+</script>
+<script>
+function doLogout(){
+  sessionStorage.removeItem('axis_session');
+  localStorage.removeItem('axis_session');
+  window.location.href='./login.html';
+}
 </script>
 </body>
 </html>
