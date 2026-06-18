@@ -210,7 +210,7 @@ body{background:#fff;font-size:11px}
 <input class="ef-sm" type="text" id="ev-prevenda" placeholder="Início Pré-Venda" oninput="D.evento.prevenda=this.value;sv()">
 <input class="ef-sm" type="text" id="ev-vgeral" placeholder="Início Venda Geral" oninput="D.evento.vgeral=this.value;sv()">
 <input class="ef-sm" type="text" id="ev-local" placeholder="Local / Cidade" oninput="D.evento.local=this.value;sv()">
-<input class="ef-sm" type="number" id="ev-cap" placeholder="Capacidade total" oninput="D.evento.cap=+this.value;render()">
+<input class="ef-sm" type="number" step="any" id="ev-cap" placeholder="Capacidade total" oninput="D.evento.cap=+this.value;render()">
 </div>
 <div class="header-btns">
 <button class="btn-pdf" onclick="savePDF()">🖨️ Salvar PDF</button>
@@ -289,21 +289,21 @@ body{background:#fff;font-size:11px}
 <div class="split-pct-row">
 <div class="split-card" style="border-color:#ef4444">
 <div class="split-card-label" style="color:#ef4444">🏢 Axis</div>
-<input class="split-pct-input" type="number" min="0" max="100" id="sp-axis" value="100" oninput="D.split.axis=+this.value;render()">
+<input class="split-pct-input" type="number" step="any" min="0" max="100" id="sp-axis" value="100" oninput="D.split.axis=+this.value;render()">
 <div class="split-pct-symbol">%</div>
 <div class="split-result-proj" id="sp-axis-p">R$ 0</div>
 <div class="split-result-real" id="sp-axis-r">R$ 0</div>
 </div>
 <div class="split-card" style="border-color:#7c3aed">
 <div class="split-card-label" style="color:#7c3aed">🎤 Artista</div>
-<input class="split-pct-input" type="number" min="0" max="100" id="sp-artista" value="0" oninput="D.split.artista=+this.value;render()">
+<input class="split-pct-input" type="number" step="any" min="0" max="100" id="sp-artista" value="0" oninput="D.split.artista=+this.value;render()">
 <div class="split-pct-symbol">%</div>
 <div class="split-result-proj" id="sp-artista-p">R$ 0</div>
 <div class="split-result-real" id="sp-artista-r">R$ 0</div>
 </div>
 <div class="split-card" style="border-color:#0891b2">
 <div class="split-card-label" style="color:#0891b2">🤝 Sócio</div>
-<input class="split-pct-input" type="number" min="0" max="100" id="sp-socio" value="0" oninput="D.split.socio=+this.value;render()">
+<input class="split-pct-input" type="number" step="any" min="0" max="100" id="sp-socio" value="0" oninput="D.split.socio=+this.value;render()">
 <div class="split-pct-symbol">%</div>
 <div class="split-result-proj" id="sp-socio-p">R$ 0</div>
 <div class="split-result-real" id="sp-socio-r">R$ 0</div>
@@ -576,15 +576,15 @@ h+='<div><table class="lote-table"><thead><tr><th>Tipo</th><th style="background
 l.tipos.forEach(function(t){
 var tp=t.tipo!=='Cortesia'?t.qp*t.val:0,tr_=t.tipo!=='Cortesia'?t.qr*t.val:0;
 h+='<tr><td><span class="tipo-label">'+t.tipo+'</span></td>';
-h+='<td style="background:#f8fbff"><input type="number" min="0" value="'+t.qp+'" oninput="upT(\''+s.id+'\',\''+l.id+'\',\''+t.tipo+'\',\'qp\',this.value)"></td>';
+h+='<td style="background:#f8fbff"><input type="number" step="any" min="0" value="'+t.qp+'" oninput="upT(\''+s.id+'\',\''+l.id+'\',\''+t.tipo+'\',\'qp\',this.value)"></td>';
 if(t.tipo!=='Cortesia'){
-h+='<td style="background:#f8fbff"><input type="number" min="0" step="0.01" value="'+t.val+'" oninput="upT(\''+s.id+'\',\''+l.id+'\',\''+t.tipo+'\',\'val\',this.value)"></td>';
+h+='<td style="background:#f8fbff"><input type="number" min="0" step="any" value="'+t.val+'" oninput="upT(\''+s.id+'\',\''+l.id+'\',\''+t.tipo+'\',\'val\',this.value)"></td>';
 h+='<td class="auto-val">'+R(tp)+'</td>';
-h+='<td style="background:#f6fdf7"><input type="number" min="0" value="'+t.qr+'" oninput="upT(\''+s.id+'\',\''+l.id+'\',\''+t.tipo+'\',\'qr\',this.value)"></td>';
+h+='<td style="background:#f6fdf7"><input type="number" step="any" min="0" value="'+t.qr+'" oninput="upT(\''+s.id+'\',\''+l.id+'\',\''+t.tipo+'\',\'qr\',this.value)"></td>';
 h+='<td class="real-val">'+R(tr_)+'</td>';
 }else{
 h+='<td colspan="2" style="color:var(--muted);font-size:11px;text-align:center">— sem receita</td>';
-h+='<td style="background:#f6fdf7"><input type="number" min="0" value="'+t.qr+'" oninput="upT(\''+s.id+'\',\''+l.id+'\',\''+t.tipo+'\',\'qr\',this.value)"></td>';
+h+='<td style="background:#f6fdf7"><input type="number" step="any" min="0" value="'+t.qr+'" oninput="upT(\''+s.id+'\',\''+l.id+'\',\''+t.tipo+'\',\'qr\',this.value)"></td>';
 h+='<td class="real-val" style="color:var(--muted)">—</td>';
 }
 h+='</tr>';
@@ -606,8 +606,8 @@ function renderDescontos(c){
 var h='';
 (D.descontos||[]).forEach(function(d){
 h+='<tr><td><input type="text" value="'+esc(d.nome)+'" oninput="descontoNm(\''+d.id+'\',this.value)" style="background:transparent;border:none;font-size:12px"></td>';
-h+='<td style="background:#f8fbff"><input type="number" min="0" value="'+(d.proj||0)+'" oninput="upD(\''+d.id+'\',\'proj\',this.value)"></td>';
-h+='<td style="background:#fff5f5"><input type="number" min="0" value="'+(d.real||0)+'" oninput="upD(\''+d.id+'\',\'real\',this.value)"></td>';
+h+='<td style="background:#f8fbff"><input type="number" step="any" min="0" value="'+(d.proj||0)+'" oninput="upD(\''+d.id+'\',\'proj\',this.value)"></td>';
+h+='<td style="background:#fff5f5"><input type="number" step="any" min="0" value="'+(d.real||0)+'" oninput="upD(\''+d.id+'\',\'real\',this.value)"></td>';
 h+='<td><button onclick="delDesconto(\''+d.id+'\')" style="background:none;color:#cbd5e1;border:none;cursor:pointer;font-size:14px;padding:2px 4px" onmouseover="this.style.color=\'#ef4444\'" onmouseout="this.style.color=\'#cbd5e1\'">✕</button></td></tr>';
 });
 $('descontos-ct').innerHTML=h;
@@ -635,8 +635,8 @@ function renderOutras(c){
 var h='';
 D.outras.forEach(function(o){
 h+='<tr><td><input type="text" value="'+esc(o.nome)+'" oninput="outraNm(\''+o.id+'\',this.value)" style="background:transparent;border:none;font-size:12px"></td>';
-h+='<td style="background:#f8fbff"><input type="number" min="0" value="'+o.proj+'" oninput="upO(\''+o.id+'\',\'proj\',this.value)"></td>';
-h+='<td style="background:#f6fdf7"><input type="number" min="0" value="'+o.real+'" oninput="upO(\''+o.id+'\',\'real\',this.value)"></td>';
+h+='<td style="background:#f8fbff"><input type="number" step="any" min="0" value="'+o.proj+'" oninput="upO(\''+o.id+'\',\'proj\',this.value)"></td>';
+h+='<td style="background:#f6fdf7"><input type="number" step="any" min="0" value="'+o.real+'" oninput="upO(\''+o.id+'\',\'real\',this.value)"></td>';
 h+='<td><button onclick="delO(\''+o.id+'\')" style="background:none;color:#cbd5e1;border:none;cursor:pointer;font-size:14px;padding:2px 4px" onmouseover="this.style.color=\'#ef4444\'" onmouseout="this.style.color=\'#cbd5e1\'">✕</button></td></tr>';
 });
 $('outras-ct').innerHTML=h;
@@ -672,8 +672,8 @@ if(!g.itens.length)h+='<div style="padding:12px 16px;color:var(--muted);font-siz
 g.itens.forEach(function(i){
 var d=i.real-i.proj;
 h+='<div class="item-row"><div class="item-desc"><input type="text" value="'+esc(i.desc)+'" oninput="upID(\''+g.id+'\',\''+i.id+'\',this.value)"></div>';
-h+='<div style="background:#f8fbff;padding:2px 4px;border-radius:4px"><input type="number" min="0" value="'+i.proj+'" oninput="upI(\''+g.id+'\',\''+i.id+'\',\'proj\',this.value)"></div>';
-h+='<div style="background:#f6fdf7;padding:2px 4px;border-radius:4px"><input type="number" min="0" value="'+i.real+'" oninput="upI(\''+g.id+'\',\''+i.id+'\',\'real\',this.value)"></div>';
+h+='<div style="background:#f8fbff;padding:2px 4px;border-radius:4px"><input type="number" step="any" min="0" value="'+i.proj+'" oninput="upI(\''+g.id+'\',\''+i.id+'\',\'proj\',this.value)"></div>';
+h+='<div style="background:#f6fdf7;padding:2px 4px;border-radius:4px"><input type="number" step="any" min="0" value="'+i.real+'" oninput="upI(\''+g.id+'\',\''+i.id+'\',\'real\',this.value)"></div>';
 h+='<div class="item-delta '+(d>=0?'pos':'neg')+'">'+(d>0?'+':'')+R(d)+'</div>';
 h+='<button class="del-item" onclick="delI(\''+g.id+'\',\''+i.id+'\')">✕</button>';
 h+='</div>';
