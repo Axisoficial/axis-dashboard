@@ -35,9 +35,15 @@ iframe{width:100%;height:100%;border:none}
 <button class="tab" onclick="showTab('viabilidade',this)" id="btn-viabilidade"><span class="tab-emoji">📉</span> Viabilidade</button>
 <button class="tab" onclick="showTab('producao',this)" id="btn-producao"><span class="tab-emoji">🎬</span> Produção</button>
 <button class="tab" onclick="showTab('vendas',this)" id="btn-vendas"><span class="tab-emoji">📈</span> Vendas</button>
+          <button class="nav-btn" id="btn-agenciamento" onclick="showPage('agenciamento')">
+            <span>🎤 Agenciamento</span>
+          </button>
 </div>
 <div id="frames">
 <div class="frame-wrap active" id="fw-dashboard"><div class="loading-overlay" id="ld-dashboard"><div class="spinner"></div><p>Carregando Dashboard...</p></div><iframe id="fr-dashboard" src="dashboard-vendas.html" onload="frameLoaded('dashboard')"></iframe></div>
+      <div id="page-agenciamento" class="page-frame" style="display:none">
+        <iframe src="./viabilidade-agenciamento.html" onload="hideLoader(this)" style="width:100%;height:100%;border:none;" allowfullscreen></iframe>
+      </div>
 <div class="frame-wrap" id="fw-custos"><div class="loading-overlay" id="ld-custos"><div class="spinner"></div><p>Carregando Custos...</p></div><iframe id="fr-custos" src="custos.html" onload="frameLoaded('custos')"></iframe></div>
 <div class="frame-wrap" id="fw-viabilidade"><div class="loading-overlay" id="ld-viabilidade"><div class="spinner"></div><p>Carregando Viabilidade...</p></div><iframe id="fr-viabilidade" src="viabilidade.html?v=13" onload="frameLoaded('viabilidade')"></iframe></div>
 <div class="frame-wrap" id="fw-producao"><div class="loading-overlay" id="ld-producao"><div class="spinner"></div><p>Carregando Produção...</p></div><iframe id="fr-producao" src="producao.html" onload="frameLoaded('producao')"></iframe></div>
