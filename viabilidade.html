@@ -402,7 +402,7 @@ body{background:#fff;font-size:11px}
 <div class="be-stat"><div class="be-stat-val" id="be-tkt">—</div><div class="be-stat-label">Pagantes p/ Breakeven</div></div>
 <div class="be-stat"><div class="be-stat-val" id="be-pct">—%</div><div class="be-stat-label">% Ocupação p/ Breakeven</div></div>
 <div class="be-stat"><div class="be-stat-val" id="be-tm">R$ —</div><div class="be-stat-label">Ticket Médio Proj</div></div>
-<div class="be-stat"><div class="be-stat-val" id="be-cap">—</div><div class="be-stat-label">Pagantes Proj Total</div></div>
+<div class="be-stat"><div class="be-stat-val" id="be-cap">—</div><div class="be-stat-label">Total Ingressos Proj</div></div>
 </div>
 </div>
 <div class="section">
@@ -518,7 +518,7 @@ var rlp=rp-txp,rlr=rr-txr;
 var mp=0,mr=0;D.grupos.forEach(function(g){g.itens.forEach(function(i){mp+=i.proj;mr+=i.real;});});
 var cp=mp+txp,cr=mr+txr;
 var resp=rp-cp,resr=rr-cr;
-var tm=pp>0?bp/pp:0;
+var tm=pp>0?bp/(pp+cortP):0;
 var beT=tm>0?cp/tm:0;
 var cap=D.evento.cap||(pp+cortP)||1;
 var bePct=beT/cap*100;
@@ -697,7 +697,7 @@ function renderBreakeven(c){
 set('be-tkt',Math.round(c.beT).toLocaleString('pt-BR'));
 set('be-pct',pct(c.bePct));
 set('be-tm',R(c.tm));
-set('be-cap',c.pp.toLocaleString('pt-BR'));
+set('be-cap',(c.pp+(c.cortP||0)).toLocaleString('pt-BR'));
 var pcts=[50,70,85,100];
 var h='';
 pcts.forEach(function(p){
