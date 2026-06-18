@@ -140,43 +140,16 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',sans-serif;fo
 <div id="panel-receitas" class="tab-panel active">
 
   <div class="section-card">
-    <div class="section-header">
-      <div class="section-title">🎟️ BILHETERIA</div>
-      <div class="section-totals">Total: <span id="tot-bilheteria" class="green">R$ 0</span></div>
-    </div>
-    <table class="cost-table">
-      <thead><tr><th>Setor / Tipo</th><th>QTD</th><th>Valor Unit. (R$)</th><th>Taxa Plataf. (%)</th><th>Receita Líquida</th><th></th></tr></thead>
-      <tbody id="tb-bilheteria">
-        <tr>
-          <td><input type="text" value="Pista - Inteira" oninput="calcAll()"></td>
-          <td><input type="number" value="0" min="0" oninput="calcAll()"></td>
-          <td><input type="number" value="0" min="0" step="0.01" oninput="calcAll()"></td>
-          <td><input type="number" value="10" min="0" max="100" step="0.1" oninput="calcAll()"></td>
-          <td style="font-weight:700;" class="green">R$ 0</td>
-          <td><button class="del-btn" onclick="delRow(this)">✕</button></td>
-        </tr>
-        <tr>
-          <td><input type="text" value="Pista - Meia" oninput="calcAll()"></td>
-          <td><input type="number" value="0" min="0" oninput="calcAll()"></td>
-          <td><input type="number" value="0" min="0" step="0.01" oninput="calcAll()"></td>
-          <td><input type="number" value="10" min="0" max="100" step="0.1" oninput="calcAll()"></td>
-          <td style="font-weight:700;" class="green">R$ 0</td>
-          <td><button class="del-btn" onclick="delRow(this)">✕</button></td>
-        </tr>
-        <tr>
-          <td><input type="text" value="Área VIP" oninput="calcAll()"></td>
-          <td><input type="number" value="0" min="0" oninput="calcAll()"></td>
-          <td><input type="number" value="0" min="0" step="0.01" oninput="calcAll()"></td>
-          <td><input type="number" value="10" min="0" max="100" step="0.1" oninput="calcAll()"></td>
-          <td style="font-weight:700;" class="green">R$ 0</td>
-          <td><button class="del-btn" onclick="delRow(this)">✕</button></td>
-        </tr>
-      </tbody>
-    </table>
-    <button class="add-row-btn" onclick="addRow('tb-bilheteria','bilheteria')">+ Adicionar setor</button>
+  <div class="section-header">
+    <div class="section-title">🎤 CACHÊ CONTRATADO</div>
+    <div class="section-totals">Total: <span id="tot-bilheteria" class="green">R$ 0,00</span></div>
   </div>
-
-  <div class="section-card">
+  <div style="padding:16px 20px 20px;">
+    <label style="display:block;font-size:.75rem;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em;">Valor cobrado do contratante (R$)</label>
+    <input type="number" id="cache-contratado" step="any" min="0" placeholder="0" oninput="calc()" style="width:100%;padding:12px 14px;background:var(--card2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:1.5em;box-sizing:border-box;">
+  </div>
+</div>
+<div class="section-card">
     <div class="section-header">
       <div class="section-title">🤝 PATROCÍNIO / COTAS</div>
       <div class="section-totals">Total: <span id="tot-patrocinio" class="green">R$ 0</span></div>
@@ -471,23 +444,10 @@ function sumSimple(tbId) {
 }
 
 function calcBilheteria() {
-  var total = 0;
-  document.querySelectorAll('#tb-bilheteria tr').forEach(function(tr) {
-    var ins = tr.querySelectorAll('input');
-    if (ins.length < 4) return;
-    var qtd = parseFloat(ins[1].value) || 0;
-    var val = parseFloat(ins[2].value) || 0;
-    var taxa = parseFloat(ins[3].value) || 0;
-    var bruto = qtd * val;
-    var liq = bruto * (1 - taxa / 100);
-    total += liq;
-    var tdVal = tr.querySelector('td:nth-child(5)');
-    if (tdVal) tdVal.textContent = fmt(liq);
-  });
+  var total = parseFloat(document.getElementById('cache-contratado').value) || 0;
+  document.getElementById('tot-bilheteria').textContent = 'R$ ' + total.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
   return total;
 }
-
-// ===== MAIN CALC =====
 function calcAll() {
   var bilheteria = calcBilheteria();
   var patrocinio = sumSimple('tb-patrocinio');
@@ -588,12 +548,13 @@ function novoEvento() {
   document.getElementById('input-data').value = '';
   document.getElementById('input-artista').value = '';
   document.getElementById('input-responsavel').value = '';
+  document.getElementById('cache-contratado').value = '';
   document.getElementById('cache-valor').value = '0';
   document.getElementById('cache-pagamento').value = 'À vista no dia';
   document.getElementById('cache-obs').value = '';
   document.getElementById('pct-axis').value = '20';
   document.getElementById('pct-artista').value = '80';
-  ['tb-bilheteria','tb-patrocinio','tb-outras-rec','tb-infra','tb-local','tb-legal','tb-mkt','tb-equipe','tb-logistica','tb-outros'].forEach(function(id) {
+  ['tb-patrocinio','tb-outras-rec','tb-infra','tb-local','tb-legal','tb-mkt','tb-equipe','tb-logistica','tb-outros'].forEach(function(id) {
     var tb = document.getElementById(id);
     if (tb) {
       tb.querySelectorAll('input[type=number]').forEach(function(i){ i.value='0'; });
