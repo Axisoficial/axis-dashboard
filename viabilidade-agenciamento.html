@@ -119,6 +119,14 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',sans-serif;fo
       <input type="text" id="input-responsavel" placeholder="Nome do responsável">
     </div>
 
+    <div style="margin-top:12px;">
+      <label style="display:block;font-size:.75rem;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em;">Quem pagou os custos?</label>
+      <select id="input-quem-pagou" onchange="calc()" style="width:100%;padding:10px 14px;background:var(--card2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:1rem;box-sizing:border-box;">
+        <option value="artista">Artista</option>
+        <option value="axis">Axis</option>
+      </select>
+    </div>
+
 <div id="kpis">
   <div class="kpi"><div class="kpi-label">Receita Bruta</div><div class="kpi-val" id="kpi-receita">R$ 0</div><div class="kpi-sub">Total do evento</div></div>
   <div class="kpi"><div class="kpi-label">Cachê Artista</div><div class="kpi-val red" id="kpi-cache">R$ 0</div><div class="kpi-sub">Fixo garantido</div></div>
@@ -350,7 +358,7 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',sans-serif;fo
     <div class="split-box" style="background:transparent;padding:0;">
       <div class="split-row">
         <div class="split-name" style="color:var(--green);">🏢 Axis</div>
-        <input type="number" class="split-pct" id="pct-axis" value="20" min="0" max="100" step="1" oninput="calcAll()"> %
+        <input type="number" class="split-pct" id="pct-axis" value="30" min="0" max="100" step="1" oninput="calcAll()"> %
         <div class="split-val green" id="val-axis">R$ 0</div>
       </div>
       <div class="split-row">
@@ -549,6 +557,7 @@ function novoEvento() {
   document.getElementById('input-artista').value = '';
   document.getElementById('input-responsavel').value = '';
   document.getElementById('cache-contratado').value = '';
+  document.getElementById('input-quem-pagou').value = 'artista';
   document.getElementById('cache-valor').value = '0';
   document.getElementById('cache-pagamento').value = 'À vista no dia';
   document.getElementById('cache-obs').value = '';
