@@ -2,7 +2,7 @@
 // Include this as the FIRST script in every protected page.
 (function(){
   try{
-    var s=JSON.parse(localStorage.getItem('axis_session')||'null');
+    var s=JSON.parse(sessionStorage.getItem('axis_session')||'null');
     if(!s||!s.token||!s.email){
       location.replace('/axis-dashboard/login.html?next='+encodeURIComponent(location.pathname+location.search));
     }
@@ -13,10 +13,10 @@
 
 // Expose helper functions globally
 function axisLogout(){
-  localStorage.removeItem('axis_session');
+  sessionStorage.removeItem('axis_session');
   location.href='/axis-dashboard/login.html';
 }
 
 function axisCurrentUser(){
-  try{return JSON.parse(localStorage.getItem('axis_session')||'null');}catch(e){return null;}
+  try{return JSON.parse(sessionStorage.getItem('axis_session')||'null');}catch(e){return null;}
 }
