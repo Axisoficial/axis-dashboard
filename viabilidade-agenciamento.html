@@ -114,6 +114,10 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',sans-serif;fo
   <label style="margin-left:12px;">Artista</label>
   <input type="text" id="input-artista" placeholder="Ex: Xanddy Harmonia" style="background:#1e1e38;border:1px solid #444;color:#fff;padding:5px 10px;border-radius:6px;font-size:13px;width:180px;">
 </div>
+    <div class="field-group">
+      <label>RESPONSÁVEL</label>
+      <input type="text" id="input-responsavel" placeholder="Nome do responsável">
+    </div>
 
 <div id="kpis">
   <div class="kpi"><div class="kpi-label">Receita Bruta</div><div class="kpi-val" id="kpi-receita">R$ 0</div><div class="kpi-sub">Total do evento</div></div>
@@ -564,12 +568,13 @@ function salvarEvento() {
   var nome = (document.getElementById('input-nome').value || '').trim();
   var data = document.getElementById('input-data').value || '';
   var artista = (document.getElementById('input-artista').value || '').trim();
+  var resp = (document.getElementById('input-responsavel').value || '').trim();
   if (!nome) { alert('Preencha o nome do evento primeiro.'); return; }
   if (!data) { alert('Preencha a data do evento.'); return; }
   var d = data.replace(/-/g, '');
   var desc = artista ? 'Artista: ' + artista : '';
   var url = 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' +
-    encodeURIComponent(nome) + '&dates=' + d + '/' + d +
+    encodeURIComponent(nome + (resp ? ' - ' + resp : '')) + '&dates=' + d + '/' + d +
     '&details=' + encodeURIComponent(desc) +
     '&add=axis.entretenimento%40gmail.com';
   window.open(url, '_blank');
@@ -582,6 +587,7 @@ function novoEvento() {
   document.getElementById('input-nome').value = '';
   document.getElementById('input-data').value = '';
   document.getElementById('input-artista').value = '';
+  document.getElementById('input-responsavel').value = '';
   document.getElementById('cache-valor').value = '0';
   document.getElementById('cache-pagamento').value = 'À vista no dia';
   document.getElementById('cache-obs').value = '';
