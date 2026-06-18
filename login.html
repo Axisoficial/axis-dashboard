@@ -94,7 +94,7 @@ async function doLogin(){
     var hash=await sha256(pwd);
     if(USERS[email]&&USERS[email]===hash){
       var session={email:email,ts:Date.now(),token:btoa(email+':axis2026:'+Date.now())};
-      localStorage.setItem('axis_session',JSON.stringify(session));
+      sessionStorage.setItem('axis_session',JSON.stringify(session));
       var next=new URLSearchParams(location.search).get('next')||'app.html';
       location.href=next;
     }else{
