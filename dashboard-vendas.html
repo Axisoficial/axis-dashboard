@@ -47,6 +47,16 @@ a { color: var(--accent); text-decoration: none; }
 .progress-fill { height: 8px; border-radius: 4px; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
 .pace-alert { background: #f64f5911; border: 1px solid #f64f5933; color: var(--red); border-radius: 8px; padding: 10px 14px; font-size: 13px; margin-top: 14px; }
 
+/* BREAKEVEN */
+.breakeven-bar { margin-top: 16px; background: var(--bg); border-radius: 10px; padding: 16px; border: 1px solid #f7971e33; }
+.breakeven-bar .be-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.breakeven-bar .be-title { font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--yellow); letter-spacing: 0.5px; }
+.breakeven-bar .be-value { font-size: 13px; color: var(--muted); }
+.breakeven-bar .be-value strong { color: var(--text); }
+.breakeven-fill { height: 10px; border-radius: 5px; background: linear-gradient(90deg, #f7971e, #f64f59); }
+.breakeven-sub { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-top: 8px; }
+.breakeven-sub .falta { color: var(--red); font-weight: 700; }
+
 /* KPI CARDS */
 .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
 .kpi { background: var(--surface); border-radius: 10px; padding: 18px; border: 1px solid var(--border); }
@@ -101,7 +111,7 @@ footer { text-align: center; color: var(--muted); font-size: 12px; padding: 24px
 <a href="https://sis.ingressodigital.com/adm/ven_sessao.php" target="_blank" class="plat-link plat-id">Ingresso Digital</a>
 </div>
 <div class="header-meta">
-Atualizado em 22/06/2026<br>
+Atualizado em 26/06/2026<br>
 <span style="color:var(--green)">&#9679; Dados frescos de hoje</span>
 </div>
 </header>
@@ -111,50 +121,67 @@ Atualizado em 22/06/2026<br>
 <!-- BELO IN CONCERT HERO -->
 <div class="belo-hero">
 <h2>&#11088; BELO IN CONCERT</h2>
-<div class="subtitle">01/08/2026 &middot; Shopping Park Sul &middot; Meta: R$ 1.000.000 &middot; Custo operacional coberto pela bilheteria</div>
+<div class="subtitle">01/08/2026 &middot; Shopping Park Sul &middot; Breakeven: R$ 1.000.000 (custo total do evento)</div>
 <div class="belo-stats">
 <div class="belo-stat ok">
-<div class="val">1.258</div>
+<div class="val">1.407</div>
 <div class="lbl">Ingressos Vendidos</div>
 </div>
 <div class="belo-stat">
-<div class="val">R$ 117,60</div>
+<div class="val">R$ 114,96</div>
 <div class="lbl">Ticket M&eacute;dio</div>
 </div>
-<div class="belo-stat ok">
-<div class="val">R$ 147.938,50</div>
+<div class="belo-stat warn">
+<div class="val">R$ 161.747,00</div>
 <div class="lbl">Bilheteria Total</div>
 </div>
 <div class="belo-stat warn">
-<div class="val">40 dias</div>
+<div class="val">36 dias</div>
 <div class="lbl">At&eacute; o Evento</div>
 </div>
 <div class="belo-stat">
-<div class="val">8.503</div>
+<div class="val">8.699</div>
 <div class="lbl">Meta de Ingressos</div>
 </div>
 <div class="belo-stat alert">
-<div class="val">7.245</div>
+<div class="val">7.292</div>
 <div class="lbl">Restam a Vender</div>
 </div>
 <div class="belo-stat alert">
-<div class="val">181/dia</div>
+<div class="val">203/dia</div>
 <div class="lbl">Meta Di&aacute;ria Necess&aacute;ria</div>
 </div>
 <div class="belo-stat warn">
-<div class="val">0 hoje</div>
-<div class="lbl">Ritmo Atual (vendas hoje)</div>
+<div class="val">16 hoje</div>
+<div class="lbl">Vendas Hoje</div>
 </div>
 </div>
+
+<!-- PROGRESSO META DE INGRESSOS -->
 <div class="progress-wrap">
 <div class="progress-label">
-<span>Progresso da Meta (14,8%)</span>
-<span>1.258 / 8.503 ingressos</span>
+<span>Progresso Meta Ingressos (16,2%)</span>
+<span>1.407 / 8.699 ingressos</span>
 </div>
-<div class="progress-bar"><div class="progress-fill" style="width:14.8%"></div></div>
+<div class="progress-bar"><div class="progress-fill" style="width:16.2%"></div></div>
 </div>
+
+<!-- BREAKEVEN BAR -->
+<div class="breakeven-bar">
+<div class="be-header">
+<span class="be-title">&#9889; Ponto de Equil&iacute;brio (Breakeven)</span>
+<span class="be-value">Arrecadado: <strong>R$ 161.747</strong> de <strong>R$ 1.000.000</strong> necess&aacute;rios</span>
+</div>
+<div class="progress-bar"><div class="breakeven-fill" style="width:16.2%"></div></div>
+<div class="breakeven-sub">
+<span>0%</span>
+<span class="falta">&#x26A0; Falta R$ 838.253 para cobrir o custo do evento</span>
+<span>100% = Breakeven</span>
+</div>
+</div>
+
 <div class="pace-alert">
-&#9888;&#65039; <strong>Ritmo cr&iacute;tico:</strong> com 0 vendas hoje vs. meta de 181/dia, o ritmo atual precisa acelerar. S&atilde;o precisos <strong>7.245 ingressos nos pr&oacute;ximos 40 dias</strong>.
+&#9888;&#65039; <strong>Ritmo cr&iacute;tico:</strong> com 16 vendas hoje vs. meta di&aacute;ria de 203, o evento precisa acelerar fortemente. S&atilde;o precisos <strong>7.292 ingressos nos pr&oacute;ximos 36 dias</strong> para atingir o breakeven de R$ 1.000.000.
 </div>
 </div>
 
@@ -162,37 +189,37 @@ Atualizado em 22/06/2026<br>
 <div class="kpi-grid">
 <div class="kpi">
 <div class="kpi-label">Total Arrecadado (T360)</div>
-<div class="kpi-value green">R$ 200.313</div>
-<div class="kpi-sub">13 eventos no Ticket360</div>
-<div class="kpi-today">&#8593; 59 hoje &middot; 608 ontem</div>
+<div class="kpi-value green">R$ 217.707</div>
+<div class="kpi-sub">16 eventos no Ticket360</div>
+<div class="kpi-today">&#8593; 495 hoje &middot; 3.295 ontem</div>
 </div>
 <div class="kpi">
 <div class="kpi-label">Bilheteria Express</div>
-<div class="kpi-value blue">R$ 27.500</div>
-<div class="kpi-sub">Suzy Brasil + Chico Chico</div>
-<div class="kpi-today">3 eventos ativos</div>
+<div class="kpi-value blue">R$ 34.455</div>
+<div class="kpi-sub">Suzy Brasil + Chico Chico + ZOOM</div>
+<div class="kpi-today">&#8593; 7 hoje &middot; 15 ontem</div>
 </div>
 <div class="kpi">
 <div class="kpi-label">Ingresso Digital</div>
-<div class="kpi-value yellow">1.402 ingressos</div>
-<div class="kpi-sub">4 eventos Teatro Gacemss/VR</div>
-<div class="kpi-today">Pink Floyd + Abba + mais 2</div>
+<div class="kpi-value yellow">1.539 ingressos</div>
+<div class="kpi-sub">4 eventos &mdash; R$ 112.419 arrecadados</div>
+<div class="kpi-today">Pink Floyd + Abba + Aventura + Bruna</div>
 </div>
 <div class="kpi">
-<div class="kpi-label">Belo In Concert</div>
-<div class="kpi-value" style="color:var(--accent)">14,8%</div>
-<div class="kpi-sub">da meta de R$ 1.000.000</div>
-<div class="kpi-today">R$ 147.938,50 arrecadados</div>
+<div class="kpi-label">Belo &mdash; Breakeven</div>
+<div class="kpi-value" style="color:var(--yellow)">16,2%</div>
+<div class="kpi-sub">do breakeven de R$ 1.000.000</div>
+<div class="kpi-today">R$ 161.747 arrecadados &middot; falta R$ 838.253</div>
 </div>
 <div class="kpi">
 <div class="kpi-label">Total Vendidos (T360)</div>
-<div class="kpi-value">27.028</div>
-<div class="kpi-sub">26.169 pagos + 859 cortesias</div>
-<div class="kpi-today">&#8593; 608 ontem &middot; 59 hoje</div>
+<div class="kpi-value">37.366</div>
+<div class="kpi-sub">36.111 pagos + 1.255 cortesias</div>
+<div class="kpi-today">&#8593; 3.295 ontem &middot; 495 hoje</div>
 </div>
 <div class="kpi">
 <div class="kpi-label">Ticket M&eacute;dio (T360)</div>
-<div class="kpi-value">R$ 7,66</div>
+<div class="kpi-value">R$ 6,03</div>
 <div class="kpi-sub">m&eacute;dia ponderada todos eventos</div>
 </div>
 </div>
@@ -201,7 +228,7 @@ Atualizado em 22/06/2026<br>
 <div class="section">
 <div class="section-header">
 <h3>Ticket360</h3>
-<span class="badge badge-t360">13 eventos</span>
+<span class="badge badge-t360">16 eventos</span>
 </div>
 <div class="tbl-wrap">
 <table>
@@ -271,36 +298,45 @@ Atualizado em 22/06/2026<br>
 <td><div class="event-date">20/06/2026</div></td>
 <td>Shopping Park Sul</td>
 <td><span class="status-realizado">Realizado</span></td>
-<td class="num">494</td><td class="num">40</td><td class="num">534</td>
+<td class="num">493</td><td class="num">40</td><td class="num">533</td>
 <td class="num">0</td><td class="num">0</td>
-<td class="num">R$ 220,00</td><td class="num">R$ 0,45</td>
+<td class="num">R$ 170,00</td><td class="num">R$ 0,34</td>
 </tr>
 <tr>
 <td><div class="event-name">Fun Fest &mdash; Bruno Diegues</div></td>
 <td><div class="event-date">24/06/2026</div></td>
 <td>Shopping Park Sul</td>
-<td><span class="status-ativo">&#9679; Ativo (faltam 2d)</span></td>
-<td class="num">6.019</td><td class="num">145</td><td class="num">6.164</td>
-<td class="num">277</td><td class="num">0</td>
-<td class="num">R$ 915,00</td><td class="num">R$ 0,15</td>
+<td><span class="status-realizado">Realizado</span></td>
+<td class="num">7.275</td><td class="num">441</td><td class="num">7.716</td>
+<td class="num">0</td><td class="num">0</td>
+<td class="num">R$ 3.650,00</td><td class="num">R$ 0,50</td>
 </tr>
 <tr>
 <td><div class="event-name">Fun Fest &mdash; Gamadinho Resenha dos Amigos</div></td>
 <td><div class="event-date">27/06/2026</div></td>
 <td>Shopping Park Sul</td>
-<td><span class="status-ativo">&#9679; Ativo (faltam 5d)</span></td>
-<td class="num">3.194</td><td class="num">0</td><td class="num">3.194</td>
-<td class="num">165</td><td class="num today-num">36</td>
-<td class="num">R$ 135,00</td><td class="num">R$ 0,04</td>
+<td><span class="status-ativo">&#9679; Ativo (faltam 1d)</span></td>
+<td class="num">4.973</td><td class="num">100</td><td class="num">5.073</td>
+<td class="num">609</td><td class="num today-num">105</td>
+<td class="num">R$ 525,00</td><td class="num">R$ 0,11</td>
+</tr>
+<tr>
+<td><div class="event-name">Fun Fest &mdash; Nosso Sentimento e Bertolossi</div></td>
+<td><div class="event-date">29/06/2026</div></td>
+<td>Shopping Park Sul</td>
+<td><span class="status-ativo">&#9679; Ativo (faltam 3d)</span></td>
+<td class="num">4.266</td><td class="num">0</td><td class="num">4.266</td>
+<td class="num">1.608</td><td class="num today-num">207</td>
+<td class="num">R$ 330,00</td><td class="num">R$ 0,08</td>
 </tr>
 <tr>
 <td><div class="event-name">Fun Fest &mdash; T&aacute; Na Mente</div></td>
 <td><div class="event-date">04/07/2026</div></td>
 <td>Shopping Park Sul</td>
-<td><span class="status-ativo">&#9679; Ativo (faltam 12d)</span></td>
-<td class="num">2.704</td><td class="num">0</td><td class="num">2.704</td>
-<td class="num">159</td><td class="num today-num">23</td>
-<td class="num">R$ 660,00</td><td class="num">R$ 0,24</td>
+<td><span class="status-ativo">&#9679; Ativo (faltam 8d)</span></td>
+<td class="num">3.862</td><td class="num">0</td><td class="num">3.862</td>
+<td class="num">329</td><td class="num today-num">54</td>
+<td class="num">R$ 840,00</td><td class="num">R$ 0,22</td>
 </tr>
 <tr>
 <td><div class="event-name">Fun Fest 08/07</div></td>
@@ -312,12 +348,30 @@ Atualizado em 22/06/2026<br>
 <td class="num">R$ 0,00</td><td class="num">&mdash;</td>
 </tr>
 <tr>
+<td><div class="event-name">Fun Fest &mdash; Nego Damoe e Pared&atilde;o do Pokemon</div></td>
+<td><div class="event-date">11/07/2026</div></td>
+<td>Shopping Park Sul</td>
+<td><span class="status-ativo">&#9679; Ativo (faltam 15d)</span></td>
+<td class="num">892</td><td class="num">0</td><td class="num">892</td>
+<td class="num">479</td><td class="num today-num">82</td>
+<td class="num">R$ 0,00</td><td class="num">&mdash;</td>
+</tr>
+<tr>
 <td><div class="event-name">Fun Fest 14/07</div></td>
 <td><div class="event-date">14/07/2026</div></td>
 <td>Shopping Park Sul</td>
 <td><span class="status-futuro">&#9679; Futuro</span></td>
 <td class="num">0</td><td class="num">0</td><td class="num">0</td>
 <td class="num">0</td><td class="num">0</td>
+<td class="num">R$ 0,00</td><td class="num">&mdash;</td>
+</tr>
+<tr>
+<td><div class="event-name">Fun Fest &mdash; Pr&iacute;ncipe e Wellington Ambr&oacute;sio</div></td>
+<td><div class="event-date">16/07/2026</div></td>
+<td>Shopping Park Sul</td>
+<td><span class="status-ativo">&#9679; Ativo (faltam 20d)</span></td>
+<td class="num">443</td><td class="num">0</td><td class="num">443</td>
+<td class="num">227</td><td class="num today-num">31</td>
 <td class="num">R$ 0,00</td><td class="num">&mdash;</td>
 </tr>
 <tr>
@@ -333,18 +387,18 @@ Atualizado em 22/06/2026<br>
 <td><div class="event-name">&#11088; Belo In Concert</div></td>
 <td><div class="event-date">01/08/2026</div></td>
 <td>Shopping Park Sul</td>
-<td><span class="status-ativo">&#9679; Ativo (faltam 40d)</span></td>
-<td class="num">1.258</td><td class="num">0</td><td class="num">1.258</td>
-<td class="num">7</td><td class="num">0</td>
-<td class="num">R$ 147.938,50</td><td class="num">R$ 117,60</td>
+<td><span class="status-ativo">&#9679; Ativo (faltam 36d)</span></td>
+<td class="num">1.407</td><td class="num">0</td><td class="num">1.407</td>
+<td class="num">43</td><td class="num today-num">16</td>
+<td class="num">R$ 161.747,00</td><td class="num">R$ 114,96</td>
 </tr>
 </tbody>
 <tfoot>
 <tr class="tfoot">
-<td colspan="4">TOTAL DA P&Aacute;GINA</td>
-<td class="num">26.169</td><td class="num">859</td><td class="num">27.028</td>
-<td class="num">608</td><td class="num today-num">59</td>
-<td class="num">R$ 200.313,50</td><td class="num">R$ 7,66</td>
+<td colspan="4">TOTAL GERAL</td>
+<td class="num">36.111</td><td class="num">1.255</td><td class="num">37.366</td>
+<td class="num">3.295</td><td class="num today-num">495</td>
+<td class="num">R$ 217.707,00</td><td class="num">R$ 6,03</td>
 </tr>
 </tfoot>
 </table>
@@ -355,7 +409,7 @@ Atualizado em 22/06/2026<br>
 <div class="section">
 <div class="section-header">
 <h3>Bilheteria Express</h3>
-<span class="badge badge-be">3 eventos ativos</span>
+<span class="badge badge-be">3 eventos</span>
 </div>
 <div class="tbl-wrap">
 <table>
@@ -378,27 +432,27 @@ Atualizado em 22/06/2026<br>
 <td><div class="event-name">Suzy Brasil em Volta Redonda</div></td>
 <td><div class="event-date">24/07/2026</div></td>
 <td>Gacemss &mdash; VR</td>
-<td><span class="status-ativo">&#9679; Ativo (faltam 32d)</span></td>
-<td class="num">16</td>
-<td class="num">2</td><td class="num">0</td>
-<td class="num">R$ 955,00</td><td class="num">R$ 59,69</td>
-<td class="num">16 / 427</td>
+<td><span class="status-ativo">&#9679; Ativo (faltam 29d)</span></td>
+<td class="num">22</td>
+<td class="num">0</td><td class="num">0</td>
+<td class="num">R$ 1.315,00</td><td class="num">R$ 59,77</td>
+<td class="num">22 / 427</td>
 </tr>
 <tr>
 <td><div class="event-name">Chico Chico &mdash; Turn&ecirc; Let It Burn</div></td>
 <td><div class="event-date">22/08/2026</div></td>
 <td>Teatro Municipal &mdash; VR</td>
-<td><span class="status-ativo">&#9679; Ativo (faltam 61d)</span></td>
-<td class="num">262</td>
-<td class="num">6</td><td class="num">0</td>
-<td class="num">R$ 26.545,00</td><td class="num">R$ 101,32</td>
-<td class="num">262 / 766</td>
+<td><span class="status-ativo">&#9679; Ativo (faltam 58d)</span></td>
+<td class="num">329</td>
+<td class="num">15</td><td class="num today-num">7</td>
+<td class="num">R$ 33.140,00</td><td class="num">R$ 100,73</td>
+<td class="num">329 / 766</td>
 </tr>
 <tr>
 <td><div class="event-name">ZOOM Music Festival &mdash; Veigh + Alee</div></td>
 <td><div class="event-date">17/10/2026</div></td>
 <td>Ilha S&atilde;o Jo&atilde;o &mdash; VR</td>
-<td><span class="status-futuro">&#9679; Futuro (faltam 117d)</span></td>
+<td><span class="status-futuro">&#9679; Futuro (faltam 114d)</span></td>
 <td class="num">0</td>
 <td class="num">0</td><td class="num">0</td>
 <td class="num">R$ 0,00</td><td class="num">&mdash;</td>
@@ -408,9 +462,9 @@ Atualizado em 22/06/2026<br>
 <tfoot>
 <tr class="tfoot">
 <td colspan="4">TOTAL</td>
-<td class="num">278</td>
-<td class="num">8</td><td class="num">0</td>
-<td class="num">R$ 27.500,00</td><td class="num">&mdash;</td>
+<td class="num">351</td>
+<td class="num">15</td><td class="num today-num">7</td>
+<td class="num">R$ 34.455,00</td><td class="num">&mdash;</td>
 <td class="num">&mdash;</td>
 </tr>
 </tfoot>
@@ -422,7 +476,7 @@ Atualizado em 22/06/2026<br>
 <div class="section">
 <div class="section-header">
 <h3>Ingresso Digital</h3>
-<span class="badge badge-id">4 eventos ativos</span>
+<span class="badge badge-id">4 eventos</span>
 </div>
 <div class="tbl-wrap">
 <table>
@@ -433,7 +487,9 @@ Atualizado em 22/06/2026<br>
 <th>Local</th>
 <th class="num">PDV</th>
 <th class="num">Online</th>
-<th class="num">Total Ingressos</th>
+<th class="num">Total</th>
+<th class="num">Arrecadado</th>
+<th class="num">TM</th>
 </tr>
 </thead>
 <tbody>
@@ -441,31 +497,36 @@ Atualizado em 22/06/2026<br>
 <td><div class="event-name">Pink Floyd Experience</div></td>
 <td><div class="event-date">27/06/2026 20:00</div></td>
 <td>Teatro Gacemss &mdash; Volta Redonda</td>
-<td class="num">38</td><td class="num">217</td><td class="num">255</td>
+<td class="num">62</td><td class="num">261</td><td class="num">323</td>
+<td class="num">R$ 25.230,00</td><td class="num">R$ 78,60</td>
 </tr>
 <tr>
 <td><div class="event-name">Abba Experience</div></td>
 <td><div class="event-date">26/06/2026 21:30</div></td>
 <td>Teatro Gacemss &mdash; Volta Redonda</td>
-<td class="num">54</td><td class="num">356</td><td class="num">410</td>
+<td class="num">56</td><td class="num">356</td><td class="num">412</td>
+<td class="num">R$ 28.815,00</td><td class="num">R$ 70,28</td>
 </tr>
 <tr>
 <td><div class="event-name">Aventura Congelante | O Legado</div></td>
 <td><div class="event-date">26/06/2026 19:00</div></td>
 <td>Teatro Gacemss &mdash; Volta Redonda</td>
-<td class="num">30</td><td class="num">204</td><td class="num">234</td>
+<td class="num">32</td><td class="num">229</td><td class="num">261</td>
+<td class="num">R$ 18.354,00</td><td class="num">R$ 71,14</td>
 </tr>
 <tr>
 <td><div class="event-name">Bruna Louise | Meus 15 Anos!</div></td>
 <td><div class="event-date">27/06/2026 21:00</div></td>
 <td>Teatro Maestro Franklin &mdash; Volta Redonda</td>
-<td class="num">0</td><td class="num">503</td><td class="num">503</td>
+<td class="num">0</td><td class="num">543</td><td class="num">543</td>
+<td class="num">R$ 40.020,00</td><td class="num">R$ 73,70</td>
 </tr>
 </tbody>
 <tfoot>
 <tr class="tfoot">
 <td colspan="3">TOTAL</td>
-<td class="num">122</td><td class="num">1.280</td><td class="num">1.402</td>
+<td class="num">150</td><td class="num">1.389</td><td class="num">1.539</td>
+<td class="num">R$ 112.419,00</td><td class="num">&mdash;</td>
 </tr>
 </tfoot>
 </table>
@@ -475,10 +536,10 @@ Atualizado em 22/06/2026<br>
 </div>
 
 <footer>
-Axis Entretenimento &middot; Dashboard Comercial &middot; Atualizado em 22/06/2026 &agrave;s
+Axis Entretenimento &middot; Dashboard Comercial &middot; Atualizado em 26/06/2026 &agrave;s
 <script>document.write(new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}))</script>
 <noscript>&mdash;</noscript>
 </footer>
 
 </body>
-</html>
+  </html>
