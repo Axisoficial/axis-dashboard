@@ -139,7 +139,7 @@ button{cursor:pointer;border:none;border-radius:6px;font-size:13px;font-weight:6
 .col-label{font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px;text-align:center}
 .taxas-section{background:#fef3c7;border:1px solid #fcd34d;border-radius:8px;padding:12px 16px;margin-bottom:12px}
 .taxas-title{font-weight:700;font-size:12px;color:#92400e;margin-bottom:8px}
-.taxa-row{display:grid;grid-template-columns:1fr 150px 150px;gap:6px;padding:5px 0;border-bottom:1px solid #fcd34d;align-items:center}
+.taxa-row{display:grid;grid-template-columns:1fr 150px 150px 30px;gap:6px;padding:5px 0;border-bottom:1px solid #fcd34d;align-items:center}
 .taxa-row:last-child{border-bottom:none;font-weight:700}
 .taxa-label{font-size:12px;color:#78350f}
 .taxa-val{text-align:right;font-size:12px;font-weight:700;color:#92400e;padding:4px 8px}
@@ -291,21 +291,21 @@ body{background:#fff;font-size:11px}
 <div class="split-pct-row">
 <div class="split-card" style="border-color:#ef4444">
 <div class="split-card-label" style="color:#ef4444">🏢 Axis</div>
-<input class="split-pct-input" type="number" step="any" min="0" max="100" id="sp-axis" value="100" oninput="D.split.axis=+this.value;render()">
+<input class="split-pct-input" type="text" inputmode="decimal" id="sp-axis" value="100" oninput="D.split.axis=parseBR(this.value);renderPreserve()" data-fk="sp-axis">
 <div class="split-pct-symbol">%</div>
 <div class="split-result-proj" id="sp-axis-p">R$ 0</div>
 <div class="split-result-real" id="sp-axis-r">R$ 0</div>
 </div>
 <div class="split-card" style="border-color:#7c3aed">
 <div class="split-card-label" style="color:#7c3aed">🎤 Artista</div>
-<input class="split-pct-input" type="number" step="any" min="0" max="100" id="sp-artista" value="0" oninput="D.split.artista=+this.value;render()">
+<input class="split-pct-input" type="text" inputmode="decimal" id="sp-artista" value="0" oninput="D.split.artista=parseBR(this.value);renderPreserve()" data-fk="sp-artista">
 <div class="split-pct-symbol">%</div>
 <div class="split-result-proj" id="sp-artista-p">R$ 0</div>
 <div class="split-result-real" id="sp-artista-r">R$ 0</div>
 </div>
 <div class="split-card" style="border-color:#0891b2">
 <div class="split-card-label" style="color:#0891b2">🤝 Sócio</div>
-<input class="split-pct-input" type="number" step="any" min="0" max="100" id="sp-socio" value="0" oninput="D.split.socio=+this.value;render()">
+<input class="split-pct-input" type="text" inputmode="decimal" id="sp-socio" value="0" oninput="D.split.socio=parseBR(this.value);renderPreserve()" data-fk="sp-socio">
 <div class="split-pct-symbol">%</div>
 <div class="split-result-proj" id="sp-socio-p">R$ 0</div>
 <div class="split-result-real" id="sp-socio-r">R$ 0</div>
@@ -333,20 +333,19 @@ body{background:#fff;font-size:11px}
 </div>
 
 <div class="section">
-<div class="section-hdr" style="background:#374151">ℹ️ DEDUÇÕES DA BILHETERIA — apenas informativo</div>
+<div class="section-hdr" style="background:#374151">💸 TAXAS SOBRE BILHETERIA — editável
+<div class="totals"><span>Proj: <strong id="d-tot-p">R$ 0</strong></span><span>Real: <strong id="d-tot-r">R$ 0</strong></span></div>
+</div>
 <div class="section-body" style="padding:0">
 <table class="outras-table" style="width:100%">
 <thead><tr>
 <th style="text-align:left">Taxa</th>
-<th style="width:60px;text-align:center">%</th>
-<th style="width:170px;background:#eff6ff">Proj (auto)</th>
-<th style="width:170px;background:#f0fdf4">Real (auto)</th>
+<th style="width:170px;background:#eff6ff">Projetado R$</th>
+<th style="width:170px;background:#f0fdf4">Realizado R$</th>
+<th style="width:40px"></th>
 </tr></thead>
-<tbody>
-<tr class="auto-row"><td>ISS</td><td style="text-align:center">5%</td><td id="d-iss-p" style="text-align:right;padding:6px 10px;font-weight:700">R$ 0</td><td id="d-iss-r" style="text-align:right;padding:6px 10px;font-weight:700">R$ 0</td></tr>
-<tr class="auto-row"><td>ECAD</td><td style="text-align:center">5%</td><td id="d-ecad-p" style="text-align:right;padding:6px 10px;font-weight:700">R$ 0</td><td id="d-ecad-r" style="text-align:right;padding:6px 10px;font-weight:700">R$ 0</td></tr>
-<tr class="auto-row"><td>Taxa Cartão</td><td style="text-align:center">3,2%</td><td id="d-cart-p" style="text-align:right;padding:6px 10px;font-weight:700">R$ 0</td><td id="d-cart-r" style="text-align:right;padding:6px 10px;font-weight:700">R$ 0</td></tr>
-</tbody>
+<tbody id="deducoes-ct"></tbody>
+<tfoot><tr><td colspan="4" style="padding:8px 10px"><button class="add-btn" onclick="addTaxa()">+ Adicionar Taxa</button></td></tr></tfoot>
 </table>
 </div>
 </div>
@@ -376,16 +375,16 @@ body{background:#fff;font-size:11px}
 </div>
 </div>
 <div class="taxas-section">
-<div class="taxas-title">⚡ TAXAS AUTOMÁTICAS sobre Bilheteria Bruta — ISS 5% + ECAD 5% + Cartão 3,2%</div>
-<div style="display:grid;grid-template-columns:1fr 150px 150px;gap:6px;padding-bottom:6px;border-bottom:1px solid #fcd34d;margin-bottom:4px">
+<div class="taxas-title">💸 TAXAS (editável) — ISS, ECAD, Cartão, etc.</div>
+<div style="display:grid;grid-template-columns:1fr 150px 150px 30px;gap:6px;padding-bottom:6px;border-bottom:1px solid #fcd34d;margin-bottom:4px">
 <div style="font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:#78350f;font-weight:700">Item</div>
 <div style="text-align:right;font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:#78350f;font-weight:700">Projetado</div>
 <div style="text-align:right;font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:#78350f;font-weight:700">Realizado</div>
+<div></div>
 </div>
-<div class="taxa-row"><div class="taxa-label">ISS — 5% bilheteria bruta</div><div class="taxa-val" id="tx-iss-p">R$ 0</div><div class="taxa-val" id="tx-iss-r">R$ 0</div></div>
-<div class="taxa-row"><div class="taxa-label">ECAD — 5% bilheteria bruta</div><div class="taxa-val" id="tx-ecad-p">R$ 0</div><div class="taxa-val" id="tx-ecad-r">R$ 0</div></div>
-<div class="taxa-row"><div class="taxa-label">Taxa Cartão — 3,2% bilheteria bruta</div><div class="taxa-val" id="tx-cart-p">R$ 0</div><div class="taxa-val" id="tx-cart-r">R$ 0</div></div>
+<div id="taxas-ct"></div>
 <div class="taxa-row" style="font-weight:700;margin-top:4px;border-top:1px solid #fcd34d;padding-top:6px"><div class="taxa-label" style="font-weight:700;color:#92400e">TOTAL TAXAS</div><div class="taxa-val" id="tx-tot-p">R$ 0</div><div class="taxa-val" id="tx-tot-r">R$ 0</div></div>
+<button class="add-btn" onclick="addTaxa()" style="margin-top:6px">+ Adicionar Taxa</button>
 </div>
 <div class="total-row">
 <span>CUSTO TOTAL (Manual + Taxas)</span>
@@ -466,6 +465,7 @@ try{var prod=JSON.parse(localStorage.getItem('prod_v1')||'{"eventos":[]}');var p
 }
 
 function migrateTipos(p){(p.setores||[]).forEach(function(s){(s.lotes||[]).forEach(function(l){(l.tipos||[]).forEach(function(t){if(!t.id)t.id=uid();if(typeof t.cort==='undefined')t.cort=(t.tipo==='Cortesia');});});});}
+function migrateTaxas(p){if(!p.taxas||!p.taxas.length){p.taxas=[{id:uid(),nome:'ISS',proj:0,real:0},{id:uid(),nome:'ECAD',proj:0,real:0},{id:uid(),nome:'Taxa Cartão',proj:0,real:0}];}}
 function mkTipos(){return [{id:uid(),tipo:'Inteira',qp:0,val:0,qr:0,cort:false},{id:uid(),tipo:'Meia',qp:0,val:0,qr:0,cort:false},{id:uid(),tipo:'Promocional',qp:0,val:0,qr:0,cort:false},{id:uid(),tipo:'Cortesia',qp:0,val:0,qr:0,cort:true}];}
 function mkLote(nome){return {id:uid(),nome:nome,open:true,tipos:mkTipos()};}
 function mkSetor(nome){return {id:uid(),nome:nome,open:true,lotes:[mkLote('Lote 1')]};}
@@ -478,6 +478,7 @@ setores:[mkSetor('Pista'),mkSetor('Área VIP'),mkSetor('Camarote'),mkSetor('Cama
 descontos:[],
 split:{axis:100,artista:0,socio:0},
 outras:[{id:uid(),nome:'Bar / Consumação',proj:0,real:0},{id:uid(),nome:'Patrocínio',proj:0,real:0},{id:uid(),nome:'Outras Receitas',proj:0,real:0}],
+taxas:[{id:uid(),nome:'ISS',proj:0,real:0},{id:uid(),nome:'ECAD',proj:0,real:0},{id:uid(),nome:'Taxa Cartão',proj:0,real:0}],
 grupos:[
 mkGrupo('Artístico e Suas Despesas','#7c3aed',['Cache Principal','Despesas Logística Artista','Efeitos Especiais','Cache DJ Opening','Cache DJ Warm Up','Catering Camarim','VJ']),
 mkGrupo('Despesas do Local','#2563eb',['Aluguel do Local','Limpeza do Local']),
@@ -501,6 +502,7 @@ if(!p.evento.prevenda)p.evento.prevenda='';
 if(!p.evento.vgeral)p.evento.vgeral='';
 if(!p.evento.prodId)p.evento.prodId='';
 migrateTipos(p);
+migrateTaxas(p);
 return p;
 }
 }catch(e){}
@@ -522,9 +524,7 @@ var splitAxisP=blp*(sp.axis||0)/100,splitArtP=blp*(sp.artista||0)/100,splitSocP=
 var splitAxisR=blr*(sp.axis||0)/100,splitArtR=blr*(sp.artista||0)/100,splitSocR=blr*(sp.socio||0)/100;
 var splitTotal=(sp.axis||0)+(sp.artista||0)+(sp.socio||0);
 var op=0,or_=0;D.outras.forEach(function(o){op+=o.proj;or_+=o.real;});
-var ISS=.05,ECAD=.05,CART=.032;
-var issp=bp*ISS,ecadp=bp*ECAD,cartp=bp*CART,txp=issp+ecadp+cartp;
-var issr=br*ISS,ecadr=br*ECAD,cartr=br*CART,txr=issr+ecadr+cartr;
+var txp=0,txr=0;D.taxas.forEach(function(tx){txp+=(tx.proj||0);txr+=(tx.real||0);});
 var rp=bp+op,rr=br+or_;
 var rlp=rp-txp,rlr=rr-txr;
 var mp=0,mr=0;D.grupos.forEach(function(g){g.itens.forEach(function(i){mp+=i.proj;mr+=i.real;});});
@@ -535,7 +535,7 @@ var beT=tm>0?cp/tm:0;
 var cap=D.evento.cap||(pp+cortP)||1;
 var bePct=beT/cap*100;
 var projOcc=pp/cap*100;
-return {bp,br,pp,pr,cortP,dp,dr,blp,blr,splitAxisP,splitArtP,splitSocP,splitAxisR,splitArtR,splitSocR,splitTotal,op,or_,issp,ecadp,cartp,txp,issr,ecadr,cartr,txr,rp,rr,rlp,rlr,mp,mr,cp,cr,resp,resr,tm,beT,bePct,projOcc,cap};
+return {bp,br,pp,pr,cortP,dp,dr,blp,blr,splitAxisP,splitArtP,splitSocP,splitAxisR,splitArtR,splitSocR,splitTotal,op,or_,txp,txr,rp,rr,rlp,rlr,mp,mr,cp,cr,resp,resr,tm,beT,bePct,projOcc,cap};
 }
 
 function render(){
@@ -633,9 +633,9 @@ set('t-blp',R(c.blp));set('t-blr',R(c.blr));
 
 function renderSplit(c){
 set('sp-base-p',R(c.blp));set('sp-base-r',R(c.blr));
-var spa=$('sp-axis');if(spa&&document.activeElement!==spa)spa.value=D.split.axis||0;
-var spart=$('sp-artista');if(spart&&document.activeElement!==spart)spart.value=D.split.artista||0;
-var ssoc=$('sp-socio');if(ssoc&&document.activeElement!==ssoc)ssoc.value=D.split.socio||0;
+var spa=$('sp-axis');if(spa&&document.activeElement!==spa)spa.value=numStr(D.split.axis||0);
+var spart=$('sp-artista');if(spart&&document.activeElement!==spart)spart.value=numStr(D.split.artista||0);
+var ssoc=$('sp-socio');if(ssoc&&document.activeElement!==ssoc)ssoc.value=numStr(D.split.socio||0);
 set('sp-axis-p',R(c.splitAxisP));set('sp-axis-r',R(c.splitAxisR));
 set('sp-artista-p',R(c.splitArtP));set('sp-artista-r',R(c.splitArtR));
 set('sp-socio-p',R(c.splitSocP));set('sp-socio-r',R(c.splitSocR));
@@ -660,9 +660,15 @@ set('sh-op',R(c.op));set('sh-or',R(c.or_));
 }
 
 function renderDeducoes(c){
-set('d-iss-p',R(c.issp));set('d-iss-r',R(c.issr));
-set('d-ecad-p',R(c.ecadp));set('d-ecad-r',R(c.ecadr));
-set('d-cart-p',R(c.cartp));set('d-cart-r',R(c.cartr));
+var h='';
+D.taxas.forEach(function(t){
+h+='<tr><td><input type="text" value="'+esc(t.nome)+'" oninput="taxaNm(\''+t.id+'\',this.value)" style="background:transparent;border:none;font-size:12px"></td>';
+h+='<td style="background:#f8fbff"><input type="text" inputmode="decimal" class="dec-input" value="'+numStr(t.proj)+'" oninput="upTaxa(\''+t.id+'\',\'proj\',this.value)" data-fk="txp_'+t.id+'"></td>';
+h+='<td style="background:#f6fdf7"><input type="text" inputmode="decimal" class="dec-input" value="'+numStr(t.real)+'" oninput="upTaxa(\''+t.id+'\',\'real\',this.value)" data-fk="txr_'+t.id+'"></td>';
+h+='<td><button onclick="delTaxa(\''+t.id+'\')" style="background:none;color:#cbd5e1;border:none;cursor:pointer;font-size:14px;padding:2px 4px" onmouseover="this.style.color=\'#ef4444\'" onmouseout="this.style.color=\'#cbd5e1\'">✕</button></td></tr>';
+});
+$('deducoes-ct').innerHTML=h;
+set('d-tot-p',R(c.txp));set('d-tot-r',R(c.txr));
 }
 
 function lighten(hex){
@@ -688,8 +694,8 @@ if(!g.itens.length)h+='<div style="padding:12px 16px;color:var(--muted);font-siz
 g.itens.forEach(function(i){
 var d=i.real-i.proj;
 h+='<div class="item-row"><div class="item-desc"><input type="text" value="'+esc(i.desc)+'" oninput="upID(\''+g.id+'\',\''+i.id+'\',this.value)"></div>';
-h+='<div style="background:#f8fbff;padding:2px 4px;border-radius:4px"><input type="number" step="any" min="0" value="'+i.proj+'" oninput="upI(\''+g.id+'\',\''+i.id+'\',\'proj\',this.value)"></div>';
-h+='<div style="background:#f6fdf7;padding:2px 4px;border-radius:4px"><input type="number" step="any" min="0" value="'+i.real+'" oninput="upI(\''+g.id+'\',\''+i.id+'\',\'real\',this.value)"></div>';
+h+='<div style="background:#f8fbff;padding:2px 4px;border-radius:4px"><input type="text" inputmode="decimal" class="dec-input" value="'+numStr(i.proj)+'" oninput="upI(\''+g.id+'\',\''+i.id+'\',\'proj\',this.value)" data-fk="ip_'+i.id+'"></div>';
+h+='<div style="background:#f6fdf7;padding:2px 4px;border-radius:4px"><input type="text" inputmode="decimal" class="dec-input" value="'+numStr(i.real)+'" oninput="upI(\''+g.id+'\',\''+i.id+'\',\'real\',this.value)" data-fk="ir_'+i.id+'"></div>';
 h+='<div class="item-delta '+(d>=0?'pos':'neg')+'">'+(d>0?'+':'')+R(d)+'</div>';
 h+='<button class="del-item" onclick="delI(\''+g.id+'\',\''+i.id+'\')">✕</button>';
 h+='</div>';
@@ -703,9 +709,14 @@ set('sh-cp',R(c.mp));set('sh-cr',R(c.mr));
 }
 
 function renderTaxas(c){
-set('tx-iss-p',R(c.issp));set('tx-iss-r',R(c.issr));
-set('tx-ecad-p',R(c.ecadp));set('tx-ecad-r',R(c.ecadr));
-set('tx-cart-p',R(c.cartp));set('tx-cart-r',R(c.cartr));
+var h='';
+D.taxas.forEach(function(t){
+h+='<div class="taxa-row"><div class="taxa-label"><input type="text" value="'+esc(t.nome)+'" oninput="taxaNm(\''+t.id+'\',this.value)" style="background:transparent;border:none;color:inherit;font-size:12px;width:100%"></div>';
+h+='<div class="taxa-val"><input type="text" inputmode="decimal" class="dec-input" value="'+numStr(t.proj)+'" oninput="upTaxa(\''+t.id+'\',\'proj\',this.value)" data-fk="txcp_'+t.id+'" style="text-align:right;width:100%;background:transparent;border:1px solid #fcd34d;border-radius:4px"></div>';
+h+='<div class="taxa-val"><input type="text" inputmode="decimal" class="dec-input" value="'+numStr(t.real)+'" oninput="upTaxa(\''+t.id+'\',\'real\',this.value)" data-fk="txcr_'+t.id+'" style="text-align:right;width:100%;background:transparent;border:1px solid #fcd34d;border-radius:4px"></div>';
+h+='<div><button onclick="delTaxa(\''+t.id+'\')" style="background:none;color:#92400e;border:none;cursor:pointer;font-size:14px">✕</button></div></div>';
+});
+$('taxas-ct').innerHTML=h;
 set('tx-tot-p',R(c.txp));set('tx-tot-r',R(c.txr));
 }
 
@@ -775,12 +786,16 @@ function addOutra(){D.outras.push({id:uid(),nome:'Nova Receita',proj:0,real:0});
 function delO(id){D.outras=D.outras.filter(function(o){return o.id!==id;});render();}
 function upO(id,f,v){var o=D.outras.find(function(x){return x.id===id;});if(o){o[f]=parseBR(v);renderPreserve();}}
 function outraNm(id,v){var o=D.outras.find(function(x){return x.id===id;});if(o){o.nome=v;sv();}}
+function addTaxa(){D.taxas.push({id:uid(),nome:'Nova Taxa',proj:0,real:0});render();}
+function delTaxa(id){D.taxas=D.taxas.filter(function(t){return t.id!==id;});render();}
+function upTaxa(id,f,v){var t=D.taxas.find(function(x){return x.id===id;});if(t){t[f]=parseBR(v);renderPreserve();}}
+function taxaNm(id,v){var t=D.taxas.find(function(x){return x.id===id;});if(t){t.nome=v;sv();}}
 
 function addGrupo(){var n=$('new-gn').value.trim();if(!n){alert('Digite o nome.');return;}var c=$('new-gc').value;D.grupos.push(mkGrupo(n,c,[]));$('new-gn').value='';render();}
 function delG(id){if(confirm('Remover grupo e todos os itens?')){D.grupos=D.grupos.filter(function(g){return g.id!==id;});render();}}
 function addI(gid){var g=fG(gid);if(g){g.itens.push(mkItem('Novo Item'));render();}}
 function delI(gid,iid){var g=fG(gid);if(g){g.itens=g.itens.filter(function(i){return i.id!==iid;});render();}}
-function upI(gid,iid,f,v){var i=fI(gid,iid);if(i){i[f]=parseFloat(v)||0;render();}}
+function upI(gid,iid,f,v){var i=fI(gid,iid);if(i){i[f]=parseBR(v);renderPreserve();}}
 function upID(gid,iid,v){var i=fI(gid,iid);if(i){i.desc=v;sv();}}
 
 function showTab(name,el){
