@@ -125,7 +125,7 @@ button{cursor:pointer;border:none;border-radius:6px;font-size:13px;font-weight:6
 .g-chevron{font-size:11px;color:var(--muted);transition:transform .2s}
 .g-chevron.open{transform:rotate(90deg)}
 .grupo-body{border-top:1px solid var(--border)}
-.item-row{display:grid;grid-template-columns:1fr 150px 150px 90px 30px;gap:6px;padding:7px 14px;border-bottom:1px solid var(--border);align-items:center}
+.item-row{display:grid;grid-template-columns:1fr 130px 150px 150px 90px 30px;gap:6px;padding:7px 14px;border-bottom:1px solid var(--border);align-items:center}
 .item-row:last-child{border-bottom:none}
 .item-row:nth-child(even){background:#fafafa}
 .item-desc input{background:transparent;border:none;font-size:12px;color:var(--text);width:100%}
@@ -135,7 +135,7 @@ button{cursor:pointer;border:none;border-radius:6px;font-size:13px;font-weight:6
 .item-delta.neg{color:var(--red)}
 .del-item{background:none;color:#cbd5e1;font-size:14px;padding:0 4px}
 .del-item:hover{color:var(--red)}
-.items-header{display:grid;grid-template-columns:1fr 150px 150px 90px 30px;gap:6px;padding:6px 14px 4px;background:#f8fafc;border-bottom:1px solid var(--border)}
+.items-header{display:grid;grid-template-columns:1fr 130px 150px 150px 90px 30px;gap:6px;padding:6px 14px 4px;background:#f8fafc;border-bottom:1px solid var(--border)}
 .col-label{font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px;text-align:center}
 .taxas-section{background:#fef3c7;border:1px solid #fcd34d;border-radius:8px;padding:12px 16px;margin-bottom:12px}
 .taxas-title{font-weight:700;font-size:12px;color:#92400e;margin-bottom:8px}
@@ -426,6 +426,59 @@ body{background:#fff;font-size:11px}
 </div>
 </div>
 </div>
+
+<div class="section">
+<div class="section-hdr">🤝 FECHAMENTO EMPRESA/ARTISTA</div>
+<div class="section-body" style="padding:12px 16px">
+<div style="font-size:12px;color:var(--muted);margin-bottom:10px">Fluxo: Bilheteria Líquida (bruta − descontos) → (−) Taxas + Custos tag "Bilheteria Bruta" → Distribuível → split por % → (−) Custos de cada parte → Lucro Previsto.</div>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:14px;font-size:12px">
+<div><div style="color:var(--muted);text-transform:uppercase;font-weight:700;font-size:10px">Bilheteria Líquida</div><div style="display:flex;gap:16px"><span>Proj: <strong id="fe-blp">R$ 0</strong></span><span>Real: <strong id="fe-blr">R$ 0</strong></span></div></div>
+<div><div style="color:var(--muted);text-transform:uppercase;font-weight:700;font-size:10px">(−) Taxas + Custos Bruta</div><div style="display:flex;gap:16px"><span>Proj: <strong id="fe-dedp">R$ 0</strong></span><span>Real: <strong id="fe-dedr">R$ 0</strong></span></div></div>
+<div><div style="color:var(--muted);text-transform:uppercase;font-weight:700;font-size:10px">= Distribuível entre Partes</div><div style="display:flex;gap:16px"><span>Proj: <strong id="fe-distp">R$ 0</strong></span><span>Real: <strong id="fe-distr">R$ 0</strong></span></div></div>
+</div>
+<table class="outras-table" style="width:100%">
+<thead><tr>
+<th style="text-align:left">Parte</th>
+<th style="background:#eff6ff">Split Bruto Proj</th>
+<th style="background:#eff6ff">Split Bruto Real</th>
+<th style="background:#fef2f2">(−) Custos Proj</th>
+<th style="background:#fef2f2">(−) Custos Real</th>
+<th style="background:#f0fdf4">Lucro Previsto Proj</th>
+<th style="background:#f0fdf4">Lucro Previsto Real</th>
+</tr></thead>
+<tbody id="fech-empresa-ct"></tbody>
+</table>
+</div>
+</div>
+
+<div class="section">
+<div class="section-hdr">🏭 FECHAMENTO INTERNO — AXIS</div>
+<div class="section-body" style="padding:14px 16px">
+<div style="font-size:12px;color:var(--muted);margin-bottom:10px">Resultado real da produtora: split da Axis (já líquido de taxas/custos-bruta) + receitas extras (bar, patrocínio, camarote, merchandising etc.) − custos com origem "Axis".</div>
+<table class="outras-table" style="width:100%;margin-bottom:14px">
+<thead><tr>
+<th style="text-align:left">Receita Extra</th>
+<th style="width:170px;background:#eff6ff">Projetado R$</th>
+<th style="width:170px;background:#f0fdf4">Realizado R$</th>
+<th style="width:40px"></th>
+</tr></thead>
+<tbody id="outras-ct-interno"></tbody>
+<tfoot><tr><td colspan="4" style="padding:8px 10px"><button class="add-btn" onclick="addOutra()">+ Adicionar Receita Extra</button></td></tr></tfoot>
+</table>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;font-size:12px">
+<div><div style="color:var(--muted);text-transform:uppercase;font-weight:700;font-size:10px">Receita Total Produtora (Split Axis + Extras)</div><div style="display:flex;gap:16px"><span>Proj: <strong id="fi-receita-p">R$ 0</strong></span><span>Real: <strong id="fi-receita-r">R$ 0</strong></span></div></div>
+<div><div style="color:var(--muted);text-transform:uppercase;font-weight:700;font-size:10px">(−) Custos Pagos pela Axis</div><div style="display:flex;gap:16px"><span>Proj: <strong id="fi-custo-p">R$ 0</strong></span><span>Real: <strong id="fi-custo-r">R$ 0</strong></span></div></div>
+</div>
+</div>
+<div class="total-row">
+<span>RESULTADO LÍQUIDO REAL — PRODUTORA</span>
+<div style="display:flex;gap:24px">
+<span>Proj: <span class="tr-val" id="fi-result-p">R$ 0</span></span>
+<span>Real: <span class="tr-val" id="fi-result-r">R$ 0</span></span>
+</div>
+</div>
+</div>
+
 </div>
 
 <div class="modal-overlay" id="modal-ov">
@@ -466,10 +519,11 @@ try{var prod=JSON.parse(localStorage.getItem('prod_v1')||'{"eventos":[]}');var p
 
 function migrateTipos(p){(p.setores||[]).forEach(function(s){(s.lotes||[]).forEach(function(l){(l.tipos||[]).forEach(function(t){if(!t.id)t.id=uid();if(typeof t.cort==='undefined')t.cort=(t.tipo==='Cortesia');});});});}
 function migrateTaxas(p){if(!p.taxas||!p.taxas.length){p.taxas=[{id:uid(),nome:'ISS',proj:0,real:0},{id:uid(),nome:'ECAD',proj:0,real:0},{id:uid(),nome:'Taxa Cartão',proj:0,real:0}];}}
+function migrateOrigem(p){(p.grupos||[]).forEach(function(g){(g.itens||[]).forEach(function(i){if(!i.origem)i.origem='bruta';});});}
 function mkTipos(){return [{id:uid(),tipo:'Inteira',qp:0,val:0,qr:0,cort:false},{id:uid(),tipo:'Meia',qp:0,val:0,qr:0,cort:false},{id:uid(),tipo:'Promocional',qp:0,val:0,qr:0,cort:false},{id:uid(),tipo:'Cortesia',qp:0,val:0,qr:0,cort:true}];}
 function mkLote(nome){return {id:uid(),nome:nome,open:true,tipos:mkTipos()};}
 function mkSetor(nome){return {id:uid(),nome:nome,open:true,lotes:[mkLote('Lote 1')]};}
-function mkItem(desc){return {id:uid(),desc:desc,proj:0,real:0};}
+function mkItem(desc){return {id:uid(),desc:desc,proj:0,real:0,origem:'bruta'};}
 function mkGrupo(nome,cor,descs){return {id:uid(),nome:nome,cor:cor,open:true,itens:descs.map(mkItem)};}
 
 var DEFAULTS={
@@ -503,6 +557,7 @@ if(!p.evento.vgeral)p.evento.vgeral='';
 if(!p.evento.prodId)p.evento.prodId='';
 migrateTipos(p);
 migrateTaxas(p);
+migrateOrigem(p);
 return p;
 }
 }catch(e){}
@@ -520,14 +575,25 @@ var dp=0,dr=0;
 (D.descontos||[]).forEach(function(d){dp+=d.proj||0;dr+=d.real||0;});
 var blp=bp-dp,blr=br-dr;
 var sp=D.split||{axis:100,artista:0,socio:0};
-var splitAxisP=blp*(sp.axis||0)/100,splitArtP=blp*(sp.artista||0)/100,splitSocP=blp*(sp.socio||0)/100;
-var splitAxisR=blr*(sp.axis||0)/100,splitArtR=blr*(sp.artista||0)/100,splitSocR=blr*(sp.socio||0)/100;
-var splitTotal=(sp.axis||0)+(sp.artista||0)+(sp.socio||0);
 var op=0,or_=0;D.outras.forEach(function(o){op+=o.proj;or_+=o.real;});
 var txp=0,txr=0;D.taxas.forEach(function(tx){txp+=(tx.proj||0);txr+=(tx.real||0);});
+var mp=0,mr=0,cbP=0,cbR=0,caP=0,caR=0,ctP=0,ctR=0,csP=0,csR=0;
+D.grupos.forEach(function(g){g.itens.forEach(function(i){
+mp+=i.proj;mr+=i.real;
+var og=i.origem||'bruta';
+if(og==='axis'){caP+=i.proj;caR+=i.real;}
+else if(og==='artista'){ctP+=i.proj;ctR+=i.real;}
+else if(og==='socio'){csP+=i.proj;csR+=i.real;}
+else{cbP+=i.proj;cbR+=i.real;}
+});});
+var distP=blp-txp-cbP,distR=blr-txr-cbR;
+var splitAxisP=distP*(sp.axis||0)/100,splitArtP=distP*(sp.artista||0)/100,splitSocP=distP*(sp.socio||0)/100;
+var splitAxisR=distR*(sp.axis||0)/100,splitArtR=distR*(sp.artista||0)/100,splitSocR=distR*(sp.socio||0)/100;
+var splitTotal=(sp.axis||0)+(sp.artista||0)+(sp.socio||0);
+var lucroAxisP=splitAxisP-caP,lucroArtP=splitArtP-ctP,lucroSocP=splitSocP-csP;
+var lucroAxisR=splitAxisR-caR,lucroArtR=splitArtR-ctR,lucroSocR=splitSocR-csR;
 var rp=bp+op,rr=br+or_;
 var rlp=rp-txp,rlr=rr-txr;
-var mp=0,mr=0;D.grupos.forEach(function(g){g.itens.forEach(function(i){mp+=i.proj;mr+=i.real;});});
 var cp=mp+txp,cr=mr+txr;
 var resp=rp-cp,resr=rr-cr;
 var tm=pp>0?bp/(pp+cortP):0;
@@ -535,7 +601,7 @@ var beT=tm>0?cp/tm:0;
 var cap=D.evento.cap||(pp+cortP)||1;
 var bePct=beT/cap*100;
 var projOcc=pp/cap*100;
-return {bp,br,pp,pr,cortP,dp,dr,blp,blr,splitAxisP,splitArtP,splitSocP,splitAxisR,splitArtR,splitSocR,splitTotal,op,or_,txp,txr,rp,rr,rlp,rlr,mp,mr,cp,cr,resp,resr,tm,beT,bePct,projOcc,cap};
+return {bp,br,pp,pr,cortP,dp,dr,blp,blr,splitAxisP,splitArtP,splitSocP,splitAxisR,splitArtR,splitSocR,splitTotal,op,or_,txp,txr,rp,rr,rlp,rlr,mp,mr,cp,cr,resp,resr,tm,beT,bePct,projOcc,cap,cbP,cbR,caP,caR,ctP,ctR,csP,csR,distP,distR,lucroAxisP,lucroArtP,lucroSocP,lucroAxisR,lucroArtR,lucroSocR};
 }
 
 function render(){
@@ -557,6 +623,7 @@ set('t-rlp',R(c.rlp));set('t-rlr',R(c.rlr));
 renderGrupos(c);renderTaxas(c);
 set('t-cp',R(c.cp));set('t-cr',R(c.cr));
 renderBreakeven(c);
+renderFechamentos(c);
 sv();
 }
 
@@ -656,6 +723,7 @@ h+='<td style="background:#f6fdf7"><input type="text" inputmode="decimal" class=
 h+='<td><button onclick="delO(\''+o.id+'\')" style="background:none;color:#cbd5e1;border:none;cursor:pointer;font-size:14px;padding:2px 4px" onmouseover="this.style.color=\'#ef4444\'" onmouseout="this.style.color=\'#cbd5e1\'">✕</button></td></tr>';
 });
 $('outras-ct').innerHTML=h;
+if($('outras-ct-interno'))$('outras-ct-interno').innerHTML=h;
 set('sh-op',R(c.op));set('sh-or',R(c.or_));
 }
 
@@ -689,11 +757,18 @@ h+='<button class="del-grupo" onclick="event.stopPropagation();delG(\''+g.id+'\'
 h+='<span class="g-chevron '+(g.open?'open':'')+'">▶</span>';
 h+='</div>';
 if(g.open){
-h+='<div class="grupo-body"><div class="items-header"><div class="col-label" style="text-align:left">Descrição</div><div class="col-label" style="background:#eff6ff;padding:3px 6px;border-radius:4px">Projetado R$</div><div class="col-label" style="background:#f0fdf4;padding:3px 6px;border-radius:4px">Realizado R$</div><div class="col-label">Δ</div><div></div></div>';
+h+='<div class="grupo-body"><div class="items-header"><div class="col-label" style="text-align:left">Descrição</div><div class="col-label" style="text-align:left">Origem</div><div class="col-label" style="background:#eff6ff;padding:3px 6px;border-radius:4px">Projetado R$</div><div class="col-label" style="background:#f0fdf4;padding:3px 6px;border-radius:4px">Realizado R$</div><div class="col-label">Δ</div><div></div></div>';
 if(!g.itens.length)h+='<div style="padding:12px 16px;color:var(--muted);font-size:12px;text-align:center">Nenhum item — clique "+ Item" para adicionar</div>';
 g.itens.forEach(function(i){
 var d=i.real-i.proj;
+var iorg=i.origem||'bruta';
 h+='<div class="item-row"><div class="item-desc"><input type="text" value="'+esc(i.desc)+'" oninput="upID(\''+g.id+'\',\''+i.id+'\',this.value)"></div>';
+h+='<div><select onchange="upIOrigem(\''+g.id+'\',\''+i.id+'\',this.value)" style="font-size:11px;padding:3px 4px;border-radius:4px;border:1px solid var(--border);width:100%;background:#fff">'+
+'<option value="bruta"'+(iorg==='bruta'?' selected':'')+'>Bilheteria Bruta</option>'+
+'<option value="axis"'+(iorg==='axis'?' selected':'')+'>Axis</option>'+
+'<option value="artista"'+(iorg==='artista'?' selected':'')+'>Artista</option>'+
+'<option value="socio"'+(iorg==='socio'?' selected':'')+'>Sócio</option>'+
+'</select></div>';
 h+='<div style="background:#f8fbff;padding:2px 4px;border-radius:4px"><input type="text" inputmode="decimal" class="dec-input" value="'+numStr(i.proj)+'" oninput="upI(\''+g.id+'\',\''+i.id+'\',\'proj\',this.value)" data-fk="ip_'+i.id+'"></div>';
 h+='<div style="background:#f6fdf7;padding:2px 4px;border-radius:4px"><input type="text" inputmode="decimal" class="dec-input" value="'+numStr(i.real)+'" oninput="upI(\''+g.id+'\',\''+i.id+'\',\'real\',this.value)" data-fk="ir_'+i.id+'"></div>';
 h+='<div class="item-delta '+(d>=0?'pos':'neg')+'">'+(d>0?'+':'')+R(d)+'</div>';
@@ -728,7 +803,8 @@ set('be-cap',(c.pp+(c.cortP||0)).toLocaleString('pt-BR'));
 var pcts=[50,70,85,100];
 var h='';
 pcts.forEach(function(p){
-var bilSc=c.bp*(p/100),outSc=c.op,recSc=bilSc+outSc,txSc=bilSc*0.132,custSc=c.mp+txSc,resSc=recSc-custSc,pagSc=Math.round(c.pp*p/100);
+var taxRate=c.bp>0?c.txp/c.bp:0;
+var bilSc=c.bp*(p/100),outSc=c.op,recSc=bilSc+outSc,txSc=bilSc*taxRate,custSc=c.mp+txSc,resSc=recSc-custSc,pagSc=Math.round(c.pp*p/100);
 var cls=p<c.bePct?'bad':(Math.abs(p-c.bePct)<6?'be':'ok');
 var color=cls==='ok'?'#16a34a':cls==='bad'?'#dc2626':'#d97706';
 h+='<div class="scenario-card '+cls+'"><div class="sc-pct" style="color:'+color+'">'+p+'%</div>';
@@ -752,6 +828,30 @@ var beforeBe=Math.min(b,p),afterBe=Math.max(0,p-b),beSlice=Math.min(1,100-p),emp
 GC=new Chart(ctx,{type:'doughnut',data:{datasets:[{data:[beforeBe,beSlice,afterBe,empty],backgroundColor:['#ef4444','#fbbf24','#4ade80','#e2e8f0'],borderWidth:0,hoverOffset:0}]},options:{circumference:180,rotation:-90,cutout:'68%',animation:{duration:300},plugins:{legend:{display:false},tooltip:{enabled:false}}}});
 }
 
+function renderFechamentos(c){
+var rows=[
+{nome:'🏢 Axis',sp:c.splitAxisP,sr:c.splitAxisR,cp:c.caP,cr:c.caR,lp:c.lucroAxisP,lr:c.lucroAxisR},
+{nome:'🎤 Artista',sp:c.splitArtP,sr:c.splitArtR,cp:c.ctP,cr:c.ctR,lp:c.lucroArtP,lr:c.lucroArtR},
+{nome:'🤝 Sócio',sp:c.splitSocP,sr:c.splitSocR,cp:c.csP,cr:c.csR,lp:c.lucroSocP,lr:c.lucroSocR}
+];
+var h='';
+rows.forEach(function(r){
+h+='<tr><td>'+r.nome+'</td>';
+h+='<td style="text-align:right">'+R(r.sp)+'</td><td style="text-align:right">'+R(r.sr)+'</td>';
+h+='<td style="text-align:right;color:#dc2626">−'+R(r.cp)+'</td><td style="text-align:right;color:#dc2626">−'+R(r.cr)+'</td>';
+h+='<td style="text-align:right;font-weight:700;color:'+(r.lp>=0?'#16a34a':'#dc2626')+'">'+R(r.lp)+'</td><td style="text-align:right;font-weight:700;color:'+(r.lr>=0?'#16a34a':'#dc2626')+'">'+R(r.lr)+'</td></tr>';
+});
+if($('fech-empresa-ct'))$('fech-empresa-ct').innerHTML=h;
+set('fe-blp',R(c.blp));set('fe-blr',R(c.blr));
+set('fe-dedp',R(c.txp+c.cbP));set('fe-dedr',R(c.txr+c.cbR));
+set('fe-distp',R(c.distP));set('fe-distr',R(c.distR));
+var receitaTotalP=c.splitAxisP+c.op,receitaTotalR=c.splitAxisR+c.or_;
+var resultP=c.lucroAxisP+c.op,resultR=c.lucroAxisR+c.or_;
+set('fi-receita-p',R(receitaTotalP));set('fi-receita-r',R(receitaTotalR));
+set('fi-custo-p',R(c.caP));set('fi-custo-r',R(c.caR));
+var frp=$('fi-result-p');if(frp){frp.textContent=R(resultP);frp.style.color=resultP>=0?'#16a34a':'#dc2626';}
+var frr=$('fi-result-r');if(frr){frr.textContent=R(resultR);frr.style.color=resultR>=0?'#16a34a':'#dc2626';}
+}
 function fS(id){return D.setores.find(function(s){return s.id===id;});}
 function fL(sid,lid){var s=fS(sid);return s?s.lotes.find(function(l){return l.id===lid;}):null;}
 function fG(id){return D.grupos.find(function(g){return g.id===id;});}
@@ -797,6 +897,7 @@ function addI(gid){var g=fG(gid);if(g){g.itens.push(mkItem('Novo Item'));render(
 function delI(gid,iid){var g=fG(gid);if(g){g.itens=g.itens.filter(function(i){return i.id!==iid;});render();}}
 function upI(gid,iid,f,v){var i=fI(gid,iid);if(i){i[f]=parseBR(v);renderPreserve();}}
 function upID(gid,iid,v){var i=fI(gid,iid);if(i){i.desc=v;sv();}}
+function upIOrigem(gid,iid,v){var i=fI(gid,iid);if(i){i.origem=v;render();}}
 
 function showTab(name,el){
 document.querySelectorAll('.tab-pane').forEach(function(p){p.classList.remove('active');});
