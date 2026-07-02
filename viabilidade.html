@@ -206,6 +206,7 @@ body{background:#fff;font-size:11px}
 </div>
 <div class="evento-fields">
 <input class="ef-nome" type="text" id="ev-nome" placeholder="Nome do Evento" oninput="D.evento.nome=this.value;sv()">
+<input class="ef-sm" type="text" id="ev-resp" placeholder="Responsável do Evento" oninput="D.evento.responsavel=this.value;sv()">
 <input class="ef-sm" type="text" id="ev-data" placeholder="Data do Evento" oninput="D.evento.data=this.value;sv()">
 <input class="ef-sm" type="text" id="ev-prevenda" placeholder="Início Pré-Venda" oninput="D.evento.prevenda=this.value;sv()">
 <input class="ef-sm" type="text" id="ev-vgeral" placeholder="Início Venda Geral" oninput="D.evento.vgeral=this.value;sv()">
@@ -563,6 +564,7 @@ if(!p.split)p.split={axis:100,artista:0,socio:0};
 if(!p.evento.prevenda)p.evento.prevenda='';
 if(!p.evento.vgeral)p.evento.vgeral='';
 if(!p.evento.prodId)p.evento.prodId='';
+if(!p.evento.responsavel)p.evento.responsavel='';
 migrateTipos(p);
 migrateTaxas(p);
 migrateOrigem(p);
@@ -644,6 +646,7 @@ if(document.activeElement!=$('ev-prevenda'))$('ev-prevenda').value=D.evento.prev
 if(document.activeElement!=$('ev-vgeral'))$('ev-vgeral').value=D.evento.vgeral||'';
 if(document.activeElement!=$('ev-local'))$('ev-local').value=D.evento.local||'';
 if(document.activeElement!=$('ev-cap'))$('ev-cap').value=D.evento.cap||'';
+if($('ev-resp')&&document.activeElement!=$('ev-resp'))$('ev-resp').value=D.evento.responsavel||'';
 set('k-rp',R(c.rp));set('k-cp',R(c.cp));
 var kres=$('k-resp');kres.textContent=R(c.resp);kres.className='kpi-val '+(c.resp>=0?'pos':'neg');
 var marg=c.rp>0?c.resp/c.rp*100:0;set('k-marg','Margem '+pct(marg));
