@@ -42,14 +42,14 @@ iframe{width:100%;height:100%;border:none}
           <button class="nav-btn" id="btn-logout" onclick="doLogout()" style="margin-left:auto;background:rgba(255,60,60,0.15);border-color:rgba(255,60,60,0.4);color:#ff6b6b;" title="Sair"><span>⏻ Sair</span></button>
 </div>
 <div id="frames">
-<div class="frame-wrap active" id="fw-dashboard"><div class="loading-overlay" id="ld-dashboard"><div class="spinner"></div><p>Carregando Dashboard...</p></div><iframe id="fr-dashboard" src="dashboard-vendas.html" onload="frameLoaded('dashboard')"></iframe></div>
+<div class="frame-wrap active" id="fw-dashboard"><div class="loading-overlay" id="ld-dashboard"><div class="spinner"></div><p>Carregando Dashboard...</p></div><iframe id="fr-dashboard" src="dashboard-vendas.html?v=20260702" onload="frameLoaded('dashboard')"></iframe></div>
       <div id="fw-agenciamento" class="frame-wrap">
         <iframe src="./viabilidade-agenciamento.html" onload="hideLoader(this)" style="width:100%;height:100%;border:none;" allowfullscreen></iframe>
       </div>
 <div class="frame-wrap" id="fw-custos"><div class="loading-overlay" id="ld-custos"><div class="spinner"></div><p>Carregando Custos...</p></div><iframe id="fr-custos" src="custos.html" onload="frameLoaded('custos')"></iframe></div>
 <div class="frame-wrap" id="fw-viabilidade"><div class="loading-overlay" id="ld-viabilidade"><div class="spinner"></div><p>Carregando Viabilidade...</p></div><iframe id="fr-viabilidade" src="viabilidade.html?v=17" onload="frameLoaded('viabilidade')"></iframe></div>
 <div class="frame-wrap" id="fw-producao"><div class="loading-overlay" id="ld-producao"><div class="spinner"></div><p>Carregando Produção...</p></div><iframe id="fr-producao" src="producao.html" onload="frameLoaded('producao')"></iframe></div>
-<div class="frame-wrap" id="fw-vendas"><div class="loading-overlay" id="ld-vendas"><div class="spinner"></div><p>Carregando Vendas...</p></div><iframe id="fr-vendas" src="dashboard-vendas.html" onload="frameLoaded('vendas')"></iframe></div>
+<div class="frame-wrap" id="fw-vendas"><div class="loading-overlay" id="ld-vendas"><div class="spinner"></div><p>Carregando Vendas...</p></div><iframe id="fr-vendas" src="dashboard-vendas.html?v=20260702" onload="frameLoaded('vendas')"></iframe></div>
 </div>
 <script>
 var TABS=['dashboard','custos','viabilidade','producao','vendas','agenciamento'];
