@@ -900,7 +900,7 @@ var ctx=cv.getContext('2d');
 if(GC){GC.destroy();GC=null;}
 var p=Math.min(Math.max(projPct,0),100),b=Math.min(Math.max(bePct,0),100);
 var beforeBe=Math.min(b,p),afterBe=Math.max(0,p-b),beSlice=Math.min(1,100-p),empty=Math.max(0,100-p-beSlice);
-GC=new Chart(ctx,{type:'doughnut',data:{datasets:[{data:[beforeBe,beSlice,afterBe,empty],backgroundColor:['#ef4444','#fbbf24','#4ade80','#e2e8f0'],borderWidth:0,hoverOffset:0}]},options:{circumference:180,rotation:-90,cutout:'68%',responsive:false,maintainAspectRatio:false,animation:{duration:300},plugins:{legend:{display:false},tooltip:{enabled:false}}}});
+GC=new Chart(ctx,{type:'doughnut',data:{datasets:[{data:[beforeBe,beSlice,afterBe,empty],backgroundColor:['#ef4444','#fbbf24','#4ade80','#e2e8f0'],borderWidth:0,hoverOffset:0}]},options:{circumference:180,rotation:-90,cutout:'68%',responsive:false,maintainAspectRatio:false,animation:false,plugins:{legend:{display:false},tooltip:{enabled:false}}}});
 }
 
 function renderFechamentos(c){
