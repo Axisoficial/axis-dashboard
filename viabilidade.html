@@ -190,6 +190,9 @@ body{background:#fff;font-size:11px}
 .section{break-inside:avoid}
 .grupo{break-inside:avoid}
 .setor{break-inside:avoid}
+.setor[data-tot="0"],.lote[data-tot="0"],.grupo[data-tot="0"]{display:none!important}
+.chevron,.lv-chevron,.g-chevron{display:none!important}
+input:not([type="checkbox"]),select,textarea{border:none!important;background:transparent!important;box-shadow:none!important;color:#000!important;-webkit-appearance:none!important;appearance:none!important;padding:1px 2px!important}
 }
 
 #event-bar{display:none !important;}
@@ -667,7 +670,7 @@ var h='';
 D.setores.forEach(function(s){
 var sp=0,sr=0,spag=0;
 s.lotes.forEach(function(l){l.tipos.forEach(function(t){if(!(t.cort||t.tipo==='Cortesia')){sp+=t.qp*t.val;sr+=t.qr*t.val;spag+=t.qp;}});});
-h+='<div class="setor"><div class="setor-hdr">';
+h+='<div class="setor" data-tot="'+(sp+sr)+'"><div class="setor-hdr">';
 h+='<span class="chevron '+(s.open?'open':'')+'" onclick="toggleS(\''+s.id+'\')">▶</span>';
 h+='<span class="setor-nome">'+esc(s.nome)+'</span>';
 h+='<span style="font-size:11px;color:rgba(255,255,255,.4);margin-right:8px">'+spag+' pag</span>';
@@ -679,7 +682,7 @@ if(s.open){
 h+='<div class="setor-body">';
 s.lotes.forEach(function(l){
 var lp=0,lr=0;l.tipos.forEach(function(t){if(!(t.cort||t.tipo==='Cortesia')){lp+=t.qp*t.val;lr+=t.qr*t.val;}});
-h+='<div class="lote"><div class="lote-hdr">';
+h+='<div class="lote" data-tot="'+(lp+lr)+'"><div class="lote-hdr">';
 h+='<span class="lv-chevron '+(l.open?'open':'')+'" onclick="toggleL(\''+s.id+'\',\''+l.id+'\')">▶</span>';
 h+='<input class="lote-nome-input" type="text" value="'+esc(l.nome)+'" oninput="loteNm(\''+s.id+'\',\''+l.id+'\',this.value)" onclick="event.stopPropagation()">';
 h+='<div class="lote-totals"><span>Proj: <strong>'+R(lp)+'</strong></span><span>Real: <strong>'+R(lr)+'</strong></span></div>';
@@ -813,7 +816,7 @@ function renderGrupos(c){
 var h='';
 D.grupos.forEach(function(g){
 var gp=0,gr=0;g.itens.forEach(function(i){gp+=i.proj;gr+=i.real;});
-h+='<div class="grupo"><div class="grupo-hdr" style="background:'+lighten(g.cor)+'" onclick="toggleG(\''+g.id+'\')">';
+h+='<div class="grupo" data-tot="'+(gp+gr)+'"><div class="grupo-hdr" style="background:'+lighten(g.cor)+'" onclick="toggleG(\''+g.id+'\')">';
 h+='<div class="grupo-dot" style="background:'+g.cor+'"></div>';
 h+='<span class="grupo-nome">'+esc(g.nome)+'</span>';
 h+='<div class="grupo-totals"><span class="gt-val">Proj: <strong>'+R(gp)+'</strong></span><span class="gt-val">Real: <strong>'+R(gr)+'</strong></span></div>';
@@ -1049,6 +1052,10 @@ renderRascunhosList();
 }
 
 function savePDF(){
+var __pdfOpenBak__={setores:D.setores.map(function(s){return {id:s.id,open:s.open,lotes:s.lotes.map(function(l){return {id:l.id,open:l.open};})};}),grupos:D.grupos.map(function(g){return {id:g.id,open:g.open};})};
+D.setores.forEach(function(s){s.open=true;s.lotes.forEach(function(l){l.open=true;});});
+D.grupos.forEach(function(g){g.open=true;});
+render();
 document.querySelectorAll('.tab-pane').forEach(function(p){p.style.display='block';});
 var old=document.title;
 document.title='Viabilidade · '+(D.evento.nome||'Evento')+' · Axis';
@@ -1059,6 +1066,9 @@ document.title=old;
 document.querySelectorAll('.tab-pane').forEach(function(p){p.style.display='';});
 var a=document.querySelector('.tab-pane.active');
 if(a)a.style.display='block';
+D.setores.forEach(function(s){var b=__pdfOpenBak__.setores.find(function(x){return x.id===s.id;});if(b){s.open=b.open;s.lotes.forEach(function(l){var lb=b.lotes.find(function(x){return x.id===l.id;});if(lb)l.open=lb.open;});}});
+D.grupos.forEach(function(g){var b=__pdfOpenBak__.grupos.find(function(x){return x.id===g.id;});if(b)g.open=b.open;});
+render();
 },500);
 },200);
 }
