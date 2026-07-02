@@ -192,7 +192,7 @@ body{background:#fff;font-size:11px}
 .setor{break-inside:avoid}
 }
 
-#event-bar{background:var(--nav,#12122a);padding:8px 210px 8px 20px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:97;border-bottom:1px solid #2a2a4a;}
+#event-bar{display:none !important;}
 #event-bar label{color:#aaa;font-size:11px;white-space:nowrap;}
 #event-bar input[type=text]{background:#1e1e38;border:1px solid #444;color:#fff;padding:5px 10px;border-radius:6px;font-size:13px;width:220px;}
 #event-bar input[type=date]{background:#1e1e38;border:1px solid #444;color:#fff;padding:5px 10px;border-radius:6px;font-size:13px;width:155px;color-scheme:dark;}
@@ -507,7 +507,7 @@ body{background:#fff;font-size:11px}
 <script>
 var _id=1;
 function uid(){return 'u'+(Date.now()+_id++);}
-function R(v){return 'R$ '+Math.round(v||0).toLocaleString('pt-BR');}
+function R(v){return 'R$ '+(v||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});}
 function pct(v){return v.toFixed(1)+'%';}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function $(id){return document.getElementById(id);}
@@ -1092,9 +1092,9 @@ function openGoogleCalendar(){
 }
 
 function salvarEvento(){
-  var nome=(document.getElementById('input-nome')||{}).value||'';
+  var nome=(document.getElementById('ev-nome')||{}).value||'';
   nome=nome.trim();
-  var data=(document.getElementById('input-data')||{}).value||'';
+  var data=(document.getElementById('ev-data')||{}).value||'';
   if(!nome){alert('Preencha o nome do evento primeiro.');return;}
   if(!data){alert('Preencha a data do evento.');return;}
   var d=data.replace(/-/g,'');
