@@ -319,7 +319,7 @@ body{background:#fff;font-size:11px}
 <div class="totals"><span>Proj: <strong id="sh-op">R$ 0</strong></span><span>Real: <strong id="sh-or">R$ 0</strong></span></div>
 </div>
 <div class="section-body" style="padding:0">
-<div style="padding:10px 12px;background:#fff7ed;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-wrap:wrap"><span style="font-weight:600;font-size:12px;color:#9a3412">🍺 Receita de Bar (automática)</span><span style="font-size:11px;color:#78716c">R$/pessoa:</span><input type="text" inputmode="decimal" class="dec-input" id="bar-valor" style="width:70px" value="0" oninput="upBarValor(this.value)" data-fk="bar-valor"><button type="button" onclick="setBarPreset(12)" style="font-size:10px;padding:3px 6px;border-radius:4px;border:1px solid #d6d3d1;background:#fff;cursor:pointer">Teatro: R$12/pessoa</button><button type="button" onclick="setBarPreset(35)" style="font-size:10px;padding:3px 6px;border-radius:4px;border:1px solid #d6d3d1;background:#fff;cursor:pointer">Show: R$35/pessoa</button><span style="margin-left:auto;font-size:11px;color:#57534e">Baseado em ingressos projetados/realizados &middot; Proj: <strong id="bar-p">R$ 0</strong> &nbsp; Real: <strong id="bar-r">R$ 0</strong></span></div>
+<div style="padding:10px 12px;background:#fff7ed;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-wrap:wrap"><span style="font-weight:600;font-size:12px;color:#9a3412">🍺 Receita de Bar (automática)</span><span style="font-size:11px;color:#78716c">R$/pessoa:</span><input type="text" inputmode="decimal" class="dec-input" id="bar-valor" style="width:70px" value="0" oninput="upBarValor(this.value)" data-fk="bar-valor"><button type="button" onclick="setBarPreset(12)" style="font-size:10px;padding:3px 6px;border-radius:4px;border:1px solid #d6d3d1;background:#fff;cursor:pointer">Teatro: R$12/pessoa</button><button type="button" onclick="setBarPreset(35)" style="font-size:10px;padding:3px 6px;border-radius:4px;border:1px solid #d6d3d1;background:#fff;cursor:pointer">Show: R$35/pessoa</button><span style="margin-left:auto;font-size:11px;color:#57534e">Baseado em ingressos projetados/realizados &middot; Proj: <strong id="bar-p">R$ 0</strong> &nbsp; Real: <strong id="bar-r">R$ 0</strong></span></div><div style="padding:10px 12px;background:#fef9e7;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-weight:600;font-size:12px;color:#92400e">&#9881;&#65039; Taxa de Adm. do Bar (Axis):</span><input type="text" inputmode="decimal" class="dec-input" id="bar-admin-pct" style="width:50px" value="20" oninput="upBarAdminPct(this.value)" data-fk="bar-admin-pct">%<span style="font-size:11px;color:#78716c;margin-left:8px">Líquido do Bar: Proj <strong id="bar-net-p">R$ 0</strong> / Real <strong id="bar-net-r">R$ 0</strong></span><span style="flex-basis:100%;height:0"></span><span style="font-size:11px;color:#78716c">Divisão do líquido do bar (%): Axis</span><input type="text" inputmode="decimal" class="dec-input" id="bar-split-axis" style="width:45px" value="0" oninput="upBarSplit('axis',this.value)" data-fk="bar-split-axis"><span style="font-size:11px;color:#78716c">Artista</span><input type="text" inputmode="decimal" class="dec-input" id="bar-split-artista" style="width:45px" value="0" oninput="upBarSplit('artista',this.value)" data-fk="bar-split-artista"><span style="font-size:11px;color:#78716c">Parceiro</span><input type="text" inputmode="decimal" class="dec-input" id="bar-split-socio" style="width:45px" value="0" oninput="upBarSplit('socio',this.value)" data-fk="bar-split-socio"></div><div style="padding:10px 12px;background:#eef2ff;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-weight:600;font-size:12px;color:#3730a3">&#128179; Receita de Rebate (venda online):</span><input type="text" inputmode="decimal" class="dec-input" id="rebate-pct" style="width:50px" value="1" oninput="upRebatePct(this.value)" data-fk="rebate-pct">%<span style="font-size:11px;color:#78716c">sobre bilheteria bruta vendida online &middot; Proj: <strong id="rebate-p">R$ 0</strong> &nbsp; Real: <strong id="rebate-r">R$ 0</strong></span></div>
 <table class="outras-table" style="width:100%">
 <thead><tr>
 <th style="text-align:left">Fonte</th>
@@ -436,6 +436,8 @@ body{background:#fff;font-size:11px}
 <div><div style="color:var(--muted);text-transform:uppercase;font-weight:700;font-size:10px">Bilheteria Líquida</div><div style="display:flex;gap:16px"><span>Proj: <strong id="fe-blp">R$ 0</strong></span><span>Real: <strong id="fe-blr">R$ 0</strong></span></div></div>
 <div><div style="color:var(--muted);text-transform:uppercase;font-weight:700;font-size:10px">(−) Taxas + Custos Bruta</div><div style="display:flex;gap:16px"><span>Proj: <strong id="fe-dedp">R$ 0</strong></span><span>Real: <strong id="fe-dedr">R$ 0</strong></span></div></div>
 <div><div style="color:var(--muted);text-transform:uppercase;font-weight:700;font-size:10px">= Distribuível entre Partes</div><div style="display:flex;gap:16px"><span>Proj: <strong id="fe-distp">R$ 0</strong></span><span>Real: <strong id="fe-distr">R$ 0</strong></span></div></div>
+<div><div style="color:var(--muted);text-transform:uppercase;font-weight:700;font-size:10px">&#128176; Receita Líquida de Show</div><div style="display:flex;gap:16px"><span>Proj: <strong id="fe-liqshow-p">R$ 0</strong></span><span>Real: <strong id="fe-liqshow-r">R$ 0</strong></span></div></div>
+<div><div style="color:var(--muted);text-transform:uppercase;font-weight:700;font-size:10px">&#127866; Receita Líquida de Show + Bar</div><div style="display:flex;gap:16px"><span>Proj: <strong id="fe-liqshowbar-p">R$ 0</strong></span><span>Real: <strong id="fe-liqshowbar-r">R$ 0</strong></span></div></div>
 </div>
 <table class="outras-table" style="width:100%">
 <thead><tr>
@@ -522,7 +524,9 @@ function migrateTipos(p){(p.setores||[]).forEach(function(s){(s.lotes||[]).forEa
 function migrateTaxas(p){if(!p.taxas||!p.taxas.length){p.taxas=[{id:uid(),nome:'ISS',proj:0,real:0},{id:uid(),nome:'ECAD',proj:0,real:0},{id:uid(),nome:'Taxa Cartão',proj:0,real:0}];}}
 function migrateOrigem(p){(p.grupos||[]).forEach(function(g){(g.itens||[]).forEach(function(i){if(!i.origem)i.origem='bruta';});});}
 function migrateBar(p){if(typeof p.barValor!=='number')p.barValor=0;}
-function mkTipos(){return [{id:uid(),tipo:'Inteira',qp:0,val:0,qr:0,cort:false},{id:uid(),tipo:'Meia',qp:0,val:0,qr:0,cort:false},{id:uid(),tipo:'Promocional',qp:0,val:0,qr:0,cort:false},{id:uid(),tipo:'Cortesia',qp:0,val:0,qr:0,cort:true}];}
+function migrateOnline(p){(p.setores||[]).forEach(function(s){(s.lotes||[]).forEach(function(l){(l.tipos||[]).forEach(function(t){if(typeof t.onlinePct!=='number')t.onlinePct=0;});});});if(typeof p.rebatePct!=='number')p.rebatePct=1;}
+function migrateBarAdmin(p){if(typeof p.barAdminPct!=='number')p.barAdminPct=20;if(!p.barSplit)p.barSplit={axis:(p.split&&p.split.axis)||0,artista:(p.split&&p.split.artista)||0,socio:(p.split&&p.split.socio)||0};}
+function mkTipos(){return [{id:uid(),tipo:'Inteira',qp:0,val:0,qr:0,cort:false,onlinePct:0},{id:uid(),tipo:'Meia',qp:0,val:0,qr:0,cort:false,onlinePct:0},{id:uid(),tipo:'Promocional',qp:0,val:0,qr:0,cort:false,onlinePct:0},{id:uid(),tipo:'Cortesia',qp:0,val:0,qr:0,cort:true,onlinePct:0}];}
 function mkLote(nome){return {id:uid(),nome:nome,open:true,tipos:mkTipos()};}
 function mkSetor(nome){return {id:uid(),nome:nome,open:true,lotes:[mkLote('Lote 1')]};}
 function mkItem(desc){return {id:uid(),desc:desc,proj:0,real:0,origem:'bruta'};}
@@ -561,6 +565,8 @@ migrateTipos(p);
 migrateTaxas(p);
 migrateOrigem(p);
 migrateBar(p);
+migrateOnline(p);
+migrateBarAdmin(p);
 return p;
 }
 }catch(e){}
@@ -569,17 +575,27 @@ return deepClone(DEFAULTS);
 var GC=null;
 
 function calc(){
-var bp=0,br=0,pp=0,pr=0,cortP=0;
+var bp=0,br=0,pp=0,pr=0,cortP=0,onlineBrutoP=0,onlineBrutoR=0;
 D.setores.forEach(function(s){s.lotes.forEach(function(l){l.tipos.forEach(function(t){
 if(t.cort||t.tipo==='Cortesia'){cortP+=t.qp;}
-else{bp+=t.qp*t.val;br+=t.qr*t.val;pp+=t.qp;pr+=t.qr;}
+else{bp+=t.qp*t.val;br+=t.qr*t.val;pp+=t.qp;pr+=t.qr;onlineBrutoP+=t.qp*t.val*(t.onlinePct||0)/100;onlineBrutoR+=t.qr*t.val*(t.onlinePct||0)/100;}
 });});});
 var dp=0,dr=0;
 (D.descontos||[]).forEach(function(d){dp+=d.proj||0;dr+=d.real||0;});
 var blp=bp-dp,blr=br-dr;
 var sp=D.split||{axis:100,artista:0,socio:0};
 var op=0,or_=0;D.outras.forEach(function(o){op+=o.proj;or_+=o.real;});
-var barP=pp*(D.barValor||0),barR=pr*(D.barValor||0);op+=barP;or_+=barR;
+var rebatePct=(D.rebatePct==null?1:D.rebatePct);
+var rebateP=onlineBrutoP*rebatePct/100,rebateR=onlineBrutoR*rebatePct/100;
+op+=rebateP;or_+=rebateR;
+var barGrossP=pp*(D.barValor||0),barGrossR=pr*(D.barValor||0);
+op+=barGrossP;or_+=barGrossR;
+var barAdminPct=(D.barAdminPct==null?20:D.barAdminPct);
+var barAdminP=barGrossP*barAdminPct/100,barAdminR=barGrossR*barAdminPct/100;
+var barNetP=barGrossP-barAdminP,barNetR=barGrossR-barAdminR;
+var bs=D.barSplit||{axis:0,artista:0,socio:0};
+var barSplitAxisP=barNetP*(bs.axis||0)/100,barSplitArtP=barNetP*(bs.artista||0)/100,barSplitSocP=barNetP*(bs.socio||0)/100;
+var barSplitAxisR=barNetR*(bs.axis||0)/100,barSplitArtR=barNetR*(bs.artista||0)/100,barSplitSocR=barNetR*(bs.socio||0)/100;
 var txp=0,txr=0;D.taxas.forEach(function(tx){txp+=(tx.proj||0);txr+=(tx.real||0);});
 var mp=0,mr=0,cbP=0,cbR=0,caP=0,caR=0,ctP=0,ctR=0,csP=0,csR=0;
 D.grupos.forEach(function(g){g.itens.forEach(function(i){
@@ -593,11 +609,13 @@ else if(og==='axis_socio'){var totAS=(sp.axis||0)+(sp.socio||0);var fAS=totAS>0?
 else{cbP+=i.proj;cbR+=i.real;}
 });});
 var distP=blp-txp-cbP,distR=blr-txr-cbR;
+var receitaLiqShowP=distP,receitaLiqShowR=distR;
 var splitAxisP=distP*(sp.axis||0)/100,splitArtP=distP*(sp.artista||0)/100,splitSocP=distP*(sp.socio||0)/100;
 var splitAxisR=distR*(sp.axis||0)/100,splitArtR=distR*(sp.artista||0)/100,splitSocR=distR*(sp.socio||0)/100;
 var splitTotal=(sp.axis||0)+(sp.artista||0)+(sp.socio||0);
-var lucroAxisP=splitAxisP-caP,lucroArtP=splitArtP-ctP,lucroSocP=splitSocP-csP;
-var lucroAxisR=splitAxisR-caR,lucroArtR=splitArtR-ctR,lucroSocR=splitSocR-csR;
+var lucroAxisP=splitAxisP-caP+barAdminP+barSplitAxisP,lucroArtP=splitArtP-ctP+barSplitArtP,lucroSocP=splitSocP-csP+barSplitSocP;
+var lucroAxisR=splitAxisR-caR+barAdminR+barSplitAxisR,lucroArtR=splitArtR-ctR+barSplitArtR,lucroSocR=splitSocR-csR+barSplitSocR;
+var receitaLiqShowBarP=receitaLiqShowP+barNetP,receitaLiqShowBarR=receitaLiqShowR+barNetR;
 var rp=bp+op,rr=br+or_;
 var rlp=rp-txp,rlr=rr-txr;
 var cp=mp+txp,cr=mr+txr;
@@ -607,7 +625,7 @@ var beT=tm>0?cp/tm:0;
 var cap=D.evento.cap||(pp+cortP)||1;
 var bePct=beT/cap*100;
 var projOcc=pp/cap*100;
-return {bp,br,pp,pr,cortP,dp,dr,blp,blr,splitAxisP,splitArtP,splitSocP,splitAxisR,splitArtR,splitSocR,splitTotal,op,or_,txp,txr,rp,rr,rlp,rlr,mp,mr,cp,cr,resp,resr,tm,beT,bePct,projOcc,cap,cbP,cbR,caP,caR,ctP,ctR,csP,csR,distP,distR,lucroAxisP,lucroArtP,lucroSocP,lucroAxisR,lucroArtR,lucroSocR,barP,barR};
+return {bp,br,pp,pr,cortP,dp,dr,blp,blr,splitAxisP,splitArtP,splitSocP,splitAxisR,splitArtR,splitSocR,splitTotal,op,or_,txp,txr,rp,rr,rlp,rlr,mp,mr,cp,cr,resp,resr,tm,beT,bePct,projOcc,cap,cbP,cbR,caP,caR,ctP,ctR,csP,csR,distP,distR,lucroAxisP,lucroArtP,lucroSocP,lucroAxisR,lucroArtR,lucroSocR,onlineBrutoP,onlineBrutoR,rebateP,rebateR,barGrossP,barGrossR,barAdminP,barAdminR,barNetP,barNetR,barSplitAxisP,barSplitArtP,barSplitSocP,barSplitAxisR,barSplitArtR,barSplitSocR,receitaLiqShowP,receitaLiqShowR,receitaLiqShowBarP,receitaLiqShowBarR};
 }
 
 function render(){
@@ -663,6 +681,7 @@ var isCort=!!(t.cort||t.tipo==='Cortesia');
 var tp=isCort?0:t.qp*t.val,tr_=isCort?0:t.qr*t.val;
 h+='<tr><td><input type="text" class="tipo-name-input" value="'+esc(t.tipo)+'" oninput="renameTipo(\''+s.id+'\',\''+l.id+'\',\''+t.id+'\',this.value)" data-fk="tn_'+t.id+'">';
 h+='<label class="cort-chk" style="display:block;font-size:10px;color:var(--muted);margin-top:2px"><input type="checkbox" '+(isCort?'checked':'')+' onchange="toggleCort(\''+s.id+'\',\''+l.id+'\',\''+t.id+'\',this.checked)"> cortesia (sem receita)</label>';
+h+='<div style="font-size:10px;color:var(--muted);margin-top:2px;display:flex;align-items:center;gap:3px"><span>% Online:</span><input type="text" inputmode="decimal" class="dec-input" style="width:40px;padding:1px 3px;font-size:10px" value="'+numStr(t.onlinePct||0)+'" oninput="upT(\''+s.id+'\',\''+l.id+'\',\''+t.id+'\',\'onlinePct\',this.value)" data-fk="onl_'+t.id+'"></div>';
 h+='</td>';
 h+='<td style="background:#f8fbff"><input type="text" inputmode="decimal" class="dec-input" value="'+numStr(t.qp)+'" oninput="upT(\''+s.id+'\',\''+l.id+'\',\''+t.id+'\',\'qp\',this.value)" data-fk="qp_'+t.id+'"></td>';
 if(!isCort){
@@ -732,7 +751,14 @@ $('outras-ct').innerHTML=h;
 if($('outras-ct-interno'))$('outras-ct-interno').innerHTML=h;
 set('sh-op',R(c.op));set('sh-or',R(c.or_));
 var bv=$('bar-valor');if(bv&&document.activeElement!==bv)bv.value=numStr(D.barValor||0);
-set('bar-p',R(c.barP));set('bar-r',R(c.barR));
+set('bar-p',R(c.barGrossP));set('bar-r',R(c.barGrossR));
+var bap=$('bar-admin-pct');if(bap&&document.activeElement!==bap)bap.value=numStr(D.barAdminPct==null?20:D.barAdminPct);
+set('bar-net-p',R(c.barNetP));set('bar-net-r',R(c.barNetR));
+var bsa=$('bar-split-axis');if(bsa&&document.activeElement!==bsa)bsa.value=numStr((D.barSplit&&D.barSplit.axis)||0);
+var bsart=$('bar-split-artista');if(bsart&&document.activeElement!==bsart)bsart.value=numStr((D.barSplit&&D.barSplit.artista)||0);
+var bsso=$('bar-split-socio');if(bsso&&document.activeElement!==bsso)bsso.value=numStr((D.barSplit&&D.barSplit.socio)||0);
+var rpEl=$('rebate-pct');if(rpEl&&document.activeElement!==rpEl)rpEl.value=numStr(D.rebatePct==null?1:D.rebatePct);
+set('rebate-p',R(c.rebateP));set('rebate-r',R(c.rebateR));
 }
 
 function renderDeducoes(c){
@@ -855,8 +881,11 @@ if($('fech-empresa-ct'))$('fech-empresa-ct').innerHTML=h;
 set('fe-blp',R(c.blp));set('fe-blr',R(c.blr));
 set('fe-dedp',R(c.txp+c.cbP));set('fe-dedr',R(c.txr+c.cbR));
 set('fe-distp',R(c.distP));set('fe-distr',R(c.distR));
-var receitaTotalP=c.splitAxisP+c.op,receitaTotalR=c.splitAxisR+c.or_;
-var resultP=c.lucroAxisP+c.op,resultR=c.lucroAxisR+c.or_;
+set('fe-liqshow-p',R(c.receitaLiqShowP));set('fe-liqshow-r',R(c.receitaLiqShowR));
+set('fe-liqshowbar-p',R(c.receitaLiqShowBarP));set('fe-liqshowbar-r',R(c.receitaLiqShowBarR));
+var opNonBarP=c.op-c.barGrossP,opNonBarR=c.or_-c.barGrossR;
+var receitaTotalP=c.splitAxisP+c.barAdminP+c.barSplitAxisP+opNonBarP,receitaTotalR=c.splitAxisR+c.barAdminR+c.barSplitAxisR+opNonBarR;
+var resultP=c.lucroAxisP+opNonBarP,resultR=c.lucroAxisR+opNonBarR;
 set('fi-receita-p',R(receitaTotalP));set('fi-receita-r',R(receitaTotalR));
 set('fi-custo-p',R(c.caP));set('fi-custo-r',R(c.caR));
 var frp=$('fi-result-p');if(frp){frp.textContent=R(resultP);frp.style.color=resultP>=0?'#16a34a':'#dc2626';}
@@ -898,6 +927,9 @@ function upO(id,f,v){var o=D.outras.find(function(x){return x.id===id;});if(o){o
 function outraNm(id,v){var o=D.outras.find(function(x){return x.id===id;});if(o){o.nome=v;sv();}}
 function upBarValor(v){D.barValor=parseBR(v);renderPreserve();}
 function setBarPreset(v){D.barValor=v;render();}
+function upBarAdminPct(v){D.barAdminPct=parseBR(v);renderPreserve();}
+function upBarSplit(k,v){if(!D.barSplit)D.barSplit={axis:0,artista:0,socio:0};D.barSplit[k]=parseBR(v);renderPreserve();}
+function upRebatePct(v){D.rebatePct=parseBR(v);renderPreserve();}
 function addTaxa(){D.taxas.push({id:uid(),nome:'Nova Taxa',proj:0,real:0});render();}
 function delTaxa(id){D.taxas=D.taxas.filter(function(t){return t.id!==id;});render();}
 function upTaxa(id,f,v){var t=D.taxas.find(function(x){return x.id===id;});if(t){t[f]=parseBR(v);renderPreserve();}}
