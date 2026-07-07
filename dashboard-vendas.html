@@ -123,6 +123,9 @@ footer { text-align: center; color: var(--muted); font-size: 12px; padding: 24px
 .report-stat .lbl { font-size:10px; color:var(--muted); text-transform:uppercase; margin-top:4px; }
 .report-section-title { font-size:13px; font-weight:700; text-transform:uppercase; color:var(--muted); margin:20px 0 10px; letter-spacing:0.5px; }
 .report-footer-note { text-align:center; color:var(--muted); font-size:11px; margin-top:28px; padding-top:16px; border-top:1px solid var(--border); }
+.report-notes-wrap { margin-top:20px; }
+.report-notes { width:100%; min-height:120px; padding:12px; border:1px solid var(--border); border-radius:8px; background:var(--surface2); color:var(--text); font-family:inherit; font-size:14px; line-height:1.5; resize:vertical; }
+.report-notes-print { display:none; white-space:pre-wrap; font-size:13px; line-height:1.6; padding:12px; border:1px solid var(--border); border-radius:8px; }
 
 @media print {
   body * { visibility:hidden; }
@@ -132,6 +135,8 @@ footer { text-align: center; color: var(--muted); font-size: 12px; padding: 24px
   #reportOutput .report-stat { background:#f2f2f2 !important; }
   #reportOutput .val, #reportOutput .report-title { color:#000 !important; }
   #reportOutput .lbl, #reportOutput .report-meta, #reportOutput .report-date, #reportOutput .report-footer-note, #reportOutput .report-section-title { color:#555 !important; }
+  #reportOutput .report-notes { display:none; }
+  #reportOutput .report-notes-print { display:block; }
 }
 
 </style>
@@ -846,7 +851,23 @@ function renderReport(ev){
     + '<div class="report-section-title">Métricas de Vendas</div>'
     + '<div class="report-grid">' + statsHtml + '</div>'
     + breakevenHtml
+    + '<div class="report-section-title">Observações para o Produtor</div>'
+    + '<div class="report-notes-wrap">'
+    + '<textarea id="reportNotes" class="report-notes" placeholder="Escreva aqui observações sobre o evento para o produtor..."></textarea>'
+    + '<div id="reportNotesPrint" class="report-notes-print"></div>'
+    + '</div>'
     + '<div class="report-footer-note">Axis Entretenimento · Relatório de Evento · Gerado automaticamente a partir do Dashboard Comercial</div>';
+
+  var notesKey = 'axis_report_notes::' + ev.name.trim();
+  var notesArea = document.getElementById('reportNotes');
+  var notesPrint = document.getElementById('reportNotesPrint');
+  var savedNote = localStorage.getItem(notesKey) || '';
+  notesArea.value = savedNote;
+  notesPrint.textContent = savedNote || '—';
+  notesArea.addEventListener('input', function(){
+    localStorage.setItem(notesKey, notesArea.value);
+    notesPrint.textContent = notesArea.value || '—';
+  });
 }
 
 var select = document.getElementById('reportEventSelect');
