@@ -4,12 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard de Vendas — Axis Entretenimento</title>
+<link rel="icon" type="image/png" href="assets/axis-favicon.png">
 <style>
 :root {
---bg: #0f1117; --surface: #1a1d2e; --surface2: #252840;
---accent: #6c63ff; --accent2: #ff6584; --green: #43e97b;
---yellow: #f7971e; --red: #f64f59; --text: #e8eaf6;
---muted: #9098b1; --border: #2d3154;
+--bg: #0a0a0a; --surface: #161616; --surface2: #202020;
+--accent: #e4212f; --accent2: #ff4d5e; --green: #43e97b;
+--yellow: #f7971e; --red: #e4212f; --text: #f5f5f5;
+--muted: #9a9a9a; --border: #2a2a2a;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; font-size: 14px; }
@@ -17,14 +18,16 @@ a { color: var(--accent); text-decoration: none; }
 
 /* HEADER */
 .header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; align-items: center; justify-content: space-between; }
-.header-brand { font-size: 18px; font-weight: 700; color: var(--text); }
+.header-brand { font-size: 18px; font-weight: 700; color: var(--text); display: flex; align-items: center; }
 .header-brand span { color: var(--accent); }
+.header-logo { height: 34px; display: block; }
 .header-meta { color: var(--muted); font-size: 12px; text-align: right; }
 .header-links { display: flex; gap: 12px; }
 .plat-link { padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; border: 1px solid; }
 .plat-t360 { color: #00d4ff; border-color: #00d4ff33; background: #00d4ff11; }
 .plat-be { color: #ff9f43; border-color: #ff9f4333; background: #ff9f4311; }
 .plat-id { color: #43e97b; border-color: #43e97b33; background: #43e97b11; }
+.plat-icones { color: #c77dff; border-color: #c77dff33; background: #c77dff11; }
 
 /* LAYOUT */
 .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
@@ -44,7 +47,7 @@ a { color: var(--accent); text-decoration: none; }
 .progress-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-bottom: 6px; }
 .progress-bar { background: var(--border); border-radius: 4px; height: 8px; }
 .progress-fill { height: 8px; border-radius: 4px; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
-.pace-alert { background: #f64f5911; border: 1px solid #f64f5933; color: var(--red); border-radius: 8px; padding: 10px 14px; font-size: 13px; margin-top: 14px; }
+.pace-alert { background: #e4212f11; border: 1px solid #e4212f33; color: var(--red); border-radius: 8px; padding: 10px 14px; font-size: 13px; margin-top: 14px; }
 
 /* BREAKEVEN */
 .breakeven-bar { margin-top: 16px; background: var(--bg); border-radius: 10px; padding: 16px; border: 1px solid #f7971e33; }
@@ -52,7 +55,7 @@ a { color: var(--accent); text-decoration: none; }
 .breakeven-bar .be-title { font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--yellow); letter-spacing: 0.5px; }
 .breakeven-bar .be-value { font-size: 13px; color: var(--muted); }
 .breakeven-bar .be-value strong { color: var(--text); }
-.breakeven-fill { height: 10px; border-radius: 5px; background: linear-gradient(90deg, #f7971e, #f64f59); }
+.breakeven-fill { height: 10px; border-radius: 5px; background: linear-gradient(90deg, #f7971e, #e4212f); }
 .breakeven-sub { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-top: 8px; }
 .breakeven-sub .falta { color: var(--red); font-weight: 700; }
 
@@ -75,6 +78,7 @@ a { color: var(--accent); text-decoration: none; }
 .badge-t360 { background: #00d4ff22; color: #00d4ff; }
 .badge-be { background: #ff9f4322; color: #ff9f43; }
 .badge-id { background: #43e97b22; color: #43e97b; }
+.badge-icones { background: #c77dff22; color: #c77dff; }
 
 /* TABLE */
 .tbl-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid var(--border); }
@@ -91,7 +95,7 @@ tr:hover td { background: #ffffff06; }
 .status-futuro { color: var(--yellow); font-size: 11px; font-weight: 700; }
 .event-name { font-weight: 600; }
 .event-date { font-size: 11px; color: var(--muted); }
-.highlight-row td { border-left: 3px solid var(--accent); background: #6c63ff08; }
+.highlight-row td { border-left: 3px solid var(--accent); background: #e4212f08; }
 
 /* FOOTER */
 footer { text-align: center; color: var(--muted); font-size: 12px; padding: 24px; border-top: 1px solid var(--border); }
@@ -101,7 +105,7 @@ footer { text-align: center; color: var(--muted); font-size: 12px; padding: 24px
 
 <header class="header">
 <div>
-<div class="header-brand"><span>AXIS</span> ENTRETENIMENTO</div>
+<div class="header-brand"><img src="assets/axis-logo.png" alt="Axis Entretenimento" class="header-logo"></div>
 <div style="font-size:12px;color:var(--muted);">Dashboard Comercial</div>
 </div>
 <div class="header-links">
@@ -111,7 +115,7 @@ footer { text-align: center; color: var(--muted); font-size: 12px; padding: 24px
 <a href="https://produtor.icones.com.br" target="_blank" class="plat-link plat-icones">Ícones</a>
 </div>
 <div class="header-meta">
-Atualizado em 07/07/2026 08:20<br>
+Atualizado em 07/07/2026 09:08<br>
 <span style="color:var(--green)">● Dados frescos de hoje</span>
 </div>
 </header>
