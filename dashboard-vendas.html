@@ -99,6 +99,41 @@ tr:hover td { background: #ffffff06; }
 
 /* FOOTER */
 footer { text-align: center; color: var(--muted); font-size: 12px; padding: 24px; border-top: 1px solid var(--border); }
+/* TAB NAV */
+.tab-nav { display:flex; gap:8px; padding:10px 24px; background:var(--surface); border-bottom:1px solid var(--border); }
+.tab-btn { background:transparent; border:1px solid var(--border); color:var(--muted); padding:6px 16px; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; }
+.tab-btn.active { background:var(--accent); border-color:var(--accent); color:#fff; }
+
+/* REPORT VIEW */
+.report-toolbar { display:flex; align-items:flex-end; gap:16px; margin-bottom:24px; flex-wrap:wrap; }
+.report-toolbar label { font-size:12px; color:var(--muted); display:block; margin-bottom:6px; }
+.report-select { background:var(--surface); color:var(--text); border:1px solid var(--border); border-radius:6px; padding:8px 12px; font-size:14px; min-width:320px; }
+.report-print-btn { background:var(--accent); color:#fff; border:none; border-radius:6px; padding:10px 20px; font-size:13px; font-weight:700; cursor:pointer; font-family:inherit; }
+.report-print-btn:hover { opacity:0.9; }
+.report-empty { color:var(--muted); text-align:center; padding:60px 20px; }
+.report-card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:32px; max-width:800px; margin:0 auto; }
+.report-header { display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid var(--accent); padding-bottom:16px; margin-bottom:24px; }
+.report-header img { height:44px; }
+.report-header .report-date { color:var(--muted); font-size:12px; text-align:right; }
+.report-title { font-size:22px; font-weight:700; margin-bottom:4px; }
+.report-meta { color:var(--muted); font-size:13px; margin-bottom:8px; }
+.report-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:14px; margin-bottom:8px; }
+.report-stat { background:var(--bg); border-radius:8px; padding:14px; text-align:center; }
+.report-stat .val { font-size:20px; font-weight:700; }
+.report-stat .lbl { font-size:10px; color:var(--muted); text-transform:uppercase; margin-top:4px; }
+.report-section-title { font-size:13px; font-weight:700; text-transform:uppercase; color:var(--muted); margin:20px 0 10px; letter-spacing:0.5px; }
+.report-footer-note { text-align:center; color:var(--muted); font-size:11px; margin-top:28px; padding-top:16px; border-top:1px solid var(--border); }
+
+@media print {
+  body * { visibility:hidden; }
+  #reportOutput, #reportOutput * { visibility:visible; }
+  #reportOutput { position:absolute; left:0; top:0; width:100%; border:none; max-width:none; }
+  #reportOutput { background:#fff !important; color:#000 !important; }
+  #reportOutput .report-stat { background:#f2f2f2 !important; }
+  #reportOutput .val, #reportOutput .report-title { color:#000 !important; }
+  #reportOutput .lbl, #reportOutput .report-meta, #reportOutput .report-date, #reportOutput .report-footer-note, #reportOutput .report-section-title { color:#555 !important; }
+}
+
 </style>
 </head>
 <body>
@@ -120,7 +155,13 @@ Atualizado em 07/07/2026 09:08<br>
 </div>
 </header>
 
+<div class="tab-nav">
+<button id="tabDashboard" class="tab-btn active" type="button">📊 Dashboard</button>
+<button id="tabReport" class="tab-btn" type="button">📄 Relatório</button>
+</div>
+
 <div class="container">
+<div id="viewDashboard">
 
 <!-- BELO IN CONCERT HERO -->
 <div class="belo-hero">
@@ -666,6 +707,23 @@ Atualizado em 07/07/2026 09:08<br>
 
 </div>
 
+<div id="viewReport" style="display:none">
+<div class="report-toolbar">
+<div>
+<label for="reportEventSelect">Selecione o evento</label>
+<select id="reportEventSelect" class="report-select">
+<option value="">— Escolha um evento —</option>
+</select>
+</div>
+<button id="reportPrintBtn" class="report-print-btn" type="button">🖨️ Imprimir / Salvar PDF</button>
+</div>
+<div id="reportOutput" class="report-card">
+<div class="report-empty">Selecione um evento acima para gerar o relatório.</div>
+</div>
+</div>
+
+</div>
+
 <footer>
 Axis Entretenimento · Dashboard Comercial · Atualizado em 07/07/2026 às
 <script>document.write(new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}))</script>
@@ -674,4 +732,161 @@ Axis Entretenimento · Dashboard Comercial · Atualizado em 07/07/2026 às
 
 
   
+
+<script>
+(function(){
+function textOf(el){ return el ? el.textContent.trim() : ''; }
+
+function getSectionTable(headingText){
+  var headers = Array.prototype.slice.call(document.querySelectorAll('.section-header h3'));
+  var h3 = headers.find(function(h){ return h.textContent.trim() === headingText; });
+  if (!h3) return null;
+  return h3.closest('.section').querySelector('table');
+}
+
+function parseGenericRows(table, platform, colMap){
+  if (!table) return [];
+  var rows = table.querySelectorAll('tbody tr');
+  var out = [];
+  rows.forEach(function(tr){
+    var nameEl = tr.querySelector('.event-name');
+    if (!nameEl) return;
+    var tds = tr.querySelectorAll('td');
+    var ev = { platform: platform, name: textOf(nameEl) };
+    ev.date = textOf(tr.querySelector('.event-date'));
+    ev.local = tds[2] ? tds[2].textContent.trim() : '';
+    var statusEl = tr.querySelector('td span[class^="status-"]');
+    ev.status = textOf(statusEl);
+    Object.keys(colMap).forEach(function(key){
+      var idx = colMap[key];
+      ev[key] = tds[idx] ? tds[idx].textContent.trim() : undefined;
+    });
+    out.push(ev);
+  });
+  return out;
+}
+
+var EVENTS = [];
+EVENTS = EVENTS.concat(parseGenericRows(getSectionTable('Ticket360'), 'Ticket360', {
+  vendas:4, cortesias:5, total:6, ontem:7, hoje:8, arrecadado:9, tm:10, mediaDia:11
+}));
+EVENTS = EVENTS.concat(parseGenericRows(getSectionTable('Bilheteria Express'), 'Bilheteria Express', {
+  vendas:4, ontem:5, hoje:6, arrecadado:7, tm:8, capacidade:9, mediaDia:10
+}));
+EVENTS = EVENTS.concat(parseGenericRows(getSectionTable('Ícones'), 'Ícones', {
+  vendas:4, cortesias:5, total:6, ontem:7, hoje:8, arrecadado:9
+}));
+
+(function(){
+  var table = getSectionTable('Ingresso Digital');
+  if (!table) return;
+  var rows = table.querySelectorAll('tbody tr');
+  rows.forEach(function(tr){
+    var tds = tr.querySelectorAll('td');
+    if (tds.length < 8) return;
+    var nameEl = tr.querySelector('.event-name');
+    var name = nameEl ? nameEl.textContent.trim() : (tds[0] ? tds[0].textContent.trim() : '');
+    if (!name || name.indexOf('Nenhum evento') !== -1) return;
+    EVENTS.push({
+      platform: 'Ingresso Digital', name: name,
+      date: textOf(tr.querySelector('.event-date')) || (tds[1] ? tds[1].textContent.trim() : ''),
+      local: tds[2] ? tds[2].textContent.trim() : '',
+      status: '',
+      pdv: tds[3] ? tds[3].textContent.trim() : undefined,
+      online: tds[4] ? tds[4].textContent.trim() : undefined,
+      total: tds[5] ? tds[5].textContent.trim() : undefined,
+      arrecadado: tds[6] ? tds[6].textContent.trim() : undefined,
+      tm: tds[7] ? tds[7].textContent.trim() : undefined,
+      mediaDia: tds[8] ? tds[8].textContent.trim() : undefined
+    });
+  });
+})();
+
+var BELO_STATS = {};
+document.querySelectorAll('.belo-stat').forEach(function(el){
+  var val = textOf(el.querySelector('.val'));
+  var lbl = textOf(el.querySelector('.lbl'));
+  if (lbl) BELO_STATS[lbl] = val;
+});
+
+function renderReport(ev){
+  var isBelo = ev.name.trim() === 'Belo In Concert';
+  var breakevenHtml = '';
+  if (isBelo){
+    breakevenHtml = ''
+      + '<div class="report-section-title">Breakeven</div>'
+      + '<div class="report-grid">'
+      + '<div class="report-stat"><div class="val">' + (BELO_STATS['Meta de Ingressos']||'—') + '</div><div class="lbl">Meta de Ingressos</div></div>'
+      + '<div class="report-stat"><div class="val">' + (BELO_STATS['Restam a Vender']||'—') + '</div><div class="lbl">Restam a Vender</div></div>'
+      + '<div class="report-stat"><div class="val">' + (BELO_STATS['Meta Diária Necessária']||'—') + '</div><div class="lbl">Meta Diária (ingressos)</div></div>'
+      + '<div class="report-stat"><div class="val">' + (BELO_STATS['Falta p/ Breakeven']||'—') + '</div><div class="lbl">Falta p/ Breakeven</div></div>'
+      + '<div class="report-stat"><div class="val">' + (BELO_STATS['Meta Diária (R$)']||'—') + '</div><div class="lbl">Meta Diária (R$)</div></div>'
+      + '</div>';
+  }
+
+  var fieldLabels = { vendas:'Vendas', cortesias:'Cortesias', total:'Total', pdv:'PDV', online:'Online', ontem:'Ontem', hoje:'Hoje', arrecadado:'Arrecadado', tm:'Ticket Médio', mediaDia:'Média/dia', capacidade:'Capacidade' };
+  var order = ['vendas','cortesias','total','pdv','online','ontem','hoje','arrecadado','tm','mediaDia','capacidade'];
+  var statsHtml = order.filter(function(k){ return ev[k] !== undefined; }).map(function(k){
+    return '<div class="report-stat"><div class="val">' + ev[k] + '</div><div class="lbl">' + fieldLabels[k] + '</div></div>';
+  }).join('');
+
+  var metaParts = [];
+  if (ev.date) metaParts.push('Data: ' + ev.date);
+  if (ev.local) metaParts.push('Local: ' + ev.local);
+  if (ev.status) metaParts.push('Status: ' + ev.status);
+  metaParts.push('Plataforma: ' + ev.platform);
+
+  document.getElementById('reportOutput').innerHTML = ''
+    + '<div class="report-header">'
+    + '<img src="assets/axis-logo.png" alt="Axis">'
+    + '<div class="report-date">Relatório gerado em<br>' + new Date().toLocaleString('pt-BR') + '</div>'
+    + '</div>'
+    + '<div class="report-title">' + ev.name + '</div>'
+    + '<div class="report-meta">' + metaParts.join(' &nbsp;·&nbsp; ') + '</div>'
+    + '<div class="report-section-title">Métricas de Vendas</div>'
+    + '<div class="report-grid">' + statsHtml + '</div>'
+    + breakevenHtml
+    + '<div class="report-footer-note">Axis Entretenimento · Relatório de Evento · Gerado automaticamente a partir do Dashboard Comercial</div>';
+}
+
+var select = document.getElementById('reportEventSelect');
+var groups = {};
+var order2 = [];
+EVENTS.forEach(function(ev, idx){
+  if (!groups[ev.platform]) { groups[ev.platform] = []; order2.push(ev.platform); }
+  groups[ev.platform].push(idx);
+});
+order2.forEach(function(platform){
+  var og = document.createElement('optgroup');
+  og.label = platform;
+  groups[platform].forEach(function(idx){
+    var opt = document.createElement('option');
+    opt.value = idx;
+    opt.textContent = EVENTS[idx].name + (EVENTS[idx].date ? ' — ' + EVENTS[idx].date : '');
+    og.appendChild(opt);
+  });
+  select.appendChild(og);
+});
+
+select.addEventListener('change', function(){
+  if (select.value === '') {
+    document.getElementById('reportOutput').innerHTML = '<div class="report-empty">Selecione um evento acima para gerar o relatório.</div>';
+    return;
+  }
+  renderReport(EVENTS[parseInt(select.value,10)]);
+});
+
+document.getElementById('reportPrintBtn').addEventListener('click', function(){ window.print(); });
+
+function showView(view){
+  document.getElementById('viewDashboard').style.display = view==='dashboard' ? '' : 'none';
+  document.getElementById('viewReport').style.display = view==='report' ? '' : 'none';
+  document.getElementById('tabDashboard').classList.toggle('active', view==='dashboard');
+  document.getElementById('tabReport').classList.toggle('active', view==='report');
+}
+document.getElementById('tabDashboard').addEventListener('click', function(){ showView('dashboard'); });
+document.getElementById('tabReport').addEventListener('click', function(){ showView('report'); });
+})();
+</script>
+
 </body></html>
