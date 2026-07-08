@@ -81,7 +81,7 @@ if(ef&&!ef._rescued){ef._rescued=true;ef.style.cssText='position:fixed;top:46px;
 el.style.display='none';
 }
 });
-['#kpis','#summary','#tabs'].forEach(function(sel){var el=doc.querySelector(sel);if(el)el.style.top='0';});
+['#kpis','#summary','#tabs'].forEach(function(sel){var el=doc.querySelector(sel);if(el){var fe=doc.body.querySelectorAll('.header-btns,.evento-fields');var mb=0;fe.forEach(function(x){var r=x.getBoundingClientRect();if(r.bottom>mb)mb=r.bottom;});el.style.top=(mb>0?(mb+8):0)+'px';}});function _recalcStickyOffsets(name){try{var d=document.getElementById('fr-'+name).contentDocument;['#kpis','#summary','#tabs'].forEach(function(sel){var el=d.querySelector(sel);if(el){var fe=d.body.querySelectorAll('.header-btns,.evento-fields');var mb=0;fe.forEach(function(x){var r=x.getBoundingClientRect();if(r.bottom>mb)mb=r.bottom;});el.style.top=(mb>0?(mb+8):0)+'px';}});}catch(e){}}window.addEventListener('resize',function(){Object.keys(_loaded).forEach(function(n){if(_loaded[n])_recalcStickyOffsets(n);});});
 var frames=doc.querySelector('#frames');
 if(frames)frames.style.top='0';
 }catch(e){}
