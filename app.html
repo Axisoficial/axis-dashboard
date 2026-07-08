@@ -44,7 +44,8 @@ iframe{width:100%;height:100%;border:none}
 <div id="frames">
 <div class="frame-wrap active" id="fw-dashboard"><div class="loading-overlay" id="ld-dashboard"><div class="spinner"></div><p>Carregando Dashboard...</p></div><iframe id="fr-dashboard" src="dashboard-vendas.html?v=20260702" onload="frameLoaded('dashboard')"></iframe></div>
       <div id="fw-agenciamento" class="frame-wrap">
-        <iframe src="./viabilidade-agenciamento.html" onload="hideLoader(this)" style="width:100%;height:100%;border:none;" allowfullscreen></iframe>
+        <div class="loading-overlay" id="ld-agenciamento"><div class="spinner"></div><p>Carregando Agenciamento...</p></div>
+        <iframe id="fr-agenciamento" src="./viabilidade-agenciamento.html" onload="_loaded['agenciamento']=true;var ld=document.getElementById('ld-agenciamento');if(ld)ld.classList.add('hidden');" style="width:100%;height:100%;border:none;" allowfullscreen></iframe>
       </div>
 <div class="frame-wrap" id="fw-custos"><div class="loading-overlay" id="ld-custos"><div class="spinner"></div><p>Carregando Custos...</p></div><iframe id="fr-custos" src="custos.html" onload="frameLoaded('custos')"></iframe></div>
 <div class="frame-wrap" id="fw-viabilidade"><div class="loading-overlay" id="ld-viabilidade"><div class="spinner"></div><p>Carregando Viabilidade...</p></div><iframe id="fr-viabilidade" src="viabilidade.html?v=17" onload="frameLoaded('viabilidade')"></iframe></div>
