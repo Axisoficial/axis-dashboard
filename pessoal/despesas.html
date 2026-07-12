@@ -23,10 +23,21 @@ header .sub{font-size:12px;color:var(--muted)}
 .item{display:flex;justify-content:space-between;align-items:center;padding:9px 12px;background:#faf7ff;border-radius:8px;margin-bottom:6px;border-left:3px solid var(--purple)}
 .item-label{font-size:12px;font-weight:600}
 .item-sub{font-size:10px;color:var(--muted)}
+.item-right{display:flex;align-items:center;gap:10px}
 .item-val{font-size:13px;font-weight:700}
+.item-actions{display:flex;gap:6px}
+.item-actions button{border:none;background:#ede9fe;color:var(--purple);width:24px;height:24px;border-radius:6px;cursor:pointer;font-size:12px;line-height:1}
+.item-actions button.del{background:#fee2e2;color:#991b1b}
+.item-actions button:hover{opacity:.8}
 .total-row{display:flex;justify-content:space-between;padding:10px 12px;background:var(--purple);border-radius:8px;margin-top:8px}
 .total-row .lbl{color:#fff;font-weight:700;font-size:12px}
 .total-row .val{color:#fff;font-weight:900;font-size:15px}
+.add-row{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.add-row input{padding:8px 10px;border:1px solid var(--gray2);border-radius:8px;font-size:13px}
+.add-row input.name{flex:1;min-width:160px}
+.add-row input.val{width:140px}
+.add-row button{background:var(--purple);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:700;cursor:pointer}
+.add-row button:hover{opacity:.9}
 .calc-row{display:flex;gap:12px;align-items:center;margin-top:14px;flex-wrap:wrap}
 .calc-row label{font-size:12px;color:var(--muted);font-weight:600}
 .calc-row input{padding:8px 10px;border:1px solid var(--gray2);border-radius:8px;font-size:14px;width:160px}
@@ -60,52 +71,123 @@ header .sub{font-size:12px;color:var(--muted)}
 <div class="card">
 <h2>🏠 Despesas Pessoais Mensais</h2>
 <div id="items-list"></div>
+<div class="add-row">
+<input type="text" class="name" id="new-name" placeholder="Nome do gasto (ex: Academia)">
+<input type="text" class="val" id="new-val" placeholder="Valor (ex: 250)" inputmode="numeric">
+<button id="btn-add">+ Adicionar gasto</button>
+</div>
 <div class="total-row"><div class="lbl">Total / Mes</div><div class="val" id="total-mes-val">-</div></div>
 <div class="total-row" style="margin-top:6px;background:#5b21b6"><div class="lbl">Total / Ano</div><div class="val" id="total-ano-val">-</div></div>
+<div class="note">Clique no ✎ pra editar um item, ou no ✕ pra remover. As alterações ficam salvas neste navegador automaticamente. Se quiser que eu sincronize esses valores no arquivo oficial (pra aparecer em outros dispositivos também), é só me avisar.</div>
 </div>
 <div class="card">
 <h2>🎯 Quanto preciso ganhar por mes</h2>
 <div class="calc-row"><label>Reserva/investimento desejado por mes (R$):</label><input type="text" id="inp-reserva" value="0" inputmode="numeric"></div>
-<div class="note" id="calc-note">Ajuste o valor acima para simular quanto voce precisa ganhar por mes alem de cobrir suas despesas fixas.</div>
+<div class="note" id="calc-note"></div>
 </div>
 </div>
 <script>
-var ITEMS = [
+var STORAGE_KEY = 'axis_despesas_pessoais_items';
+var DEFAULT_ITEMS = [
   ['Parcela do Carro', 6000],
   ['Cartao de Credito', 20000],
   ['Aluguel', 350],
-  ['Contas Diversas (agua, luz, internet...)', 5000]
+  ['Contas Diversas (agua, luz, internet...)', 5000],
+  ['Alice', 2500]
 ];
-function fmt(n){ return 'R$ ' + n.toLocaleString('pt-BR', {minimumFractionDigits:0, maximumFractionDigits:2}); }
+
+function loadItems(){
+  try{
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return DEFAULT_ITEMS.slice();
+    var parsed = JSON.parse(raw);
+    if(!Array.isArray(parsed) || !parsed.length) return DEFAULT_ITEMS.slice();
+    return parsed;
+  }catch(e){ return DEFAULT_ITEMS.slice(); }
+}
+function saveItems(items){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+}
+
+var ITEMS = loadItems();
+
+function fmt(n){ return 'R$ ' + Number(n).toLocaleString('pt-BR', {minimumFractionDigits:0, maximumFractionDigits:2}); }
 function parseBR(s){ if(!s) return 0; return parseFloat(String(s).replace(/\./g,'').replace(',','.'))||0; }
+
 function render(){
   var list = document.getElementById('items-list');
   list.innerHTML = '';
   var total = 0;
-  ITEMS.forEach(function(it){
+  ITEMS.forEach(function(it, idx){
     total += it[1];
     var div = document.createElement('div');
     div.className = 'item';
-    div.innerHTML = '<div><div class="item-label">'+it[0]+'</div><div class="item-sub">Mensal</div></div><div class="item-val">'+fmt(it[1])+'</div>';
+    div.innerHTML = '<div><div class="item-label">'+it[0]+'</div><div class="item-sub">Mensal</div></div>'
+      + '<div class="item-right"><div class="item-val">'+fmt(it[1])+'</div>'
+      + '<div class="item-actions"><button class="edit" data-idx="'+idx+'" title="Editar">✎</button>'
+      + '<button class="del" data-idx="'+idx+'" title="Remover">✕</button></div></div>';
     list.appendChild(div);
   });
   document.getElementById('total-mes-val').textContent = fmt(total);
   document.getElementById('total-ano-val').textContent = fmt(total*12);
   document.getElementById('kpi-mes').textContent = fmt(total);
   document.getElementById('kpi-ano').textContent = fmt(total*12);
+
+  [...list.querySelectorAll('button.edit')].forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var idx = parseInt(btn.getAttribute('data-idx'));
+      var it = ITEMS[idx];
+      var newName = prompt('Nome do gasto:', it[0]);
+      if(newName === null) return;
+      var newValStr = prompt('Valor mensal (R$):', String(it[1]));
+      if(newValStr === null) return;
+      var newVal = parseBR(newValStr);
+      ITEMS[idx] = [newName.trim() || it[0], newVal];
+      saveItems(ITEMS);
+      render();
+    });
+  });
+  [...list.querySelectorAll('button.del')].forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var idx = parseInt(btn.getAttribute('data-idx'));
+      if(!confirm('Remover "'+ITEMS[idx][0]+'"?')) return;
+      ITEMS.splice(idx,1);
+      saveItems(ITEMS);
+      render();
+    });
+  });
+
   updateCalc(total);
 }
+
 function updateCalc(total){
   var reserva = parseBR(document.getElementById('inp-reserva').value);
   var meta = total + reserva;
   document.getElementById('kpi-meta').textContent = fmt(meta);
   document.getElementById('calc-note').textContent = 'Com reserva de '+fmt(reserva)+'/mes, voce precisa ganhar pelo menos '+fmt(meta)+'/mes ('+fmt(meta*12)+'/ano) para cobrir despesas e guardar esse valor.';
 }
+
 document.getElementById('inp-reserva').addEventListener('input', function(){
   var total = ITEMS.reduce(function(a,b){return a+b[1];},0);
   updateCalc(total);
 });
+
+document.getElementById('btn-add').addEventListener('click', function(){
+  var nameEl = document.getElementById('new-name');
+  var valEl = document.getElementById('new-val');
+  var name = nameEl.value.trim();
+  var val = parseBR(valEl.value);
+  if(!name || !val){ alert('Preencha nome e valor do gasto.'); return; }
+  ITEMS.push([name, val]);
+  saveItems(ITEMS);
+  nameEl.value=''; valEl.value='';
+  render();
+});
+document.getElementById('new-val').addEventListener('keydown', function(e){ if(e.key==='Enter') document.getElementById('btn-add').click(); });
+document.getElementById('new-name').addEventListener('keydown', function(e){ if(e.key==='Enter') document.getElementById('new-val').focus(); });
+
 document.getElementById('hoje').textContent = new Date().toLocaleDateString('pt-BR', {day:'2-digit', month:'long', year:'numeric'});
+
 render();
 </script>
 </body>
