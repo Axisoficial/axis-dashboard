@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
-<head>
+<html lang="pt-BR"><head>
   <script src="auth.js"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -156,10 +155,10 @@ tfoot tr{background:var(--gray);font-weight:800;border-top:2px solid var(--gray2
 <header>
   <div><div class="logo">AXIS</div><div class="logo-sub">ENTRETENIMENTO</div></div>
   <div class="hlinks">
-    <a href="index.html" class="hlink hlink-gray">&#8592; Dashboard</a>
-    <span class="hlink hlink-red">&#128176; Gastos Felipe Brito</span>
+    <a href="index.html" class="hlink hlink-gray">← Dashboard</a>
+    <span class="hlink hlink-red">💰 Gastos Felipe Brito</span>
   </div>
-  <div class="header-right" id="hdate">&#8212;<small>Gestão de Gastos</small></div>
+  <div class="header-right" id="hdate">—<small>Gestão de Gastos</small></div>
 </header>
 
 <div class="container">
@@ -168,28 +167,28 @@ tfoot tr{background:var(--gray);font-weight:800;border-top:2px solid var(--gray2
   <div class="kpi-grid">
     <div class="kpi">
       <div class="kpi-lbl">Total Gasto (Show)</div>
-      <div class="kpi-val num-red" id="kpi-total">&#8212;</div>
-      <div class="kpi-sub" id="kpi-count">&#8212; itens</div>
+      <div class="kpi-val num-red" id="kpi-total">—</div>
+      <div class="kpi-sub" id="kpi-count">— itens</div>
     </div>
     <div class="kpi green">
-      <div class="kpi-lbl">&#10003; Já Pago</div>
-      <div class="kpi-val num-green" id="kpi-pago">&#8212;</div>
-      <div class="kpi-sub" id="kpi-pago-ct">&#8212; itens</div>
+      <div class="kpi-lbl">✓ Já Pago</div>
+      <div class="kpi-val num-green" id="kpi-pago">—</div>
+      <div class="kpi-sub" id="kpi-pago-ct">— itens</div>
     </div>
     <div class="kpi">
       <div class="kpi-lbl">A Pagar</div>
-      <div class="kpi-val num-red" id="kpi-apagar">&#8212;</div>
-      <div class="kpi-sub" id="kpi-apagar-ct">&#8212; pendentes</div>
+      <div class="kpi-val num-red" id="kpi-apagar">—</div>
+      <div class="kpi-sub" id="kpi-apagar-ct">— pendentes</div>
     </div>
     <div class="kpi amber">
       <div class="kpi-lbl">Receita Matuê + Brandão</div>
       <div class="kpi-val" style="color:var(--amber)">R$ 649.997</div>
-      <div class="kpi-sub num-red" id="kpi-dif">Diferença: &#8212;</div>
+      <div class="kpi-sub num-red" id="kpi-dif">Diferença: —</div>
     </div>
     <div class="kpi purple">
-      <div class="kpi-lbl">Gastos Pessoais / Mês</div>
-      <div class="kpi-val" style="color:var(--purple)">R$ 31.350</div>
-      <div class="kpi-sub" style="color:var(--purple);font-weight:700">R$ 376.200 / ano</div>
+      <div class="kpi-lbl">Gastos Fixos Axis / Mês</div>
+      <div class="kpi-val" style="color:var(--purple)">R$ 5.849</div>
+      <div class="kpi-sub" style="color:var(--purple);font-weight:700">R$ 70.188 / ano</div>
     </div>
   </div>
 
@@ -198,56 +197,32 @@ tfoot tr{background:var(--gray);font-weight:800;border-top:2px solid var(--gray2
 
     <!-- Pizza: Categorias -->
     <div class="chart-card">
-      <div class="chart-title">&#127829; Gastos por Categoria</div>
+      <div class="chart-title">🍕 Gastos por Categoria</div>
       <div class="chart-wrap"><canvas id="chartCat"></canvas></div>
       <div class="chart-legend" id="legend-cat"></div>
     </div>
 
     <!-- Pizza: Status -->
     <div class="chart-card">
-      <div class="chart-title">&#9989; Status dos Gastos</div>
+      <div class="chart-title">✅ Status dos Gastos</div>
       <div class="chart-wrap"><canvas id="chartStatus"></canvas></div>
       <div class="chart-legend" id="legend-status"></div>
     </div>
 
     <!-- Vida Pessoal -->
     <div class="chart-card vida-card">
-      <div class="vida-title">&#127968; Gastos Pessoais Mensais</div>
-      <div class="vida-item">
-        <div>
-          <div class="vida-item-label">Parcela do Carro</div>
-          <div class="vida-item-sub">Mensal</div>
-        </div>
-        <div class="vida-item-val">R$ 6.000</div>
-      </div>
-      <div class="vida-item">
-        <div>
-          <div class="vida-item-label">Cartão de Crédito</div>
-          <div class="vida-item-sub">Mensal</div>
-        </div>
-        <div class="vida-item-val">R$ 20.000</div>
-      </div>
-      <div class="vida-item">
-        <div>
-          <div class="vida-item-label">Aluguel</div>
-          <div class="vida-item-sub">Mensal</div>
-        </div>
-        <div class="vida-item-val">R$ 350</div>
-      </div>
-      <div class="vida-item">
-        <div>
-          <div class="vida-item-label">Contas Diversas</div>
-          <div class="vida-item-sub">Mensal (água, luz, internet...)</div>
-        </div>
-        <div class="vida-item-val">R$ 5.000</div>
-      </div>
-      <div class="vida-total-row">
+      <div class="vida-title">🏢 Gastos Fixos Axis</div>
+      
+      
+      
+      
+      <div class="vida-item"><div><div class="vida-item-label">Aluguel</div><div class="vida-item-sub">Mensal</div></div><div class="vida-item-val">R$ 2.200</div></div><div class="vida-item"><div><div class="vida-item-label">Internet</div><div class="vida-item-sub">Mensal</div></div><div class="vida-item-val">R$ 99</div></div><div class="vida-item"><div><div class="vida-item-label">Água</div><div class="vida-item-sub">Mensal</div></div><div class="vida-item-val">R$ 150</div></div><div class="vida-item"><div><div class="vida-item-label">Hélio</div><div class="vida-item-sub">Mensal</div></div><div class="vida-item-val">R$ 1.500</div></div><div class="vida-item"><div><div class="vida-item-label">Pedro</div><div class="vida-item-sub">Mensal</div></div><div class="vida-item-val">R$ 800</div></div><div class="vida-item"><div><div class="vida-item-label">Ray</div><div class="vida-item-sub">Mensal</div></div><div class="vida-item-val">R$ 500</div></div><div class="vida-item"><div><div class="vida-item-label">Alarme</div><div class="vida-item-sub">Mensal</div></div><div class="vida-item-val">R$ 600</div></div><div class="vida-total-row">
         <div class="lbl">Total / Mês</div>
-        <div class="val">R$ 31.350</div>
+        <div class="val">R$ 5.849</div>
       </div>
       <div class="vida-total-row" style="margin-top:5px;background:#5b21b6">
         <div class="lbl">Total / Ano</div>
-        <div class="val">R$ 376.200</div>
+        <div class="val">R$ 70.188</div>
       </div>
     </div>
 
@@ -255,27 +230,27 @@ tfoot tr{background:var(--gray);font-weight:800;border-top:2px solid var(--gray2
 
   <!-- Meta de Lucro Anual -->
   <div class="meta-section">
-    <div class="meta-title">&#127919; Meta de Faturamento &amp; Lucro Anual</div>
+    <div class="meta-title">🎯 Meta de Faturamento &amp; Lucro Anual</div>
     <div class="meta-grid">
       <div class="meta-box">
-        <div class="meta-box-lbl">Vida Pessoal / Ano</div>
-        <div class="meta-box-val" style="color:var(--purple)">R$ 376.200</div>
-        <div class="meta-box-sub">Mínimo p/ manter estilo de vida</div>
+        <div class="meta-box-lbl">Custos Fixos Axis / Ano</div>
+        <div class="meta-box-val" style="color:var(--purple)">R$ 70.188</div>
+        <div class="meta-box-sub">Custos fixos mensais da Axis</div>
       </div>
       <div class="meta-box highlight" id="meta-custo-show">
         <div class="meta-box-lbl">Custo Médio / Show</div>
-        <div class="meta-box-val num-red" id="meta-custo-val">&#8212;</div>
+        <div class="meta-box-val num-red" id="meta-custo-val">—</div>
         <div class="meta-box-sub">Baseado nos gastos atuais</div>
       </div>
       <div class="meta-box danger" id="meta-total-box">
         <div class="meta-box-lbl">Faturamento Mínimo / Ano</div>
-        <div class="meta-box-val num-red" id="meta-fat-min">&#8212;</div>
-        <div class="meta-box-sub">Shows + vida (sem lucro extra)</div>
+        <div class="meta-box-val num-red" id="meta-fat-min">—</div>
+        <div class="meta-box-sub">Shows + custos fixos (sem lucro extra)</div>
       </div>
       <div class="meta-box ok" id="meta-lucro-box">
         <div class="meta-box-lbl">Meta com Lucro</div>
-        <div class="meta-box-val num-green" id="meta-com-lucro">&#8212;</div>
-        <div class="meta-box-sub" id="meta-com-lucro-sub">&#8212;</div>
+        <div class="meta-box-val num-green" id="meta-com-lucro">—</div>
+        <div class="meta-box-sub" id="meta-com-lucro-sub">—</div>
       </div>
     </div>
     <div class="meta-slider-row">
@@ -290,7 +265,7 @@ tfoot tr{background:var(--gray);font-weight:800;border-top:2px solid var(--gray2
 
   <!-- A Pagar panel -->
   <div class="apagar-panel" id="apagar-panel" style="display:none">
-    <div class="apagar-title">&#9888;&#65039; O que você ainda precisa pagar</div>
+    <div class="apagar-title">⚠️ O que você ainda precisa pagar</div>
     <div id="apagar-list"></div>
   </div>
 
@@ -328,7 +303,7 @@ tfoot tr{background:var(--gray);font-weight:800;border-top:2px solid var(--gray2
   <div class="tbl-wrap">
     <div class="tbl-header">
       <div class="tbl-title">Todos os Gastos</div>
-      <span style="font-size:11px;color:var(--muted)" id="tbl-count">&#8212;</span>
+      <span style="font-size:11px;color:var(--muted)" id="tbl-count">—</span>
     </div>
     <table>
       <thead>
@@ -341,7 +316,7 @@ tfoot tr{background:var(--gray);font-weight:800;border-top:2px solid var(--gray2
       <tfoot>
         <tr>
           <td colspan="3"><strong>TOTAL</strong></td>
-          <td class="num num-red" id="tbl-total">&#8212;</td>
+          <td class="num num-red" id="tbl-total">—</td>
           <td colspan="2"></td>
         </tr>
       </tfoot>
@@ -535,8 +510,8 @@ function updateCharts(total,byCat,totPago,totAP,totParcial){
 }
 
 // ---- META ----
-var VIDA_ANUAL=376200;
-var VIDA_MENSAL=31350;
+var VIDA_ANUAL=70188;
+var VIDA_MENSAL=5849;
 var _totalShow=0;
 
 function updateMeta(){
@@ -560,7 +535,7 @@ function updateMeta(){
   var precByShow=fatComLucro/shows;
   document.getElementById('meta-note').textContent=
     'Com '+shows+' show'+(shows>1?'s':'')+'/ano e lucro pessoal de '+fmt(lucroMes)+'/mês → '
-    +'cada show precisa faturar '+fmt(precByShow)+' (custo + vida + lucro).';
+    +'cada show precisa faturar '+fmt(precByShow)+' (custo + fixo + lucro).';
 }
 
 // ---- RENDER ----
@@ -731,5 +706,6 @@ document.getElementById('hdate').innerHTML=n.toLocaleDateString('pt-BR',{day:'2-
 initCharts();
 render();
 </script>
-</body>
-</html>
+
+
+</body></html>
