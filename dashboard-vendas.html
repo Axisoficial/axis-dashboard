@@ -140,7 +140,18 @@ footer { text-align: center; color: var(--muted); font-size: 12px; padding: 24px
 }
 
 </style>
-</head>
+<style id="axis-carousel-style">
+#axis-carousel{position:relative;overflow:hidden;}
+.axis-carousel-track{display:flex;transition:transform .6s ease;}
+.axis-carousel-track > .belo-hero{flex:0 0 100%;margin-bottom:0 !important;}
+.axis-nav-btn{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.55);color:#fff;border:1px solid var(--border);width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:20px;z-index:5;user-select:none;}
+.axis-nav-btn:hover{background:rgba(228,33,47,.85);}
+.axis-nav-prev{left:8px;}
+.axis-nav-next{right:8px;}
+.axis-dots{display:flex;justify-content:center;gap:8px;margin:10px 0 24px;}
+.axis-dot{width:8px;height:8px;border-radius:50%;background:var(--border);cursor:pointer;transition:background .2s;}
+.axis-dot.active{background:var(--accent);}
+</style></head>
 <body>
 
 <header class="header">
@@ -1008,5 +1019,169 @@ document.getElementById('tabReport').addEventListener('click', function(){ showV
   bar.appendChild(badge);
   bar.appendChild(track);
   document.body.insertBefore(bar, document.body.firstChild);
+})();
+</script><script id="axis-carousel-script">
+(function(){
+  if (document.getElementById('axis-carousel')) return;
+  var heroEl = document.querySelector('.belo-hero');
+  if (!heroEl) return;
+
+  function getTableBySignature(required, exclude){
+    var tables = document.querySelectorAll('table');
+    for (var i=0;i<tables.length;i++){
+      var t = tables[i];
+      var headers = Array.from(t.querySelectorAll('thead th')).map(function(th){return th.textContent.trim();});
+      var hasAll = required.every(function(h){return headers.indexOf(h)>=0;});
+      var hasExcluded = exclude ? exclude.some(function(h){return headers.indexOf(h)>=0;}) : false;
+      if (hasAll && !hasExcluded) return {table:t, headers:headers};
+    }
+    return null;
+  }
+  function parseDate(str){
+    var m = str.match(/(\d{2})\/(\d{2})\/(\d{4})/);
+    if (!m) return null;
+    return new Date(parseInt(m[3]), parseInt(m[2])-1, parseInt(m[1]));
+  }
+  function extractEvents(sig, platformLabel){
+    if (!sig) return [];
+    var headers = sig.headers;
+    var idx = {};
+    headers.forEach(function(h,i){ idx[h]=i; });
+    var rows = Array.from(sig.table.querySelectorAll('tbody tr'));
+    var out = [];
+    rows.forEach(function(row){
+      var cells = row.children;
+      var nameEl = row.querySelector('.event-name');
+      var dateEl = row.querySelector('.event-date');
+      if (!nameEl || !dateEl) return;
+      var name = nameEl.textContent.trim();
+      var dateStr = dateEl.textContent.trim();
+      var statusIdx = idx['Status'];
+      var statusText = statusIdx!=null && cells[statusIdx] ? cells[statusIdx].textContent.trim() : '';
+      if (/realizado/i.test(statusText)) return;
+      if (/belo in concert/i.test(name)) return;
+      var date = parseDate(dateStr);
+      if (!date) return;
+      function cellText(h){ var i = idx[h]; return (i!=null && cells[i]) ? cells[i].textContent.trim() : null; }
+      out.push({
+        name: name, dateStr: dateStr, date: date,
+        local: cells[idx['Local']] ? cells[idx['Local']].textContent.trim() : '',
+        platform: platformLabel,
+        vendas: cellText('Vendas'), cortesias: cellText('Cort.'),
+        ontem: cellText('Ontem'), hoje: cellText('Hoje'),
+        arrecadado: cellText('Arrecadado'), tm: cellText('TM'),
+        capacidade: cellText('Capacidade'), projecao: cellText('Projeção')
+      });
+    });
+    return out;
+  }
+
+  var sigT360 = getTableBySignature(['Cort.','Média/dia','Projeção']);
+  var sigBE = getTableBySignature(['Capacidade']);
+  var sigIcones = getTableBySignature(['Cort.','Projeção'], ['Média/dia','Capacidade']);
+
+  var events = []
+    .concat(extractEvents(sigT360, 'Ticket360'))
+    .concat(extractEvents(sigBE, 'Bilheteria Express'))
+    .concat(extractEvents(sigIcones, 'Ícones'));
+
+  events.sort(function(a,b){ return a.date - b.date; });
+  var nextEvents = events.slice(0,3);
+  if (!nextEvents.length) return;
+
+  function daysUntil(date){
+    var today = new Date(); today.setHours(0,0,0,0);
+    var d = new Date(date); d.setHours(0,0,0,0);
+    return Math.round((d - today) / 86400000);
+  }
+  function buildStat(val, lbl){
+    var box = document.createElement('div'); box.className = 'belo-stat';
+    var v = document.createElement('div'); v.className='val'; v.textContent = (val==null || val==='') ? '—' : val;
+    var l = document.createElement('div'); l.className='lbl'; l.textContent = lbl;
+    box.appendChild(v); box.appendChild(l);
+    return box;
+  }
+  function buildSlide(ev){
+    var wrap = document.createElement('div'); wrap.className = 'belo-hero';
+    var h2 = document.createElement('h2'); h2.textContent = '⭐ ' + ev.name;
+    var sub = document.createElement('div'); sub.className = 'subtitle';
+    var dias = daysUntil(ev.date);
+    var diasTxt = dias <= 0 ? 'hoje' : ('faltam ' + dias + ' dia' + (dias===1?'':'s'));
+    sub.textContent = ev.dateStr + ' · ' + ev.local + ' · ' + ev.platform + ' · ' + diasTxt;
+    var stats = document.createElement('div'); stats.className = 'belo-stats';
+    stats.appendChild(buildStat(ev.vendas, 'Vendidos'));
+    if (ev.cortesias!=null) stats.appendChild(buildStat(ev.cortesias, 'Cortesias'));
+    stats.appendChild(buildStat(ev.tm, 'Ticket Médio'));
+    stats.appendChild(buildStat(ev.arrecadado, 'Arrecadado'));
+    stats.appendChild(buildStat(ev.ontem, 'Ontem'));
+    stats.appendChild(buildStat(ev.hoje, 'Hoje'));
+    if (ev.projecao!=null) stats.appendChild(buildStat(ev.projecao, 'Projeção'));
+    wrap.appendChild(h2); wrap.appendChild(sub); wrap.appendChild(stats);
+    if (ev.capacidade){
+      var capNum = parseFloat(ev.capacidade.replace(/[^\d]/g,''));
+      var vendNum = parseFloat((ev.vendas||'0').replace(/[^\d]/g,''));
+      if (capNum > 0){
+        var pct = Math.min(100, Math.round((vendNum/capNum)*1000)/10);
+        var barWrap = document.createElement('div'); barWrap.style.marginTop = '4px';
+        var lbl = document.createElement('div');
+        lbl.style.cssText = 'font-size:12px;color:var(--muted);margin-bottom:6px;';
+        lbl.textContent = 'Ocupação (' + pct + '%) — ' + vendNum + ' / ' + capNum + ' ingressos';
+        var bar = document.createElement('div'); bar.className='progress-bar';
+        var fill = document.createElement('div'); fill.className='progress-fill'; fill.style.width = pct + '%';
+        bar.appendChild(fill); barWrap.appendChild(lbl); barWrap.appendChild(bar);
+        wrap.appendChild(barWrap);
+      }
+    }
+    return wrap;
+  }
+
+  var slides = [heroEl];
+  nextEvents.forEach(function(ev){ slides.push(buildSlide(ev)); });
+  if (slides.length <= 1) return;
+
+  var carousel = document.createElement('div');
+  carousel.id = 'axis-carousel'; carousel.className = 'axis-carousel';
+  var track = document.createElement('div'); track.className = 'axis-carousel-track';
+
+  heroEl.parentNode.insertBefore(carousel, heroEl);
+  slides.forEach(function(s){ track.appendChild(s); });
+  carousel.appendChild(track);
+
+  var prevBtn = document.createElement('div'); prevBtn.className='axis-nav-btn axis-nav-prev'; prevBtn.textContent='‹';
+  var nextBtn = document.createElement('div'); nextBtn.className='axis-nav-btn axis-nav-next'; nextBtn.textContent='›';
+  carousel.appendChild(prevBtn); carousel.appendChild(nextBtn);
+
+  var dotsWrap = document.createElement('div'); dotsWrap.className='axis-dots';
+  var dots = slides.map(function(_, i){
+    var d = document.createElement('div'); d.className='axis-dot' + (i===0?' active':'');
+    d.addEventListener('click', function(){ goTo(i); });
+    dotsWrap.appendChild(d);
+    return d;
+  });
+  carousel.parentNode.insertBefore(dotsWrap, carousel.nextSibling);
+
+  var current = 0, timer = null;
+  function render(){
+    track.style.transform = 'translateX(-' + (current*100) + '%)';
+    dots.forEach(function(d,i){ d.className = 'axis-dot' + (i===current?' active':''); });
+  }
+  function goTo(i){ current = (i + slides.length) % slides.length; render(); resetTimer(); }
+  function next(){ goTo(current+1); }
+  function prev(){ goTo(current-1); }
+  function resetTimer(){ if (timer) clearInterval(timer); timer = setInterval(next, 9000); }
+
+  prevBtn.addEventListener('click', prev);
+  nextBtn.addEventListener('click', next);
+
+  var touchStartX = null;
+  carousel.addEventListener('touchstart', function(e){ touchStartX = e.touches[0].clientX; }, {passive:true});
+  carousel.addEventListener('touchend', function(e){
+    if (touchStartX==null) return;
+    var dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 40){ dx < 0 ? next() : prev(); }
+    touchStartX = null;
+  }, {passive:true});
+
+  render(); resetTimer();
 })();
 </script></body></html>
