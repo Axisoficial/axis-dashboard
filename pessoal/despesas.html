@@ -63,6 +63,16 @@ header .sub{font-size:12px;color:var(--muted)}
 .hist-table td.diff.up{color:#991b1b}
 .hist-table td.diff.down{color:var(--green)}
 .hist-table td.diff.flat{color:var(--muted)}
+.goal{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:#f0fdf4;border-radius:8px;margin-bottom:6px;border-left:3px solid var(--green);gap:10px;flex-wrap:wrap}
+.goal input.goal-name{border:1px solid transparent;background:transparent;font-size:12px;font-weight:600;color:var(--text);padding:4px 6px;border-radius:6px;flex:1;min-width:120px;font-family:inherit}
+.goal input.goal-name:hover,.goal input.goal-name:focus{border-color:var(--gray2);background:#fff}
+.goal input.goal-val{border:1px solid transparent;background:transparent;font-size:13px;font-weight:700;color:var(--text);padding:4px 6px;border-radius:6px;width:100px;text-align:right;font-family:inherit}
+.goal input.goal-val:hover,.goal input.goal-val:focus{border-color:var(--gray2);background:#fff}
+.goal input.goal-ano{border:1px solid transparent;background:transparent;font-size:13px;font-weight:700;color:var(--text);padding:4px 6px;border-radius:6px;width:60px;text-align:center;font-family:inherit}
+.goal input.goal-ano:hover,.goal input.goal-ano:focus{border-color:var(--gray2);background:#fff}
+.goal-sub{font-size:10px;color:var(--muted);padding-left:6px;width:100%}
+.goal-right{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+.goal-mensal{font-size:12px;font-weight:800;color:var(--green);white-space:nowrap}
 </style>
 </head>
 <body>
@@ -123,10 +133,25 @@ function casaLogout(){
 </table>
 <div class="note">O mes atual fica destacado. "Vs. mes anterior" compara o total de cada mes com o do mes anterior no mesmo ano.</div>
 </div>
+<div class="card">
+<h2>🎯 Metas de Economia</h2>
+<div id="goals-list"></div>
+<div class="add-row">
+<input type="text" class="name" id="new-goal-name" placeholder="Nome da meta (ex: Viagem 2027)">
+<input type="text" class="val" id="new-goal-val" placeholder="Valor (ex: 10000)" inputmode="numeric" style="width:120px">
+<input type="text" id="new-goal-ano" placeholder="Ano" inputmode="numeric" style="width:80px;padding:8px 10px;border:1px solid var(--gray2);border-radius:8px;font-size:13px">
+<button id="btn-add-goal">+ Adicionar meta</button>
+</div>
+<div class="note">Cada meta mostra quanto voces precisam guardar por mes pra chegar la ate o ano definido, considerando o mes atual.</div>
+</div>
 </div>
 <script>
 var STORAGE_KEY = 'axis_despesas_pessoais_por_mes';
 var LEGACY_KEY = 'axis_despesas_pessoais_items';
+var GOALS_KEY = 'axis_despesas_metas';
+var DEFAULT_GOALS = [
+  {nome:'Viagem 2027', valor:10000, ano:2027}
+];
 var MES_NOMES = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 var MES_NOMES_LONGOS = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 var DEFAULT_ITEMS = [
@@ -172,6 +197,19 @@ function getMesItems(m){
 }
 
 var DADOS = loadAll();
+
+function loadGoals(){
+  try{
+    var raw = localStorage.getItem(GOALS_KEY);
+    if(raw){
+      var parsed = JSON.parse(raw);
+      if(Array.isArray(parsed)) return parsed;
+    }
+  }catch(e){}
+  return DEFAULT_GOALS.map(function(g){ return {nome:g.nome, valor:g.valor, ano:g.ano}; });
+}
+function saveGoals(){ localStorage.setItem(GOALS_KEY, JSON.stringify(GOALS)); }
+var GOALS = loadGoals();
 
 function fmt(n){ return 'R$ ' + Number(n).toLocaleString('pt-BR', {minimumFractionDigits:0, maximumFractionDigits:2}); }
 function parseBR(s){ if(!s) return 0; return parseFloat(String(s).replace(/\./g,'').replace(',','.'))||0; }
@@ -253,7 +291,88 @@ function render(){
   });
 
   renderHistorico();
+  renderGoals();
 }
+
+function mesesRestantes(anoAlvo){
+  var hoje = new Date();
+  var totalAtual = hoje.getFullYear()*12 + hoje.getMonth();
+  var totalAlvo = anoAlvo*12 + 11; // considera dezembro do ano alvo como prazo
+  var diff = totalAlvo - totalAtual;
+  return diff > 0 ? diff : 0;
+}
+
+function renderGoals(){
+  var list = document.getElementById('goals-list');
+  list.innerHTML = '';
+  GOALS.forEach(function(g, idx){
+    var meses = mesesRestantes(g.ano);
+    var mensal = meses > 0 ? g.valor / meses : g.valor;
+    var subTxt = meses > 0
+      ? (meses + ' meses restantes ate dezembro de ' + g.ano)
+      : 'Prazo ja chegou ou passou';
+    var div = document.createElement('div');
+    div.className = 'goal';
+    div.innerHTML = '<input type="text" class="goal-name" data-idx="'+idx+'" value="'+g.nome.replace(/"/g,'&quot;')+'">'
+      + '<div class="goal-right">'
+      + 'R$ <input type="text" class="goal-val" data-idx="'+idx+'" value="'+g.valor+'" inputmode="numeric">'
+      + '<input type="text" class="goal-ano" data-idx="'+idx+'" value="'+g.ano+'" inputmode="numeric">'
+      + '<div class="goal-mensal">'+fmt(mensal)+'/mes</div>'
+      + '<button class="del" data-idx="'+idx+'" title="Remover" style="border:none;background:#fee2e2;color:#991b1b;width:24px;height:24px;border-radius:6px;cursor:pointer;font-size:12px">✕</button>'
+      + '</div>'
+      + '<div class="goal-sub">'+subTxt+'</div>';
+    list.appendChild(div);
+  });
+
+  [...list.querySelectorAll('input.goal-name')].forEach(function(inp){
+    inp.addEventListener('change', function(){
+      var idx = parseInt(this.dataset.idx);
+      GOALS[idx].nome = this.value.trim() || GOALS[idx].nome;
+      saveGoals();
+      renderGoals();
+    });
+  });
+  [...list.querySelectorAll('input.goal-val')].forEach(function(inp){
+    inp.addEventListener('change', function(){
+      var idx = parseInt(this.dataset.idx);
+      GOALS[idx].valor = parseBR(this.value);
+      saveGoals();
+      renderGoals();
+    });
+  });
+  [...list.querySelectorAll('input.goal-ano')].forEach(function(inp){
+    inp.addEventListener('change', function(){
+      var idx = parseInt(this.dataset.idx);
+      var ano = parseInt(this.value) || GOALS[idx].ano;
+      GOALS[idx].ano = ano;
+      saveGoals();
+      renderGoals();
+    });
+  });
+  [...list.querySelectorAll('button.del')].forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var idx = parseInt(btn.getAttribute('data-idx'));
+      if(!confirm('Remover a meta "'+GOALS[idx].nome+'"?')) return;
+      GOALS.splice(idx,1);
+      saveGoals();
+      renderGoals();
+    });
+  });
+}
+
+document.getElementById('btn-add-goal').addEventListener('click', function(){
+  var nameEl = document.getElementById('new-goal-name');
+  var valEl = document.getElementById('new-goal-val');
+  var anoEl = document.getElementById('new-goal-ano');
+  var nome = nameEl.value.trim();
+  var valor = parseBR(valEl.value);
+  var ano = parseInt(anoEl.value) || (new Date().getFullYear()+1);
+  if(!nome || !valor){ alert('Preencha nome e valor da meta.'); return; }
+  GOALS.push({nome:nome, valor:valor, ano:ano});
+  saveGoals();
+  nameEl.value=''; valEl.value=''; anoEl.value='';
+  renderGoals();
+});
 
 function renderHistorico(){
   var body = document.getElementById('hist-body');
