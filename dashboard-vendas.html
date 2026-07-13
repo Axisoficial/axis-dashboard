@@ -1004,21 +1004,52 @@ document.getElementById('tabReport').addEventListener('click', function(){ showV
       return parts.length ? parts.join('     \u2022     ') : 'AXIS ENTRETENIMENTO — Dashboard ao vivo';
     } catch(e){ return 'AXIS ENTRETENIMENTO — Dashboard ao vivo'; }
   }
-  if (document.getElementById('axis-ticker')) return;
+
+  var oldBar = document.getElementById('axis-ticker');
+  if (oldBar) oldBar.parentNode.removeChild(oldBar);
+  var oldStyle = document.getElementById('axis-ticker-style-tag');
+  if (oldStyle) oldStyle.parentNode.removeChild(oldStyle);
+
   var style = document.createElement('style');
-  style.textContent = '@keyframes axis-ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } } #axis-ticker{position:sticky;top:0;left:0;width:100%;background:#c00;color:#fff;font-weight:700;font-size:13px;letter-spacing:.3px;overflow:hidden;white-space:nowrap;z-index:9999;padding:8px 0;box-shadow:0 2px 8px rgba(0,0,0,.35);font-family:inherit;} #axis-ticker .axis-badge{display:inline-block;background:#000;padding:4px 10px;margin:0 12px;border-radius:3px;vertical-align:middle;} #axis-ticker .axis-track{display:inline-block;white-space:nowrap;padding-left:100%;animation:axis-ticker-scroll 40s linear infinite;vertical-align:middle;}';
+  style.id = 'axis-ticker-style-tag';
+  style.textContent = '#axis-ticker{position:sticky;top:0;left:0;width:100%;background:#c00;color:#fff;font-weight:700;font-size:13px;letter-spacing:.3px;z-index:9999;padding:8px 0;box-shadow:0 2px 8px rgba(0,0,0,.35);font-family:inherit;display:flex;align-items:center;} #axis-ticker .axis-badge{flex:0 0 auto;display:inline-block;background:#000;padding:4px 10px;margin:0 12px;border-radius:3px;white-space:nowrap;} #axis-ticker .axis-viewport{flex:1 1 auto;overflow:hidden;position:relative;height:1.3em;margin-right:12px;} #axis-ticker .axis-track{position:absolute;top:0;left:0;white-space:nowrap;will-change:transform;}';
   document.head.appendChild(style);
+
   var bar = document.createElement('div');
   bar.id = 'axis-ticker';
   var badge = document.createElement('span');
   badge.className = 'axis-badge';
   badge.textContent = '\uD83D\uDD34 AO VIVO';
+  var viewport = document.createElement('div');
+  viewport.className = 'axis-viewport';
   var track = document.createElement('span');
   track.className = 'axis-track';
   track.textContent = buildTicker();
+  viewport.appendChild(track);
   bar.appendChild(badge);
-  bar.appendChild(track);
+  bar.appendChild(viewport);
   document.body.insertBefore(bar, document.body.firstChild);
+
+  function startScroll(){
+    var trackWidth = track.scrollWidth;
+    var pos = viewport.clientWidth;
+    var speed = 70;
+    var lastTime = null;
+    function step(ts){
+      if (lastTime==null) lastTime = ts;
+      var dt = (ts-lastTime)/1000; lastTime = ts;
+      pos -= speed*dt;
+      if (pos < -trackWidth) pos = viewport.clientWidth;
+      track.style.transform = 'translateX(' + pos + 'px)';
+      requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  if (viewport.clientWidth > 0) {
+    startScroll();
+  } else {
+    setTimeout(startScroll, 200);
+  }
 })();
 </script><script id="axis-carousel-script">
 (function(){
