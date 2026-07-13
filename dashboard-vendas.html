@@ -154,7 +154,7 @@ footer { text-align: center; color: var(--muted); font-size: 12px; padding: 24px
 <a href="https://sis.ingressodigital.com/adm/ven_sessao.php" target="_blank" class="plat-link plat-id">Ingresso Digital</a>
 <a href="https://produtor.icones.com.br" target="_blank" class="plat-link plat-icones">Ícones</a>
 </div>
-<div class="header-meta">Atualizado em 13/07/2026 08:37<br>
+<div class="header-meta">Atualizado em 13/07/2026 14:42<br>
 <span style="color:var(--green)">● Dados frescos de hoje</span></div>
 </header>
 
@@ -940,4 +940,25 @@ document.getElementById('tabReport').addEventListener('click', function(){ showV
 })();
 </script>
 
-</body></html>
+<script id="axis-autorefresh">
+(function(){
+  function getTimestamp(html){
+    var m = html.match(/Atualizado em ([\d\/: ]+)/);
+    return m ? m[1].trim() : null;
+  }
+  var metaEl = document.querySelector('.header-meta');
+  var current = metaEl ? getTimestamp(metaEl.textContent) : null;
+  function checkForUpdate(){
+    fetch(window.location.pathname + '?_=' + Date.now(), {cache:'no-store'})
+      .then(function(r){ return r.text(); })
+      .then(function(html){
+        var latest = getTimestamp(html);
+        if(latest && current && latest !== current){
+          location.reload();
+        }
+      })
+      .catch(function(){});
+  }
+  setInterval(checkForUpdate, 3 * 60 * 1000);
+})();
+</script></body></html>
