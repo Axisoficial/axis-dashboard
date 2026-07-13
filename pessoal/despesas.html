@@ -139,10 +139,11 @@ function casaLogout(){
 <div class="add-row">
 <input type="text" class="name" id="new-goal-name" placeholder="Nome da meta (ex: Viagem 2027)">
 <input type="text" class="val" id="new-goal-val" placeholder="Valor (ex: 10000)" inputmode="numeric" style="width:120px">
+<select id="new-goal-mes" style="padding:8px 10px;border:1px solid var(--gray2);border-radius:8px;font-size:13px"></select>
 <input type="text" id="new-goal-ano" placeholder="Ano" inputmode="numeric" style="width:80px;padding:8px 10px;border:1px solid var(--gray2);border-radius:8px;font-size:13px">
 <button id="btn-add-goal">+ Adicionar meta</button>
 </div>
-<div class="note">Cada meta mostra quanto voces precisam guardar por mes pra chegar la ate o ano definido, considerando o mes atual.</div>
+<div class="note">Cada meta mostra quanto voces precisam guardar por mes pra chegar la ate o mes/ano definido, considerando o mes atual.</div>
 </div>
 </div>
 <script>
@@ -150,7 +151,7 @@ var STORAGE_KEY = 'axis_despesas_pessoais_por_mes';
 var LEGACY_KEY = 'axis_despesas_pessoais_items';
 var GOALS_KEY = 'axis_despesas_metas';
 var DEFAULT_GOALS = [
-  {nome:'Viagem 2027', valor:10000, ano:2027}
+  {nome:'Viagem 2027', valor:10000, mes:11, ano:2027}
 ];
 var MES_NOMES = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 var MES_NOMES_LONGOS = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
@@ -203,10 +204,14 @@ function loadGoals(){
     var raw = localStorage.getItem(GOALS_KEY);
     if(raw){
       var parsed = JSON.parse(raw);
-      if(Array.isArray(parsed)) return parsed;
+      if(Array.isArray(parsed)){
+        return parsed.map(function(g){
+          return {nome:g.nome, valor:g.valor, mes:(typeof g.mes==='number' ? g.mes : 11), ano:g.ano};
+        });
+      }
     }
   }catch(e){}
-  return DEFAULT_GOALS.map(function(g){ return {nome:g.nome, valor:g.valor, ano:g.ano}; });
+  return DEFAULT_GOALS.map(function(g){ return {nome:g.nome, valor:g.valor, mes:g.mes, ano:g.ano}; });
 }
 function saveGoals(){ localStorage.setItem(GOALS_KEY, JSON.stringify(GOALS)); }
 var GOALS = loadGoals();
@@ -294,34 +299,47 @@ function render(){
   renderGoals();
 }
 
-function mesesRestantes(anoAlvo){
+function mesesRestantes(mesAlvo, anoAlvo){
   var hoje = new Date();
   var totalAtual = hoje.getFullYear()*12 + hoje.getMonth();
-  var totalAlvo = anoAlvo*12 + 11; // considera dezembro do ano alvo como prazo
+  var totalAlvo = anoAlvo*12 + mesAlvo;
   var diff = totalAlvo - totalAtual;
   return diff > 0 ? diff : 0;
+}
+
+function montaSelectMes(selectEl, selecionado){
+  selectEl.innerHTML = '';
+  MES_NOMES_LONGOS.forEach(function(nome, idx){
+    var opt = document.createElement('option');
+    opt.value = idx;
+    opt.textContent = nome;
+    if(idx === selecionado) opt.selected = true;
+    selectEl.appendChild(opt);
+  });
 }
 
 function renderGoals(){
   var list = document.getElementById('goals-list');
   list.innerHTML = '';
   GOALS.forEach(function(g, idx){
-    var meses = mesesRestantes(g.ano);
+    var meses = mesesRestantes(g.mes, g.ano);
     var mensal = meses > 0 ? g.valor / meses : g.valor;
     var subTxt = meses > 0
-      ? (meses + ' meses restantes ate dezembro de ' + g.ano)
+      ? (meses + ' meses restantes ate ' + MES_NOMES_LONGOS[g.mes] + ' de ' + g.ano)
       : 'Prazo ja chegou ou passou';
     var div = document.createElement('div');
     div.className = 'goal';
     div.innerHTML = '<input type="text" class="goal-name" data-idx="'+idx+'" value="'+g.nome.replace(/"/g,'&quot;')+'">'
       + '<div class="goal-right">'
       + 'R$ <input type="text" class="goal-val" data-idx="'+idx+'" value="'+g.valor+'" inputmode="numeric">'
+      + '<select class="goal-mes" data-idx="'+idx+'" style="padding:4px 6px;border:1px solid var(--gray2);border-radius:6px;font-size:12px"></select>'
       + '<input type="text" class="goal-ano" data-idx="'+idx+'" value="'+g.ano+'" inputmode="numeric">'
       + '<div class="goal-mensal">'+fmt(mensal)+'/mes</div>'
       + '<button class="del" data-idx="'+idx+'" title="Remover" style="border:none;background:#fee2e2;color:#991b1b;width:24px;height:24px;border-radius:6px;cursor:pointer;font-size:12px">✕</button>'
       + '</div>'
       + '<div class="goal-sub">'+subTxt+'</div>';
     list.appendChild(div);
+    montaSelectMes(div.querySelector('select.goal-mes'), g.mes);
   });
 
   [...list.querySelectorAll('input.goal-name')].forEach(function(inp){
@@ -336,6 +354,14 @@ function renderGoals(){
     inp.addEventListener('change', function(){
       var idx = parseInt(this.dataset.idx);
       GOALS[idx].valor = parseBR(this.value);
+      saveGoals();
+      renderGoals();
+    });
+  });
+  [...list.querySelectorAll('select.goal-mes')].forEach(function(sel){
+    sel.addEventListener('change', function(){
+      var idx = parseInt(this.dataset.idx);
+      GOALS[idx].mes = parseInt(this.value);
       saveGoals();
       renderGoals();
     });
@@ -360,17 +386,21 @@ function renderGoals(){
   });
 }
 
+montaSelectMes(document.getElementById('new-goal-mes'), 11);
+
 document.getElementById('btn-add-goal').addEventListener('click', function(){
   var nameEl = document.getElementById('new-goal-name');
   var valEl = document.getElementById('new-goal-val');
+  var mesEl = document.getElementById('new-goal-mes');
   var anoEl = document.getElementById('new-goal-ano');
   var nome = nameEl.value.trim();
   var valor = parseBR(valEl.value);
+  var mes = parseInt(mesEl.value);
   var ano = parseInt(anoEl.value) || (new Date().getFullYear()+1);
   if(!nome || !valor){ alert('Preencha nome e valor da meta.'); return; }
-  GOALS.push({nome:nome, valor:valor, ano:ano});
+  GOALS.push({nome:nome, valor:valor, mes:mes, ano:ano});
   saveGoals();
-  nameEl.value=''; valEl.value=''; anoEl.value='';
+  nameEl.value=''; valEl.value=''; anoEl.value=''; mesEl.value=11;
   renderGoals();
 });
 
