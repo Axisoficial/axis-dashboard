@@ -2,9 +2,8 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Despesas Pessoais - Felipe Brito</title>
+<title>Despesas da Casa - Felipe & Leticia</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="../auth.js"></script>
 <style>
 :root{--red:#C8102E;--gray:#f4f4f6;--gray2:#e8e8ec;--text:#1a1a2e;--muted:#6b7280;--green:#16a34a;--amber:#d97706;--blue:#2563eb;--purple:#7c3aed;color-scheme:light}
 *{box-sizing:border-box}
@@ -12,6 +11,9 @@ body{margin:0;font-family:-apple-system,'Segoe UI',Roboto,sans-serif;background:
 header{background:#fff;border-bottom:3px solid var(--purple);padding:16px 24px;display:flex;justify-content:space-between;align-items:center}
 header h1{font-size:18px;margin:0}
 header .sub{font-size:12px;color:var(--muted)}
+.logout{border:none;background:var(--gray2);color:var(--text);padding:7px 14px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer}
+.logout:hover{background:#ddd6fe}
+.header-right{display:flex;align-items:center;gap:12px}
 .container{max-width:1100px;margin:0 auto;padding:24px}
 .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:24px}
 .kpi{background:#fff;border-radius:12px;padding:16px;border-top:4px solid var(--purple);box-shadow:0 1px 3px rgba(0,0,0,.08)}
@@ -43,59 +45,88 @@ header .sub{font-size:12px;color:var(--muted)}
 .add-row input.val{width:140px}
 .add-row button{background:var(--purple);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:700;cursor:pointer}
 .add-row button:hover{opacity:.9}
-.calc-row{display:flex;gap:12px;align-items:center;margin-top:14px;flex-wrap:wrap}
-.calc-row label{font-size:12px;color:var(--muted);font-weight:600}
-.calc-row input{padding:8px 10px;border:1px solid var(--gray2);border-radius:8px;font-size:14px;width:160px}
 .note{font-size:12px;color:var(--muted);margin-top:10px;line-height:1.5}
 .badge{display:inline-block;background:#fee2e2;color:#991b1b;font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px;margin-left:8px}
+.hist-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:16px}
+.hist-stat{background:var(--gray);border-radius:10px;padding:10px 12px}
+.hist-stat .lbl{font-size:10px;text-transform:uppercase;color:var(--muted);font-weight:700;letter-spacing:.03em}
+.hist-stat .val{font-size:16px;font-weight:800;margin-top:2px;color:var(--purple)}
+.hist-stat .val.hi{color:#991b1b}
+.hist-stat .val.lo{color:var(--green)}
+.hist-table{width:100%;border-collapse:collapse;font-size:12px}
+.hist-table th{text-align:left;font-size:10px;text-transform:uppercase;color:var(--muted);font-weight:700;letter-spacing:.03em;padding:6px 8px;border-bottom:2px solid var(--gray2)}
+.hist-table td{padding:7px 8px;border-bottom:1px solid var(--gray2)}
+.hist-table tr.current{background:#faf7ff}
+.hist-table tr.current td:first-child{font-weight:800;color:var(--purple)}
+.hist-table td.num{text-align:right;font-weight:700}
+.hist-table td.diff{text-align:right;font-size:11px;font-weight:700}
+.hist-table td.diff.up{color:#991b1b}
+.hist-table td.diff.down{color:var(--green)}
+.hist-table td.diff.flat{color:var(--muted)}
 </style>
 </head>
 <body>
 <script>
 (function(){
-  var u = typeof axisCurrentUser === 'function' ? axisCurrentUser() : null;
-  if(!u || u.email !== 'felipebrito@axisentretenimento.com'){
-    if (typeof axisLogout === 'function') axisLogout();
-    else location.href='/axis-dashboard/login.html';
+  try{
+    var s = JSON.parse(sessionStorage.getItem('despesas_casa_session')||'null');
+    if(!s || !s.token || !s.user){
+      location.replace('login-casa.html?next='+encodeURIComponent(location.pathname.split('/').pop()));
+    }
+  }catch(e){
+    location.replace('login-casa.html');
   }
 })();
+function casaLogout(){
+  sessionStorage.removeItem('despesas_casa_session');
+  location.href='login-casa.html';
+}
 </script>
 <header>
 <div>
-<h1>💰 Despesas Pessoais <span class="badge">PRIVADO</span></h1>
-<div class="sub">Felipe Brito - Projeto pessoal, separado da Axis Entretenimento</div>
+<h1>💰 Despesas da Casa <span class="badge">PRIVADO</span></h1>
+<div class="sub">Felipe & Leticia - Projeto pessoal, separado da Axis Entretenimento</div>
 </div>
+<div class="header-right">
 <div class="sub" id="hoje"></div>
+<div class="sub" id="quem"></div>
+<button class="logout" onclick="casaLogout()">Sair</button>
+</div>
 </header>
 <div class="container">
 <div class="kpi-grid">
 <div class="kpi"><div class="kpi-lbl">Total Mensal</div><div class="kpi-val" id="kpi-mes">-</div><div class="kpi-sub" id="kpi-mes-sub">Despesas fixas do mes</div></div>
 <div class="kpi"><div class="kpi-lbl">Total Anual</div><div class="kpi-val" id="kpi-ano">-</div><div class="kpi-sub">Soma dos 12 meses</div></div>
-<div class="kpi"><div class="kpi-lbl">Preciso Ganhar / Mes</div><div class="kpi-val" id="kpi-meta" style="color:var(--red)">-</div><div class="kpi-sub">Despesas do mes + reserva desejada</div></div>
+<div class="kpi"><div class="kpi-lbl">Ponto de Equilibrio</div><div class="kpi-val" id="kpi-meta" style="color:var(--red)">-</div><div class="kpi-sub" id="kpi-meta-sub">Quanto precisa faturar no mes pra cobrir as despesas</div></div>
 </div>
 <div class="card">
-<h2>🏠 Despesas Pessoais Mensais</h2>
+<h2>🏠 Despesas da Casa Mensais</h2>
 <div class="tabs" id="tabs"></div>
 <div id="items-list"></div>
 <div class="add-row">
 <input type="text" class="name" id="new-name" placeholder="Nome do gasto (ex: Academia)">
 <input type="text" class="val" id="new-val" placeholder="Valor (ex: 250)" inputmode="numeric">
 <button id="btn-add">+ Adicionar gasto</button>
+<button id="btn-save" style="background:#16a34a">💾 Salvar</button>
+<button id="btn-clear" style="background:#fee2e2;color:#991b1b">🗑 Limpar mes</button>
 </div>
 <div class="total-row"><div class="lbl" id="total-mes-lbl">Total / Mes</div><div class="val" id="total-mes-val">-</div></div>
 <div class="total-row" style="margin-top:6px;background:#5b21b6"><div class="lbl">Total / Ano</div><div class="val" id="total-ano-val">-</div></div>
 <div class="note">Clique direto no nome ou no valor pra editar o item. As alterações ficam salvas neste navegador automaticamente, por mes. Clique no ✕ pra remover um item. Se quiser que eu sincronize esses valores no arquivo oficial (pra aparecer em outros dispositivos também), é só me avisar.</div>
 </div>
 <div class="card">
-<h2>🎯 Quanto preciso ganhar por mes</h2>
-<div class="calc-row"><label>Reserva/investimento desejado por mes (R$):</label><input type="text" id="inp-reserva" value="0" inputmode="numeric"></div>
-<div class="note" id="calc-note"></div>
+<h2>📊 Historico Mensal</h2>
+<div class="hist-stats" id="hist-stats"></div>
+<table class="hist-table">
+<thead><tr><th>Mes</th><th style="text-align:right">Total</th><th style="text-align:right">Vs. mes anterior</th></tr></thead>
+<tbody id="hist-body"></tbody>
+</table>
+<div class="note">O mes atual fica destacado. "Vs. mes anterior" compara o total de cada mes com o do mes anterior no mesmo ano.</div>
 </div>
 </div>
 <script>
 var STORAGE_KEY = 'axis_despesas_pessoais_por_mes';
 var LEGACY_KEY = 'axis_despesas_pessoais_items';
-var RESERVA_KEY = 'axis_despesas_pessoais_reserva';
 var MES_NOMES = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 var MES_NOMES_LONGOS = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 var DEFAULT_ITEMS = [
@@ -189,6 +220,8 @@ function render(){
   document.getElementById('kpi-mes').textContent = fmt(total);
   document.getElementById('kpi-mes-sub').textContent = 'Despesas de ' + MES_NOMES_LONGOS[mesAtual];
   document.getElementById('kpi-ano').textContent = fmt(totalAno);
+  document.getElementById('kpi-meta').textContent = fmt(total);
+  document.getElementById('kpi-meta-sub').textContent = 'Pra cobrir as despesas de ' + MES_NOMES_LONGOS[mesAtual];
 
   [...list.querySelectorAll('input.item-name')].forEach(function(inp){
     inp.addEventListener('change', function(){
@@ -219,21 +252,43 @@ function render(){
     });
   });
 
-  updateCalc(total);
+  renderHistorico();
 }
 
-function updateCalc(total){
-  var reserva = parseBR(document.getElementById('inp-reserva').value);
-  var meta = total + reserva;
-  document.getElementById('kpi-meta').textContent = fmt(meta);
-  document.getElementById('calc-note').textContent = 'Com reserva de '+fmt(reserva)+'/mes, voce precisa ganhar pelo menos '+fmt(meta)+'/mes ('+fmt(meta*12)+'/ano) para cobrir despesas de '+MES_NOMES_LONGOS[mesAtual]+' e guardar esse valor.';
-}
+function renderHistorico(){
+  var body = document.getElementById('hist-body');
+  body.innerHTML = '';
+  var totais = [];
+  for(var m=0;m<12;m++) totais.push(totalDoMes(m));
 
-document.getElementById('inp-reserva').addEventListener('input', function(){
-  localStorage.setItem(RESERVA_KEY, this.value);
-  var total = totalDoMes(mesAtual);
-  updateCalc(total);
-});
+  var soma = totais.reduce(function(a,b){return a+b;},0);
+  var media = soma/12;
+  var maiorIdx = 0, menorIdx = 0;
+  for(var m=1;m<12;m++){
+    if(totais[m] > totais[maiorIdx]) maiorIdx = m;
+    if(totais[m] < totais[menorIdx]) menorIdx = m;
+  }
+
+  var stats = document.getElementById('hist-stats');
+  stats.innerHTML =
+    '<div class="hist-stat"><div class="lbl">Media Mensal</div><div class="val">'+fmt(media)+'</div></div>'
+    + '<div class="hist-stat"><div class="lbl">Maior Mes</div><div class="val hi">'+MES_NOMES_LONGOS[maiorIdx]+' - '+fmt(totais[maiorIdx])+'</div></div>'
+    + '<div class="hist-stat"><div class="lbl">Menor Mes</div><div class="val lo">'+MES_NOMES_LONGOS[menorIdx]+' - '+fmt(totais[menorIdx])+'</div></div>';
+
+  for(var m=0;m<12;m++){
+    var tr = document.createElement('tr');
+    if(m===mesAtual) tr.className = 'current';
+    var diffCell = '<td class="diff flat">-</td>';
+    if(m>0){
+      var diff = totais[m] - totais[m-1];
+      var cls = diff>0 ? 'up' : (diff<0 ? 'down' : 'flat');
+      var sinal = diff>0 ? '+' : (diff<0 ? '-' : '');
+      diffCell = '<td class="diff '+cls+'">'+sinal+fmt(Math.abs(diff))+'</td>';
+    }
+    tr.innerHTML = '<td>'+MES_NOMES_LONGOS[m]+'</td><td class="num">'+fmt(totais[m])+'</td>'+diffCell;
+    body.appendChild(tr);
+  }
+}
 
 document.getElementById('btn-add').addEventListener('click', function(){
   var nameEl = document.getElementById('new-name');
@@ -249,10 +304,27 @@ document.getElementById('btn-add').addEventListener('click', function(){
 document.getElementById('new-val').addEventListener('keydown', function(e){ if(e.key==='Enter') document.getElementById('btn-add').click(); });
 document.getElementById('new-name').addEventListener('keydown', function(e){ if(e.key==='Enter') document.getElementById('new-val').focus(); });
 
-document.getElementById('hoje').textContent = new Date().toLocaleDateString('pt-BR', {day:'2-digit', month:'long', year:'numeric'});
+document.getElementById('btn-save').addEventListener('click', function(){
+  saveAll();
+  var btn = this;
+  var original = btn.textContent;
+  btn.textContent = '✓ Salvo!';
+  btn.disabled = true;
+  setTimeout(function(){ btn.textContent = original; btn.disabled = false; }, 1400);
+});
 
-var reservaSalva = localStorage.getItem(RESERVA_KEY);
-if(reservaSalva !== null) document.getElementById('inp-reserva').value = reservaSalva;
+document.getElementById('btn-clear').addEventListener('click', function(){
+  if(!confirm('Limpar todos os gastos de ' + MES_NOMES_LONGOS[mesAtual] + '? Essa acao nao pode ser desfeita.')) return;
+  DADOS[monthKey(mesAtual)] = [];
+  saveAll();
+  render();
+});
+
+document.getElementById('hoje').textContent = new Date().toLocaleDateString('pt-BR', {day:'2-digit', month:'long', year:'numeric'});
+try{
+  var sessAtual = JSON.parse(sessionStorage.getItem('despesas_casa_session')||'null');
+  if(sessAtual && sessAtual.nome) document.getElementById('quem').textContent = 'Ola, ' + sessAtual.nome;
+}catch(e){}
 
 renderTabs();
 render();
