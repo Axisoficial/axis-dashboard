@@ -961,4 +961,52 @@ document.getElementById('tabReport').addEventListener('click', function(){ showV
   }
   setInterval(checkForUpdate, 3 * 60 * 1000);
 })();
+</script><script id="axis-ticker-script">
+(function(){
+  function buildTicker(){
+    try {
+      var parts = [];
+      var tables = document.querySelectorAll('table');
+      var totalGeralText = null;
+      tables.forEach(function(t){
+        var tf = t.querySelector('tfoot');
+        if (tf && /TOTAL GERAL/i.test(tf.textContent)) {
+          totalGeralText = tf.textContent.replace(/\s+/g,' ').trim();
+        }
+      });
+      if (totalGeralText) parts.push('\uD83D\uDCCA ' + totalGeralText);
+      var kpis = document.querySelectorAll('.kpi');
+      kpis.forEach(function(k){
+        var txt = k.textContent.replace(/\s+/g,' ').trim();
+        if (/Breakeven/i.test(txt)) {
+          parts.push('\uD83C\uDFA4 BELO IN CONCERT: ' + txt.replace('Belo — Breakeven','').trim());
+        }
+      });
+      kpis.forEach(function(k){
+        var txt = k.textContent.replace(/\s+/g,' ').trim();
+        if (!/Breakeven/i.test(txt)) {
+          parts.push('\uD83C\uDFAB ' + txt);
+        }
+      });
+      var meta = document.querySelector('.header-meta');
+      if (meta) parts.push('\uD83D\uDD52 ' + meta.textContent.replace(/\s+/g,' ').trim());
+      return parts.length ? parts.join('     \u2022     ') : 'AXIS ENTRETENIMENTO — Dashboard ao vivo';
+    } catch(e){ return 'AXIS ENTRETENIMENTO — Dashboard ao vivo'; }
+  }
+  if (document.getElementById('axis-ticker')) return;
+  var style = document.createElement('style');
+  style.textContent = '@keyframes axis-ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } } #axis-ticker{position:sticky;top:0;left:0;width:100%;background:#c00;color:#fff;font-weight:700;font-size:13px;letter-spacing:.3px;overflow:hidden;white-space:nowrap;z-index:9999;padding:8px 0;box-shadow:0 2px 8px rgba(0,0,0,.35);font-family:inherit;} #axis-ticker .axis-badge{display:inline-block;background:#000;padding:4px 10px;margin:0 12px;border-radius:3px;vertical-align:middle;} #axis-ticker .axis-track{display:inline-block;white-space:nowrap;padding-left:100%;animation:axis-ticker-scroll 40s linear infinite;vertical-align:middle;}';
+  document.head.appendChild(style);
+  var bar = document.createElement('div');
+  bar.id = 'axis-ticker';
+  var badge = document.createElement('span');
+  badge.className = 'axis-badge';
+  badge.textContent = '\uD83D\uDD34 AO VIVO';
+  var track = document.createElement('span');
+  track.className = 'axis-track';
+  track.textContent = buildTicker();
+  bar.appendChild(badge);
+  bar.appendChild(track);
+  document.body.insertBefore(bar, document.body.firstChild);
+})();
 </script></body></html>
