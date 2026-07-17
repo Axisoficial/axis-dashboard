@@ -165,7 +165,7 @@ footer { text-align: center; color: var(--muted); font-size: 12px; padding: 24px
 <a href="https://sis.ingressodigital.com/adm/ven_sessao.php" target="_blank" class="plat-link plat-id">Ingresso Digital</a>
 <a href="https://produtor.icones.com.br" target="_blank" class="plat-link plat-icones">Ícones</a>
 </div>
-<div class="header-meta">Atualizado em 17/07/2026 10:45</div>
+<div class="header-meta">Atualizado em 17/07/2026 10:53</div>
 </header>
 
 <div class="tab-nav">
@@ -1147,7 +1147,14 @@ document.getElementById('tabReport').addEventListener('click', function(){ showV
     .concat(extractEvents(sigIcones, 'Ícones'));
 
   events.sort(function(a,b){ return a.date - b.date; });
-  var nextEvents = events.slice(0,3);
+  var todayF = new Date(); todayF.setHours(0,0,0,0);
+  function parseMoney(s){ if(!s) return 0; var n = s.replace(/[^0-9,.-]/g,'').replace(/\./g,'').replace(',', '.'); return parseFloat(n)||0; }
+  var nextEvents = events.filter(function(e){
+    var ed = new Date(e.date); ed.setHours(0,0,0,0);
+    if (ed < todayF) return false;
+    if (parseMoney(e.arrecadado) <= 10000) return false;
+    return true;
+  }).slice(0,3);
   if (!nextEvents.length) return;
 
   function daysUntil(date){
