@@ -165,7 +165,7 @@ footer { text-align: center; color: var(--muted); font-size: 12px; padding: 24px
 <a href="https://sis.ingressodigital.com/adm/ven_sessao.php" target="_blank" class="plat-link plat-id">Ingresso Digital</a>
 <a href="https://produtor.icones.com.br" target="_blank" class="plat-link plat-icones">Ícones</a>
 </div>
-<div class="header-meta">Atualizado em 21/07/2026 12:05</div>
+<div class="header-meta">Atualizado em 21/07/2026 12:20</div>
 </header>
 
 <div class="tab-nav">
@@ -1244,6 +1244,8 @@ document.getElementById('tabReport').addEventListener('click', function(){ showV
     var metaC = 0, restC = 0, metaDiariaC = 0, pctC = 0;
     if (custo){
       metaC = tmNumC>0 ? Math.round(custo/tmNumC) : 0;
+      var capNumC = parseInt((ev.capacidade||"").split("/")[1]||"", 10);
+      if (!isNaN(capNumC) && capNumC>0 && metaC>capNumC){ metaC = capNumC; }
       restC = Math.max(0, metaC - vendNumC);
       metaDiariaC = dias>0 ? Math.round(restC/dias) : restC;
       pctC = custo>0 ? Math.round((arrNumC/custo)*1000)/10 : 0;
