@@ -445,6 +445,7 @@ input:not([type="checkbox"]),select,textarea{border:none!important;background:tr
 <div><div style="color:var(--muted);text-transform:uppercase;font-weight:700;font-size:10px">&#128176; Receita Líquida de Show</div><div style="display:flex;gap:16px"><span>Proj: <strong id="fe-liqshow-p">R$ 0</strong></span><span>Real: <strong id="fe-liqshow-r">R$ 0</strong></span></div></div>
 <div><div style="color:var(--muted);text-transform:uppercase;font-weight:700;font-size:10px">&#127866; Receita Líquida de Show + Bar</div><div style="display:flex;gap:16px"><span>Proj: <strong id="fe-liqshowbar-p">R$ 0</strong></span><span>Real: <strong id="fe-liqshowbar-r">R$ 0</strong></span></div></div>
 </div>
+<div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:4px">🎫 Cenário Só Bilheteria (Show)</div>
 <table class="outras-table" style="width:100%">
 <thead><tr>
 <th style="text-align:left">Parte</th>
@@ -457,6 +458,22 @@ input:not([type="checkbox"]),select,textarea{border:none!important;background:tr
 </tr></thead>
 <tbody id="fech-empresa-ct"></tbody>
 </table>
+
+<div style="margin-top:18px;padding-top:14px;border-top:2px dashed var(--border)">
+<div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:4px">🍹 Cenário Bilheteria + Bar (usa o % de cada parte já configurado na seção Bar/Consumação abaixo)</div>
+<table class="outras-table" style="width:100%">
+<thead><tr>
+<th style="text-align:left">Parte</th>
+<th style="background:#eff6ff">Split Bruto Proj</th>
+<th style="background:#eff6ff">Split Bruto Real</th>
+<th style="background:#fef2f2">(−) Custos Proj</th>
+<th style="background:#fef2f2">(−) Custos Real</th>
+<th style="background:#f0fdf4">Lucro Previsto Proj</th>
+<th style="background:#f0fdf4">Lucro Previsto Real</th>
+</tr></thead>
+<tbody id="fech-empresa-bar-ct"></tbody>
+</table>
+</div>
 </div>
 </div>
 
@@ -905,18 +922,28 @@ GC=new Chart(ctx,{type:'doughnut',data:{datasets:[{data:[beforeBe,beSlice,afterB
 
 function renderFechamentos(c){
 var rows=[
-{nome:'🏢 '+((D.labels&&D.labels.axis)||'Axis'),sp:c.splitAxisP,sr:c.splitAxisR,cp:c.caP,cr:c.caR,lp:c.lucroAxisP,lr:c.lucroAxisR},
-{nome:'🎤 '+((D.labels&&D.labels.artista)||'Artista'),sp:c.splitArtP,sr:c.splitArtR,cp:c.ctP,cr:c.ctR,lp:c.lucroArtP,lr:c.lucroArtR},
-{nome:'🤝 '+((D.labels&&D.labels.socio)||'Parceiro'),sp:c.splitSocP,sr:c.splitSocR,cp:c.csP,cr:c.csR,lp:c.lucroSocP,lr:c.lucroSocR}
+{key:'axis',nome:'🏢 '+((D.labels&&D.labels.axis)||'Axis'),sp:c.splitAxisP,sr:c.splitAxisR,cp:c.caP,cr:c.caR,lp:c.lucroAxisP,lr:c.lucroAxisR},
+{key:'artista',nome:'🎤 '+((D.labels&&D.labels.artista)||'Artista'),sp:c.splitArtP,sr:c.splitArtR,cp:c.ctP,cr:c.ctR,lp:c.lucroArtP,lr:c.lucroArtR},
+{key:'socio',nome:'🤝 '+((D.labels&&D.labels.socio)||'Parceiro'),sp:c.splitSocP,sr:c.splitSocR,cp:c.csP,cr:c.csR,lp:c.lucroSocP,lr:c.lucroSocR}
 ];
-var h='';
+function sumByNameFE(list,name){var p=0,r=0;(list||[]).forEach(function(e){if((e.nome||'').trim().toLowerCase()===String(name||'').trim().toLowerCase()){p+=e.p;r+=e.r;}});return{p:p,r:r};}
+var h='',hBar='';
 rows.forEach(function(r){
 h+='<tr><td>'+r.nome+'</td>';
 h+='<td style="text-align:right">'+R(r.sp)+'</td><td style="text-align:right">'+R(r.sr)+'</td>';
 h+='<td style="text-align:right;color:#dc2626">−'+R(r.cp)+'</td><td style="text-align:right;color:#dc2626">−'+R(r.cr)+'</td>';
 h+='<td style="text-align:right;font-weight:700;color:'+(r.lp>=0?'#16a34a':'#dc2626')+'">'+R(r.lp)+'</td><td style="text-align:right;font-weight:700;color:'+(r.lr>=0?'#16a34a':'#dc2626')+'">'+R(r.lr)+'</td></tr>';
+var labelName=(r.key==='axis'?((D.labels&&D.labels.axis)||'Axis'):(r.key==='artista'?((D.labels&&D.labels.artista)||'Artista'):((D.labels&&D.labels.socio)||'Parceiro')));
+var barShare=sumByNameFE(c.barRecipientsCalc,labelName);
+var spBarP=r.sp+barShare.p,spBarR=r.sr+barShare.r;
+var lpBarP=spBarP-r.cp,lpBarR=spBarR-r.cr;
+hBar+='<tr><td>'+r.nome+'</td>';
+hBar+='<td style="text-align:right">'+R(spBarP)+'</td><td style="text-align:right">'+R(spBarR)+'</td>';
+hBar+='<td style="text-align:right;color:#dc2626">−'+R(r.cp)+'</td><td style="text-align:right;color:#dc2626">−'+R(r.cr)+'</td>';
+hBar+='<td style="text-align:right;font-weight:700;color:'+(lpBarP>=0?'#16a34a':'#dc2626')+'">'+R(lpBarP)+'</td><td style="text-align:right;font-weight:700;color:'+(lpBarR>=0?'#16a34a':'#dc2626')+'">'+R(lpBarR)+'</td></tr>';
 });
 if($('fech-empresa-ct'))$('fech-empresa-ct').innerHTML=h;
+if($('fech-empresa-bar-ct'))$('fech-empresa-bar-ct').innerHTML=hBar;
 set('fe-blp',R(c.blp));set('fe-blr',R(c.blr));
 set('fe-dedp',R(c.txp+c.cbP));set('fe-dedr',R(c.txr+c.cbR));
 set('fe-distp',R(c.distP));set('fe-distr',R(c.distR));
