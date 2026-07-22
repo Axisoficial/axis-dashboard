@@ -93,6 +93,18 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',sans-serif;fo
 .resumo-table tr.total-final{background:#1a0a38;border-top:2px solid var(--purple);}
 .resumo-table tr.total-final td{font-size:15px;font-weight:700;padding:12px 14px;}
 
+
+@media print{
+*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+#tabs,.header-btns,.add-row-btn,.del-btn{display:none!important}
+.tab-panel{display:block!important}
+body{background:#fff;font-size:11px}
+#header{position:relative!important;top:auto!important;padding:10px 16px}
+#event-bar{position:relative!important;top:auto!important;flex-wrap:wrap}
+#kpis{position:relative!important;top:auto!important;overflow-x:visible!important;flex-wrap:wrap}
+.section-card,.cache-card,.divisao-card{break-inside:avoid}
+input,select,textarea{border:none!important;background:transparent!important;box-shadow:none!important;color:#000!important;-webkit-appearance:none!important;appearance:none!important;padding:1px 2px!important}
+}
 </style>
 </head>
 <body>
