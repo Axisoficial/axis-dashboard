@@ -129,11 +129,10 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',sans-serif;fo
 
 <div id="kpis">
   <div class="kpi"><div class="kpi-label">Receita Bruta</div><div class="kpi-val" id="kpi-receita">R$ 0</div><div class="kpi-sub">Total do evento</div></div>
-  <div class="kpi"><div class="kpi-label">Cachê Artista</div><div class="kpi-val red" id="kpi-cache">R$ 0</div><div class="kpi-sub">Fixo garantido</div></div>
-  <div class="kpi"><div class="kpi-label">Custos Produção</div><div class="kpi-val red" id="kpi-custos">R$ 0</div><div class="kpi-sub">Todos manuais</div></div>
-  <div class="kpi"><div class="kpi-label">Resultado Líquido</div><div class="kpi-val" id="kpi-resultado">R$ 0</div><div class="kpi-sub">Após cachê + custos</div></div>
+    <div class="kpi"><div class="kpi-label">Custos Produção</div><div class="kpi-val red" id="kpi-custos">R$ 0</div><div class="kpi-sub">Todos manuais</div></div>
+  <div class="kpi"><div class="kpi-label">Resultado Líquido</div><div class="kpi-val" id="kpi-resultado">R$ 0</div><div class="kpi-sub">Após custos</div></div>
   <div class="kpi"><div class="kpi-label">Axis Recebe</div><div class="kpi-val green" id="kpi-axis">R$ 0</div><div class="kpi-sub" id="kpi-axis-pct">0%</div></div>
-  <div class="kpi"><div class="kpi-label">Artista Recebe</div><div class="kpi-val purple" id="kpi-artista">R$ 0</div><div class="kpi-sub" id="kpi-artista-pct">0% + cachê</div></div>
+  <div class="kpi"><div class="kpi-label">Artista Recebe</div><div class="kpi-val purple" id="kpi-artista">R$ 0</div><div class="kpi-sub" id="kpi-artista-pct">0%</div></div>
 </div>
 
 <div id="tabs">
@@ -197,25 +196,6 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',sans-serif;fo
 
 <!-- ===== CUSTOS ===== -->
 <div id="panel-custos" class="tab-panel">
-
-  <!-- CACHÊ ESPECIAL -->
-  <div class="cache-card">
-    <div class="cache-title">🎤 CACHÊ DO ARTISTA</div>
-    <div class="cache-grid">
-      <div class="cache-field">
-        <label>Valor do Cachà (R$)</label>
-        <input type="number" id="cache-valor" value="0" min="0" step="0.01" oninput="calcAll()" placeholder="0,00">
-      </div>
-      <div class="cache-field">
-        <label>Pagamento</label>
-        <input type="text" id="cache-pagamento" value="À vista no dia" placeholder="Ex: 50% antes, 50% após">
-      </div>
-      <div class="cache-field">
-        <label>Observações</label>
-        <input type="text" id="cache-obs" value="" placeholder="Ex: inclui passagens">
-      </div>
-    </div>
-  </div>
 
   <!-- INFRAESTRUTURA -->
   <div class="section-card">
@@ -346,15 +326,14 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',sans-serif;fo
     <div class="divisao-title">📊 RESUMO DO RESULTADO</div>
     <table class="resumo-table">
       <tr><td>Receita Bruta Total</td><td class="green" id="res-receita">R$ 0</td></tr>
-      <tr><td>(-) Cachê do Artista</td><td class="red" id="res-cache">R$ 0</td></tr>
-      <tr><td>(-) Custos de Produção</td><td class="red" id="res-custos">R$ 0</td></tr>
+            <tr><td>(-) Custos de Produção</td><td class="red" id="res-custos">R$ 0</td></tr>
       <tr class="total-final"><td>= RESULTADO LÍQUIDO</td><td id="res-resultado">R$ 0</td></tr>
     </table>
   </div>
 
   <div class="cache-card" style="margin-bottom:16px;">
     <div class="cache-title">✂️ DIVISÃO DO RESULTADO</div>
-    <p style="font-size:12px;color:var(--muted);margin-bottom:14px;">O artista já recebeu o cachê fixo. O resultado líquido abaixo é dividido conforme as porcentagens:</p>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:14px;">O cachê já foi debitado da receita, junto aos custos. O resultado líquido abaixo é dividido conforme as porcentagens:</p>
     <div class="split-box" style="background:transparent;padding:0;">
       <div class="split-row">
         <div class="split-name" style="color:var(--green);">🏢 Axis</div>
@@ -363,7 +342,7 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',sans-serif;fo
       </div>
       <div class="split-row">
         <div class="split-name" style="color:var(--purple);">🎤 Artista</div>
-        <input type="number" class="split-pct" id="pct-artista" value="80" min="0" max="100" step="1" oninput="calcAll()"> %
+        <input type="number" class="split-pct" id="pct-artista" value="70" min="0" max="100" step="1" oninput="calcAll()"> %
         <div class="split-val purple" id="val-artista">R$ 0</div>
       </div>
       <div id="pct-check" class="split-total-check" style="background:#1e1e38;color:var(--muted);">Total: 100%</div>
@@ -371,16 +350,10 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',sans-serif;fo
   </div>
 
   <div class="divisao-card">
-    <div class="divisao-title">🎤 TOTAL ARTISTA (Cachê + % Resultado)</div>
+    <div class="divisao-title">🤝 RESULTADO FINAL — AXIS E ARTISTA</div>
     <div class="divisao-grid">
-      <div class="result-box">
-        <div class="result-label">Cachê Garantido</div>
-        <div class="result-val purple" id="div-cache">R$ 0</div>
-      </div>
-      <div class="result-box">
-        <div class="result-label">% do Resultado</div>
-        <div class="result-val purple" id="div-artista-pct">R$ 0</div>
-      </div>
+      
+      
       <div class="result-box" style="background:linear-gradient(135deg,#1a0a38,#200d45);border:1px solid var(--purple);">
         <div class="result-label">TOTAL ARTISTA</div>
         <div class="result-val purple" id="div-artista-total">R$ 0</div>
@@ -462,9 +435,7 @@ function calcAll() {
   var outrasRec = sumSimple('tb-outras-rec');
   var receita = bilheteria + patrocinio + outrasRec;
 
-  var cache = parseFloat(document.getElementById('cache-valor').value) || 0;
-
-  var infra = sumSimple('tb-infra');
+    var infra = sumSimple('tb-infra');
   var local = sumSimple('tb-local');
   var legal = sumSimple('tb-legal');
   var mkt = sumSimple('tb-mkt');
@@ -473,7 +444,7 @@ function calcAll() {
   var outros = sumSimple('tb-outros');
   var custos = infra + local + legal + mkt + equipe + logistica + outros;
 
-  var resultado = receita - cache - custos;
+  var resultado = receita - custos;
 
   var pctAxis = parseFloat(document.getElementById('pct-axis').value) || 0;
   var pctArtista = parseFloat(document.getElementById('pct-artista').value) || 0;
@@ -496,8 +467,7 @@ function calcAll() {
 
   // KPIs
   document.getElementById('kpi-receita').textContent = fmt(receita);
-  document.getElementById('kpi-cache').textContent = fmt(cache);
-  document.getElementById('kpi-custos').textContent = fmt(custos);
+    document.getElementById('kpi-custos').textContent = fmt(custos);
 
   var resEl = document.getElementById('kpi-resultado');
   resEl.textContent = fmt(resultado);
@@ -505,13 +475,12 @@ function calcAll() {
 
   document.getElementById('kpi-axis').textContent = fmt(valAxis);
   document.getElementById('kpi-axis-pct').textContent = pctAxis + '%';
-  document.getElementById('kpi-artista').textContent = fmt(valArtista + cache);
-  document.getElementById('kpi-artista-pct').textContent = pctArtista + '% + cachê';
+  document.getElementById('kpi-artista').textContent = fmt(valArtista);
+  document.getElementById('kpi-artista-pct').textContent = pctArtista + '%';
 
   // Divisão tab
   document.getElementById('res-receita').textContent = fmt(receita);
-  document.getElementById('res-cache').textContent = '-' + fmt(cache);
-  document.getElementById('res-custos').textContent = '-' + fmt(custos);
+    document.getElementById('res-custos').textContent = '-' + fmt(custos);
 
   var resResEl = document.getElementById('res-resultado');
   resResEl.textContent = fmt(resultado);
@@ -525,9 +494,7 @@ function calcAll() {
   pctCheck.style.background = totalPct === 100 ? '#0a2010' : '#2a0a0a';
   pctCheck.style.color = totalPct === 100 ? 'var(--green)' : 'var(--red)';
 
-  document.getElementById('div-cache').textContent = fmt(cache);
-  document.getElementById('div-artista-pct').textContent = fmt(valArtista);
-  document.getElementById('div-artista-total').textContent = fmt(cache + valArtista);
+      document.getElementById('div-artista-total').textContent = fmt(valArtista);
   document.getElementById('div-axis-total').textContent = fmt(valAxis);
 }
 
@@ -558,11 +525,8 @@ function novoEvento() {
   document.getElementById('input-responsavel').value = '';
   document.getElementById('cache-contratado').value = '';
   document.getElementById('input-quem-pagou').value = 'artista';
-  document.getElementById('cache-valor').value = '0';
-  document.getElementById('cache-pagamento').value = 'À vista no dia';
-  document.getElementById('cache-obs').value = '';
-  document.getElementById('pct-axis').value = '20';
-  document.getElementById('pct-artista').value = '80';
+        document.getElementById('pct-axis').value = '30';
+  document.getElementById('pct-artista').value = '70';
   ['tb-patrocinio','tb-outras-rec','tb-infra','tb-local','tb-legal','tb-mkt','tb-equipe','tb-logistica','tb-outros'].forEach(function(id) {
     var tb = document.getElementById(id);
     if (tb) {
