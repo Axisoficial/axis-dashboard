@@ -294,6 +294,10 @@ input:not([type="checkbox"]),select,textarea{border:none!important;background:tr
 <span>Base de cálculo: <strong>Bilheteria Líquida (após descontos)</strong></span>
 <span>Proj: <strong id="sp-base-p">R$ 0</strong> &nbsp;|&nbsp; Real: <strong id="sp-base-r">R$ 0</strong></span>
 </div>
+<div class="split-base-info" id="split-base-bar-row" style="display:none;color:#9a3412">
+<span>+ Bar (todos os sócios): <strong id="sp-base-bar-p">R$ 0</strong> Proj &nbsp;|&nbsp; <strong id="sp-base-bar-r">R$ 0</strong> Real</span>
+<span>Total combinado (Bilheteria + Bar): <strong id="sp-base-total-p">R$ 0</strong> &nbsp;|&nbsp; <strong id="sp-base-total-r">R$ 0</strong></span>
+</div>
 <div id="split-warn" class="split-total-warn split-total-ok">✅ Total: 100%</div>
 <div class="split-pct-row">
 <div class="split-card" style="border-color:#ef4444">
@@ -302,6 +306,7 @@ input:not([type="checkbox"]),select,textarea{border:none!important;background:tr
 <div class="split-pct-symbol">%</div>
 <div class="split-result-proj" id="sp-axis-p">R$ 0</div>
 <div class="split-result-real" id="sp-axis-r">R$ 0</div>
+<div class="split-result-bar" id="sp-axis-bar" style="display:none;font-size:10px;color:#9a3412;margin-top:4px;line-height:1.4"></div>
 </div>
 <div class="split-card" style="border-color:#7c3aed">
 <div class="split-card-label" style="color:#7c3aed">🎤 <input type="text" id="lbl-artista" value="Artista" oninput="upLabel('artista',this.value)" style="border:none;background:transparent;font:inherit;font-weight:700;color:inherit;width:80px" data-fk="lbl-artista"></div>
@@ -309,6 +314,7 @@ input:not([type="checkbox"]),select,textarea{border:none!important;background:tr
 <div class="split-pct-symbol">%</div>
 <div class="split-result-proj" id="sp-artista-p">R$ 0</div>
 <div class="split-result-real" id="sp-artista-r">R$ 0</div>
+<div class="split-result-bar" id="sp-artista-bar" style="display:none;font-size:10px;color:#9a3412;margin-top:4px;line-height:1.4"></div>
 </div>
 <div class="split-card" style="border-color:#0891b2">
 <div class="split-card-label" style="color:#0891b2">🤝 <input type="text" id="lbl-socio" value="Parceiro" oninput="upLabel('socio',this.value)" style="border:none;background:transparent;font:inherit;font-weight:700;color:inherit;width:80px" data-fk="lbl-socio"></div>
@@ -316,6 +322,7 @@ input:not([type="checkbox"]),select,textarea{border:none!important;background:tr
 <div class="split-pct-symbol">%</div>
 <div class="split-result-proj" id="sp-socio-p">R$ 0</div>
 <div class="split-result-real" id="sp-socio-r">R$ 0</div>
+<div class="split-result-bar" id="sp-socio-bar" style="display:none;font-size:10px;color:#9a3412;margin-top:4px;line-height:1.4"></div>
 </div>
 </div>
 </div>
@@ -765,6 +772,29 @@ var ssoc=$('sp-socio');if(ssoc&&document.activeElement!==ssoc)ssoc.value=numStr(
 set('sp-axis-p',R(c.splitAxisP));set('sp-axis-r',R(c.splitAxisR));
 set('sp-artista-p',R(c.splitArtP));set('sp-artista-r',R(c.splitArtR));
 set('sp-socio-p',R(c.splitSocP));set('sp-socio-r',R(c.splitSocR));
+function sumByNameSP(list,name){var p=0,r=0;(list||[]).forEach(function(e){if((e.nome||'').trim().toLowerCase()===String(name||'').trim().toLowerCase()){p+=e.p;r+=e.r;}});return{p:p,r:r};}
+var hasBar=(c.barNetP||0)!==0||(c.barNetR||0)!==0;
+var barRow=$('split-base-bar-row');
+if(barRow)barRow.style.display=hasBar?'flex':'none';
+if(hasBar){
+set('sp-base-bar-p',R(c.barNetP));set('sp-base-bar-r',R(c.barNetR));
+set('sp-base-total-p',R(c.blp+c.barNetP));set('sp-base-total-r',R(c.blr+c.barNetR));
+}
+['axis','artista','socio'].forEach(function(k){
+var labelName=(D.labels&&D.labels[k])||(k==='axis'?'Axis':k==='artista'?'Artista':'Parceiro');
+var share=sumByNameSP(c.barRecipientsCalc,labelName);
+var elBar=$('sp-'+k+'-bar');
+if(!elBar)return;
+if(hasBar&&(share.p||share.r)){
+var baseP=(k==='axis'?c.splitAxisP:k==='artista'?c.splitArtP:c.splitSocP);
+var baseR=(k==='axis'?c.splitAxisR:k==='artista'?c.splitArtR:c.splitSocR);
+elBar.style.display='block';
+elBar.innerHTML='+ Bar: '+R(share.p)+' proj / '+R(share.r)+' real &rarr; <strong>Total: '+R(baseP+share.p)+' / '+R(baseR+share.r)+'</strong>';
+}else{
+elBar.style.display='none';
+elBar.innerHTML='';
+}
+});
 var w=$('split-warn');
 if(w){
 var t=c.splitTotal;
