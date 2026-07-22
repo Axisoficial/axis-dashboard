@@ -179,6 +179,7 @@ button{cursor:pointer;border:none;border-radius:6px;font-size:13px;font-weight:6
 .modal-confirm{background:var(--red);color:#fff;padding:9px 20px}
 .modal-confirm:hover{background:#dc2626}
 @media print{
+@page{size:A4;margin:8mm}
 *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
 #tabs,.header-btns,.evento-fields,.modal-overlay,.add-btn,.del-setor,.del-lote,.del-item,.del-grupo,.add-item-btn,.add-setor-btn,.add-grupo-wrap,.rename-btn{display:none!important}
 body{background:#fff;font-size:11px}
@@ -187,9 +188,9 @@ body{background:#fff;font-size:11px}
 #content{padding:10px;max-width:100%}
 .tab-pane{display:block!important}
 .modal-overlay{display:none!important}
-.section{break-inside:avoid}
-.grupo{break-inside:avoid}
-.setor{break-inside:avoid}
+.section{break-inside:auto;margin-bottom:8px}
+.grupo{break-inside:avoid;margin-bottom:6px}
+.setor{break-inside:auto;margin-bottom:6px}
 .setor[data-tot="0"],.lote[data-tot="0"],.grupo[data-tot="0"]{display:none!important}
 .chevron,.lv-chevron,.g-chevron{display:none!important}
 input:not([type="checkbox"]),select,textarea{border:none!important;background:transparent!important;box-shadow:none!important;color:#000!important;-webkit-appearance:none!important;appearance:none!important;padding:1px 2px!important}
