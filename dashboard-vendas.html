@@ -165,7 +165,7 @@ footer { text-align: center; color: var(--muted); font-size: 12px; padding: 24px
 <a href="https://sis.ingressodigital.com/adm/ven_sessao.php" target="_blank" class="plat-link plat-id">Ingresso Digital</a>
 <a href="https://produtor.icones.com.br" target="_blank" class="plat-link plat-icones">Ícones</a>
 </div>
-<div class="header-meta">Atualizado em 23/07/2026 16:00</div>
+<div class="header-meta">Atualizado em 23/07/2026 20:12</div>
 </header>
 
 <div class="tab-nav">
@@ -193,10 +193,10 @@ footer { text-align: center; color: var(--muted); font-size: 12px; padding: 24px
 <div class="val">R$ 247.983,00</div>
 <div class="lbl">Bilheteria Total</div>
 </div><div class="belo-stat warn">
-<div class="val">R$ 84.900,00</div>
-<div class="lbl">Receita de Bar (R$25 x público total)</div>
+<div class="val">R$ 118.860,00</div>
+<div class="lbl">Receita de Bar (R$35 x público total)</div>
 </div><div class="belo-stat warn">
-<div class="val">R$ 332.883,00</div>
+<div class="val">R$ 366.843,00</div>
 <div class="lbl">Total Projetado (Bilheteria + Bar)</div>
 </div>
 <div class="belo-stat warn">
@@ -224,11 +224,11 @@ footer { text-align: center; color: var(--muted); font-size: 12px; padding: 24px
 <div class="lbl">Venda do Dia · 23 ing. pagos (22/07)</div>
 </div>
 <div class="belo-stat alert">
-<div class="val">R$ 267.117</div>
+<div class="val">R$ 233.157</div>
 <div class="lbl">Falta p/ Breakeven</div>
 </div>
 <div class="belo-stat alert">
-<div class="val">R$ 29.679,67/dia</div>
+<div class="val">R$ 25.906,33/dia</div>
 <div class="lbl">Meta Diária (R$)</div>
 </div>
 </div>
@@ -243,13 +243,13 @@ footer { text-align: center; color: var(--muted); font-size: 12px; padding: 24px
 <div class="breakeven-bar">
 <div class="be-header">
 <span class="be-title">⚡ Ponto de Equilíbrio (Breakeven)</span>
-<span class="be-value">Projetado: R$ 332.883 de R$ 600.000 necessários (bilheteria + bar)</span>
+<span class="be-value">Projetado: R$ 366.843 de R$ 600.000 necessários (bilheteria + bar)</span>
 </div>
-<div class="progress-bar"><div class="breakeven-fill" style="width: 55.5%;"></div></div>
-<div class="breakeven-sub">55,5%⚠ Falta R$ 267.117 para cobrir o custo do evento100% = Breakeven</div>
+<div class="progress-bar"><div class="breakeven-fill" style="width: 61.1%;"></div></div>
+<div class="breakeven-sub">61,1%⚠ Falta R$ 233.157 para cobrir o custo do evento100% = Breakeven</div>
 </div>
 
-<div class="pace-alert">⚠️ Ritmo abaixo do necessário: média de vendas dos últimos 7 dias foi de R$ 2.714,29/dia (ingressos pagos, excluindo setor gratuito/cortesia), bem abaixo dos R$ 29.679,67/dia necessários nos 9 dias restantes. São precisos 3.301 ingressos pagos (R$ 267.117) para atingir o breakeven de R$ 600.000 (considerando bilheteria + bar).</div>
+<div class="pace-alert">⚠️ Ritmo abaixo do necessário: média de vendas dos últimos 7 dias foi de R$ 2.714,29/dia (ingressos pagos, excluindo setor gratuito/cortesia), bem abaixo dos R$ 25.906,33/dia necessários nos 9 dias restantes. São precisos 3.301 ingressos pagos (R$ 233.157) para atingir o breakeven de R$ 600.000 (considerando bilheteria + bar).</div>
 </div>
 
 <!-- KPI CARDS -->
@@ -280,9 +280,9 @@ footer { text-align: center; color: var(--muted); font-size: 12px; padding: 24px
 </div>
 <div class="kpi">
 <div class="kpi-label">Belo — Breakeven</div>
-<div class="kpi-value" style="color:var(--yellow)">55,48%</div>
+<div class="kpi-value" style="color:var(--yellow)">61,14%</div>
 <div class="kpi-sub">do breakeven de R$ 600.000 (bilheteria + bar)</div>
-<div class="kpi-today">R$ 332.883 projetados (bilheteria+bar) · falta R$ 267.117</div>
+<div class="kpi-today">R$ 366.843 projetados (bilheteria+bar) · falta R$ 233.157</div>
 </div>
 <div class="kpi">
 <div class="kpi-label">Total Vendidos (T360)</div>
@@ -1267,9 +1267,10 @@ document.getElementById('tabReport').addEventListener('click', function(){ showV
     var d = new Date(date); d.setHours(0,0,0,0);
     return Math.round((d - today) / 86400000);
   }
-  function buildStat(val, lbl){
+  function buildStat(val, lbl, color){
     var box = document.createElement('div'); box.className = 'belo-stat';
     var v = document.createElement('div'); v.className='val'; v.textContent = (val==null || val==='') ? '—' : val;
+    if (color) v.style.color = color;
     var l = document.createElement('div'); l.className='lbl'; l.textContent = lbl;
     box.appendChild(v); box.appendChild(l);
     return box;
@@ -1292,26 +1293,37 @@ document.getElementById('tabReport').addEventListener('click', function(){ showV
     var CUSTOS = {'chico chico': 120000};
     var custoKey = Object.keys(CUSTOS).find(function(k){ return ev.name.toLowerCase().indexOf(k) >= 0; });
     var custo = custoKey ? CUSTOS[custoKey] : null;
+    var BAR_RATE = {'belo in concert': 35, 'chico chico': 35, 'zoom music': 35, 'monja coen': 15, 'suzy brasil': 15, 'show da luna': 15, 'choppada': 0};
+    var barRateKey = Object.keys(BAR_RATE).find(function(k){ return ev.name.toLowerCase().indexOf(k) >= 0; });
+    var barRate = barRateKey != null ? BAR_RATE[barRateKey] : 0;
     var vendNumC = parseFloat((ev.vendas||'0').replace(/[^0-9]/g,'')) || 0;
+    var cortNumC = parseFloat((ev.cortesias||'0').replace(/[^0-9]/g,'')) || 0;
     var tmNumC = parseMoney(ev.tm);
     var arrNumC = parseMoney(ev.arrecadado);
-    var metaC = 0, restC = 0, metaDiariaC = 0, pctC = 0;
+    var barNumC = (vendNumC + cortNumC) * barRate;
+    var arrTotalC = arrNumC + barNumC;
+    var metaC = 0, restC = 0, metaDiariaC = 0, pctC = 0, lucroC = 0;
     if (custo){
       metaC = tmNumC>0 ? Math.round(custo/tmNumC) : 0;
       var capNumC = parseInt((ev.capacidade||"").split("/")[1]||"", 10);
-      if (!isNaN(capNumC) && capNumC>0 && metaC>capNumC){ metaC = capNumC; }
-      restC = Math.max(0, metaC - vendNumC);
+      if (!isNaN(capNumC) && capNumC>0) {
+         restC = Math.max(0, metaC - vendNumC);
+      } else {
+         restC = Math.max(0, metaC - vendNumC);
+      }
       metaDiariaC = dias>0 ? Math.round(restC/dias) : restC;
-      pctC = custo>0 ? Math.round((arrNumC/custo)*1000)/10 : 0;
+      pctC = custo>0 ? Math.round((arrTotalC/custo)*1000)/10 : 0;
+      lucroC = arrTotalC - custo;
       stats.appendChild(buildStat(metaC.toLocaleString('pt-BR'), 'Meta de Ingressos'));
       stats.appendChild(buildStat(restC.toLocaleString('pt-BR'), 'Restam a Vender'));
       stats.appendChild(buildStat(metaDiariaC.toLocaleString('pt-BR') + '/dia', 'Meta Diária Necessária'));
       stats.appendChild(buildStat(pctC.toFixed(1).replace('.', ',') + '%', 'Breakeven'));
+      stats.appendChild(buildStat((lucroC>=0 ? 'R$ ' : '- R$ ') + Math.round(Math.abs(lucroC)).toLocaleString('pt-BR'), 'Lucro Estimado (c/ Bar)', lucroC>=0 ? '#3b82f6' : '#e4212f'));
     }
     wrap.appendChild(h2); wrap.appendChild(sub); wrap.appendChild(stats);
     if (custo){
       var pw = document.createElement('div'); pw.className='progress-wrap';
-      var pl = document.createElement('div'); pl.className='progress-label'; pl.textContent = 'Progresso Meta Ingressos ('+pctC.toFixed(1).replace('.', ',')+'%) ' + vendNumC.toLocaleString('pt-BR') + ' / ' + metaC.toLocaleString('pt-BR') + ' ingressos';
+      var pl = document.createElement('div'); pl.className='progress-label'; pl.textContent = 'Progresso Meta Ingressos (' + pctC.toFixed(1).replace('.', ',') + '%) ' + vendNumC.toLocaleString('pt-BR') + ' / ' + metaC.toLocaleString('pt-BR') + ' ingressos';
       var pbar = document.createElement('div'); pbar.className='progress-bar';
       var pfill = document.createElement('div'); pfill.className='progress-fill'; pfill.style.width = Math.min(100,pctC)+'%';
       pbar.appendChild(pfill); pw.appendChild(pl); pw.appendChild(pbar);
@@ -1319,12 +1331,13 @@ document.getElementById('tabReport').addEventListener('click', function(){ showV
       var bb = document.createElement('div'); bb.className='breakeven-bar';
       var bh = document.createElement('div'); bh.className='be-header';
       var bt = document.createElement('span'); bt.className='be-title'; bt.textContent='⚡ Ponto de Equilíbrio (Breakeven)';
-      var bv = document.createElement('span'); bv.className='be-value'; bv.textContent='Arrecadado: R$ ' + Math.round(arrNumC).toLocaleString('pt-BR') + ' de R$ ' + custo.toLocaleString('pt-BR') + ' necessários';
+      var bv = document.createElement('span'); bv.className='be-value'; bv.textContent='Arrecadado (ingressos + bar): R$ ' + Math.round(arrTotalC).toLocaleString('pt-BR') + ' de R$ ' + custo.toLocaleString('pt-BR') + ' necessários';
       bh.appendChild(bt); bh.appendChild(bv);
       var bbar = document.createElement('div'); bbar.className='progress-bar';
       var bfill = document.createElement('div'); bfill.className='breakeven-fill'; bfill.style.width = Math.min(100,pctC)+'%';
       bbar.appendChild(bfill);
-      var bsub = document.createElement('div'); bsub.className='breakeven-sub'; bsub.textContent = pctC.toFixed(1).replace('.', ',') + '% · Falta R$ ' + Math.round(custo-arrNumC).toLocaleString('pt-BR') + ' para cobrir o custo do evento · 100% = Breakeven';
+      var bsub = document.createElement('div'); bsub.className='breakeven-sub';
+      bsub.textContent = pctC.toFixed(1).replace('.', ',') + '% · ' + (lucroC>=0 ? ('Lucro estimado de R$ ' + Math.round(lucroC).toLocaleString('pt-BR')) : ('Falta R$ ' + Math.round(custo-arrTotalC).toLocaleString('pt-BR') + ' para cobrir o custo do evento')) + ' · 100% = Breakeven';
       bb.appendChild(bh); bb.appendChild(bbar); bb.appendChild(bsub);
       wrap.appendChild(bb);
     }
