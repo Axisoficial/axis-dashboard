@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
-<head>
+<html lang="pt-BR"><head>
 <script src="auth.js"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -37,7 +36,7 @@ iframe{width:100%;height:100%;border:none}
 <button class="tab" onclick="showTab('vendas',this)" id="btn-vendas"><span class="tab-emoji">📈</span> Vendas</button>
           <button class="tab" id="btn-agenciamento" onclick="showTab('agenciamento',this)">
             <span>🎤 Agenciamento</span>
-          </button>
+          </button><button class="tab" id="btn-propostas" onclick="showTab('propostas',this)">🎫 Propostas Artistas</button>
 
           <button class="nav-btn" id="btn-logout" onclick="doLogout()" style="margin-left:auto;background:rgba(255,60,60,0.15);border-color:rgba(255,60,60,0.4);color:#ff6b6b;" title="Sair"><span>⏻ Sair</span></button>
 </div>
@@ -45,15 +44,15 @@ iframe{width:100%;height:100%;border:none}
 <div class="frame-wrap active" id="fw-dashboard"><div class="loading-overlay" id="ld-dashboard"><div class="spinner"></div><p>Carregando Dashboard...</p></div><iframe id="fr-dashboard" src="dashboard-vendas.html?v=20260702" onload="frameLoaded('dashboard')"></iframe></div>
       <div id="fw-agenciamento" class="frame-wrap">
         <div class="loading-overlay" id="ld-agenciamento"><div class="spinner"></div><p>Carregando Agenciamento...</p></div>
-        <iframe id="fr-agenciamento" src="./viabilidade-agenciamento.html" onload="_loaded['agenciamento']=true;var ld=document.getElementById('ld-agenciamento');if(ld)ld.classList.add('hidden');" style="width:100%;height:100%;border:none;" allowfullscreen></iframe>
-      </div>
+        <iframe id="fr-agenciamento" src="./viabilidade-agenciamento.html" onload="_loaded['agenciamento']=true;var ld=document.getElementById('ld-agenciamento');if(ld)ld.classList.add('hidden');" style="width:100%;height:100%;border:none;" allowfullscreen=""></iframe>
+      </div><div class="frame-wrap" id="fw-propostas"><div class="loading-overlay hidden" id="ld-propostas"><div class="spinner"></div><p>Carregando Propostas Artistas...</p></div><iframe id="fr-propostas" src="propostas-artistas.html" style="width:100%;height:100%;border:none;" onload="_loaded['propostas']=true;var ld=document.getElementById('ld-propostas');if(ld)ld.classList.add('hidden');" allowfullscreen=""></iframe></div>
 <div class="frame-wrap" id="fw-custos"><div class="loading-overlay" id="ld-custos"><div class="spinner"></div><p>Carregando Custos...</p></div><iframe id="fr-custos" src="custos.html" onload="frameLoaded('custos')"></iframe></div>
 <div class="frame-wrap" id="fw-viabilidade"><div class="loading-overlay" id="ld-viabilidade"><div class="spinner"></div><p>Carregando Viabilidade...</p></div><iframe id="fr-viabilidade" src="viabilidade.html?v=17" onload="frameLoaded('viabilidade')"></iframe></div>
 <div class="frame-wrap" id="fw-producao"><div class="loading-overlay" id="ld-producao"><div class="spinner"></div><p>Carregando Produção...</p></div><iframe id="fr-producao" src="producao.html" onload="frameLoaded('producao')"></iframe></div>
 <div class="frame-wrap" id="fw-vendas"><div class="loading-overlay" id="ld-vendas"><div class="spinner"></div><p>Carregando Vendas...</p></div><iframe id="fr-vendas" src="dashboard-vendas.html?v=20260702" onload="frameLoaded('vendas')"></iframe></div>
 </div>
 <script>
-var TABS=['dashboard','custos','viabilidade','producao','vendas','agenciamento'];
+var TABS=['dashboard','custos','viabilidade','producao','vendas','agenciamento','propostas'];
 var _loaded={};
 function showTab(name,btn){
 document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
@@ -99,5 +98,6 @@ function doLogout(){
   window.location.href='./login.html';
 }
 </script>
-</body>
-</html>
+
+
+</body></html>
