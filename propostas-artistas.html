@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Propostas de Artistas — Axis Entretenimento</title>
+<link rel="icon" href="assets/axis-favicon.png">
+<style>
+:root{
+  --bg: #0a0a0a; --surface: #161616; --surface2: #202020;
+  --accent: #e4212f; --accent2: #ff4d5e; --green: #43e97b;
+  --yellow: #f7971e; --red: #e4212f; --text: #f5f5f5;
+  --muted: #9a9a9a; --border: #2a2a2a;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  background:var(--bg); color:var(--text);
+  font-family:'Segoe UI', sans-serif;
+  min-height:100vh;
+}
+header.header{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:18px 28px; border-bottom:1px solid var(--border);
+  background:var(--surface); flex-wrap:wrap; gap:12px;
+}
+.header-left{display:flex; align-items:center; gap:14px;}
+.header-left img{height:38px;}
+.header-left h1{font-size:19px; font-weight:600;}
+.header-left .sub{font-size:12px; color:var(--muted); margin-top:2px;}
+.header-btns{display:flex; gap:10px; flex-wrap:wrap;}
+.btn{
+  border:1px solid var(--border); background:var(--surface2); color:var(--text);
+  padding:9px 16px; border-radius:8px; font-size:13px; cursor:pointer;
+  text-decoration:none; display:inline-flex; align-items:center; gap:6px;
+  transition:border-color .15s, background .15s;
+}
+.btn:hover{border-color:var(--accent); background:#262626;}
+.btn.primary{background:var(--accent); border-color:var(--accent); color:#fff; font-weight:600;}
+.btn.primary:hover{background:var(--accent2);}
+.btn.small{padding:6px 12px; font-size:12px;}
+.btn.danger{color:var(--accent2); border-color:#3a1c1e;}
+
+main{max-width:1100px; margin:0 auto; padding:28px 20px 60px;}
+
+.section-card{
+  background:var(--surface); border:1px solid var(--border); border-radius:12px;
+  padding:22px 24px; margin-bottom:24px;
+}
+.section-card h2{font-size:16px; margin-bottom:16px; display:flex; align-items:center; gap:8px;}
+.section-card h2 .tag{
+  font-size:11px; background:var(--accent); color:#fff; padding:2px 8px; border-radius:6px; font-weight:600;
+}
+
+form#proposalForm{
+  display:grid; grid-template-columns:repeat(2, 1fr); gap:16px 20px;
+}
+.field{display:flex; flex-direction:column; gap:6px;}
+.field.full{grid-column:1 / -1;}
+.field label{font-size:12px; color:var(--muted); font-weight:600;}
+.field input, .field select, .field textarea{
+  background:var(--surface2); border:1px solid var(--border); color:var(--text);
+  padding:10px 12px; border-radius:8px; font-size:14px; font-family:inherit;
+}
+.field input:focus, .field select:focus, .field textarea:focus{outline:none; border-color:var(--accent);}
+.field textarea{resize:vertical; min-height:70px;}
+.form-actions{grid-column:1 / -1; display:flex; justify-content:flex-end; gap:10px; margin-top:6px;}
+
+.proposal-list{display:flex; flex-direction:column; gap:12px;}
+.proposal-card{
+  background:var(--surface2); border:1px solid var(--border); border-radius:10px;
+  padding:16px 18px; display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap;
+}
+.proposal-info h3{font-size:15px; margin-bottom:4px;}
+.proposal-info .meta{font-size:12px; color:var(--muted); display:flex; gap:14px; flex-wrap:wrap;}
+.proposal-info .cache{color:var(--green); font-weight:700; font-size:14px; margin-top:4px;}
+.status-badge{
+  font-size:11px; padding:3px 10px; border-radius:20px; font-weight:600; text-transform:uppercase;
+}
+.status-negociacao{background:#3a2f10; color:var(--yellow);}
+.status-enviada{background:#1a2a3a; color:#5eb3ff;}
+.status-aceita{background:#12331f; color:var(--green);}
+.status-recusada{background:#3a1c1e; color:var(--accent2);}
+.proposal-actions{display:flex; gap:8px; flex-wrap:wrap;}
+.empty-state{color:var(--muted); font-size:13px; text-align:center; padding:30px 0;}
+
+/* ---------- Print template (hidden on screen) ---------- */
+#printArea{display:none;}
+
+@media print{
+  body *{visibility:hidden;}
+  #printArea, #printArea *{visibility:visible;}
+  #printArea{
+    display:block; position:absolute; top:0; left:0; width:100%;
+    background:#fff; color:#000; padding:40px 50px; font-family:'Segoe UI', sans-serif;
+  }
+  .print-header{display:flex; align-items:center; justify-content:space-between; border-bottom:3px solid #e4212f; padding-bottom:16px; margin-bottom:28px;}
+  .print-header img{height:48px;}
+  .print-header .doc-title{text-align:right;}
+  .print-header .doc-title .label{font-size:11px; letter-spacing:1px; color:#888; text-transform:uppercase;}
+  .print-header .doc-title .num{font-size:13px; color:#444; margin-top:2px;}
+  .print-artist{font-size:28px; font-weight:700; margin-bottom:4px; color:#111;}
+  .print-artist-sub{font-size:13px; color:#666; margin-bottom:26px;}
+  .print-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px 30px; margin-bottom:26px;}
+  .print-field{border-bottom:1px solid #ddd; padding-bottom:10px;}
+  .print-field .lbl{font-size:10px; text-transform:uppercase; letter-spacing:.5px; color:#999; margin-bottom:4px;}
+  .print-field .val{font-size:15px; color:#111; font-weight:600;}
+  .print-cache{background:#fdf1f2; border:1px solid #e4212f; border-radius:8px; padding:16px 20px; margin-bottom:26px; display:flex; justify-content:space-between; align-items:center;}
+  .print-cache .lbl{font-size:11px; text-transform:uppercase; color:#e4212f; font-weight:700; letter-spacing:.5px;}
+  .print-cache .val{font-size:24px; font-weight:800; color:#e4212f;}
+  .print-obs{margin-bottom:34px;}
+  .print-obs .lbl{font-size:10px; text-transform:uppercase; letter-spacing:.5px; color:#999; margin-bottom:6px;}
+  .print-obs .val{font-size:13px; color:#333; line-height:1.6; white-space:pre-wrap;}
+  .print-sign{display:flex; justify-content:space-between; margin-top:60px;}
+  .print-sign .sign-block{width:45%; text-align:center;}
+  .print-sign .sign-line{border-top:1px solid #333; margin-bottom:8px;}
+  .print-sign .sign-label{font-size:11px; color:#666;}
+  .print-footer{margin-top:40px; padding-top:14px; border-top:1px solid #ddd; font-size:10px; color:#999; display:flex; justify-content:space-between;}
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-left">
+    <img src="assets/axis-logo.png" alt="Axis Entretenimento">
+    <div>
+      <h1>Propostas de Artistas</h1>
+      <div class="sub">Cadastre valores e datas — gere o PDF da proposta comercial em um clique</div>
+    </div>
+  </div>
+  <div class="header-btns">
+    <a class="btn" href="dashboard-vendas.html">← Dashboard de Vendas</a>
+  </div>
+</header>
+
+<main>
+
+  <div class="section-card">
+    <h2><span class="tag">NOVA</span> Nova Proposta</h2>
+    <form id="proposalForm">
+      <div class="field">
+        <label for="artista">Artista</label>
+        <input type="text" id="artista" required placeholder="Ex: Belo">
+      </div>
+      <div class="field">
+        <label for="dataShow">Data do Show</label>
+        <input type="date" id="dataShow" required>
+      </div>
+      <div class="field">
+        <label for="local">Cidade / Local</label>
+        <input type="text" id="local" required placeholder="Ex: Shopping Park Sul — Volta Redonda/RJ">
+      </div>
+      <div class="field">
+        <label for="cache">Valor do Cachê (R$)</label>
+        <input type="text" id="cache" required placeholder="Ex: 80.000,00" inputmode="decimal">
+      </div>
+      <div class="field">
+        <label for="pagamento">Forma de Pagamento</label>
+        <input type="text" id="pagamento" placeholder="Ex: 50% sinal + 50% no dia do show">
+      </div>
+      <div class="field">
+        <label for="duracao">Duração da Apresentação</label>
+        <input type="text" id="duracao" placeholder="Ex: 90 minutos">
+      </div>
+      <div class="field">
+        <label for="validade">Validade da Proposta</label>
+        <input type="date" id="validade">
+      </div>
+      <div class="field">
+        <label for="status">Status</label>
+        <select id="status">
+          <option value="negociacao">Em negociação</option>
+          <option value="enviada">Enviada</option>
+          <option value="aceita">Aceita</option>
+          <option value="recusada">Recusada</option>
+        </select>
+      </div>
+      <div class="field full">
+        <label for="responsavel">Contratante / Responsável Axis</label>
+        <input type="text" id="responsavel" placeholder="Ex: Felipe Brito — Axis Entretenimento">
+      </div>
+      <div class="field full">
+        <label for="obs">Observações / Cláusulas Adicionais</label>
+        <textarea id="obs" placeholder="Ex: Inclui camarim, hospedagem para 4 pessoas, som e luz por conta do contratante..."></textarea>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn primary">+ Salvar Proposta</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="section-card">
+    <h2><span class="tag" style="background:var(--surface2); color:var(--muted); border:1px solid var(--border);">LISTA</span> Propostas Salvas</h2>
+    <div class="proposal-list" id="proposalList">
+      <div class="empty-state">Nenhuma proposta cadastrada ainda.</div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ===================== PRINT / PDF TEMPLATE ===================== -->
+<div id="printArea">
+  <div class="print-header">
+    <img src="assets/axis-logo.png" alt="Axis Entretenimento">
+    <div class="doc-title">
+      <div class="label">Proposta Comercial</div>
+      <div class="num" id="p-num"></div>
+    </div>
+  </div>
+
+  <div class="print-artist" id="p-artista"></div>
+  <div class="print-artist-sub" id="p-sub"></div>
+
+  <div class="print-grid">
+    <div class="print-field"><div class="lbl">Data do Show</div><div class="val" id="p-data"></div></div>
+    <div class="print-field"><div class="lbl">Cidade / Local</div><div class="val" id="p-local"></div></div>
+    <div class="print-field"><div class="lbl">Duração da Apresentação</div><div class="val" id="p-duracao"></div></div>
+    <div class="print-field"><div class="lbl">Validade da Proposta</div><div class="val" id="p-validade"></div></div>
+    <div class="print-field"><div class="lbl">Forma de Pagamento</div><div class="val" id="p-pagamento"></div></div>
+    <div class="print-field"><div class="lbl">Contratante / Responsável</div><div class="val" id="p-responsavel"></div></div>
+  </div>
+
+  <div class="print-cache">
+    <div class="lbl">Valor do Cachê</div>
+    <div class="val" id="p-cache"></div>
+  </div>
+
+  <div class="print-obs">
+    <div class="lbl">Observações / Cláusulas Adicionais</div>
+    <div class="val" id="p-obs"></div>
+  </div>
+
+  <div class="print-sign">
+    <div class="sign-block">
+      <div class="sign-line"></div>
+      <div class="sign-label">Axis Entretenimento</div>
+    </div>
+    <div class="sign-block">
+      <div class="sign-line"></div>
+      <div class="sign-label" id="p-artista-sign">Artista / Representante</div>
+    </div>
+  </div>
+
+  <div class="print-footer">
+    <span>Axis Entretenimento — Proposta gerada em <span id="p-gerado"></span></span>
+    <span>axisentretenimento.com.br</span>
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY = 'axis_propostas_artistas';
+
+function loadProposals(){
+  try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }catch(e){ return []; }
+}
+function saveProposals(list){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+}
+function fmtDate(iso){
+  if(!iso) return '—';
+  const [y,m,d] = iso.split('-');
+  return `${d}/${m}/${y}`;
+}
+function statusLabel(s){
+  return {negociacao:'Em negociação', enviada:'Enviada', aceita:'Aceita', recusada:'Recusada'}[s] || s;
+}
+
+function render(){
+  const list = loadProposals();
+  const el = document.getElementById('proposalList');
+  if(list.length === 0){
+    el.innerHTML = '<div class="empty-state">Nenhuma proposta cadastrada ainda.</div>';
+    return;
+  }
+  el.innerHTML = list.map((p, i) => `
+    <div class="proposal-card">
+      <div class="proposal-info">
+        <h3>${p.artista}</h3>
+        <div class="meta">
+          <span>📅 ${fmtDate(p.dataShow)}</span>
+          <span>📍 ${p.local || '—'}</span>
+          <span class="status-badge status-${p.status}">${statusLabel(p.status)}</span>
+        </div>
+        <div class="cache">R$ ${p.cache}</div>
+      </div>
+      <div class="proposal-actions">
+        <button class="btn small primary" onclick="gerarPDF(${i})">📄 Gerar PDF</button>
+        <button class="btn small danger" onclick="excluirProposta(${i})">Excluir</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+document.getElementById('proposalForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  const list = loadProposals();
+  list.unshift({
+    artista: document.getElementById('artista').value.trim(),
+    dataShow: document.getElementById('dataShow').value,
+    local: document.getElementById('local').value.trim(),
+    cache: document.getElementById('cache').value.trim(),
+    pagamento: document.getElementById('pagamento').value.trim(),
+    duracao: document.getElementById('duracao').value.trim(),
+    validade: document.getElementById('validade').value,
+    status: document.getElementById('status').value,
+    responsavel: document.getElementById('responsavel').value.trim(),
+    obs: document.getElementById('obs').value.trim(),
+    criadoEm: new Date().toISOString()
+  });
+  saveProposals(list);
+  this.reset();
+  render();
+});
+
+function excluirProposta(i){
+  const list = loadProposals();
+  list.splice(i, 1);
+  saveProposals(list);
+  render();
+}
+
+function gerarPDF(i){
+  const p = loadProposals()[i];
+  document.getElementById('p-num').textContent = 'Nº ' + (i+1).toString().padStart(4,'0') + ' — ' + fmtDate(p.dataShow).replace(/\//g,'');
+  document.getElementById('p-artista').textContent = p.artista;
+  document.getElementById('p-sub').textContent = 'Proposta de contratação artística';
+  document.getElementById('p-data').textContent = fmtDate(p.dataShow);
+  document.getElementById('p-local').textContent = p.local || '—';
+  document.getElementById('p-duracao').textContent = p.duracao || '—';
+  document.getElementById('p-validade').textContent = p.validade ? fmtDate(p.validade) : '—';
+  document.getElementById('p-pagamento').textContent = p.pagamento || '—';
+  document.getElementById('p-responsavel').textContent = p.responsavel || '—';
+  document.getElementById('p-cache').textContent = 'R$ ' + (p.cache || '—');
+  document.getElementById('p-obs').textContent = p.obs || '—';
+  document.getElementById('p-gerado').textContent = new Date().toLocaleDateString('pt-BR') + ' às ' + new Date().toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
+  window.print();
+}
+
+render();
+</script>
+
+</body>
+</html>
