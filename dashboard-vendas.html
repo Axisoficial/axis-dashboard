@@ -140,6 +140,19 @@ footer { text-align: center; color: var(--muted); font-size: 12px; padding: 24px
   #reportOutput .report-notes-print { display:block; }
 }
 
+
+/* ===== COMENTARIOS E LINK DRIVE (secoes estaticas/manuais, ver nota) ===== */
+.note { font-size: 12px; color: var(--muted); margin-top: 10px; line-height: 1.5; }
+.manual-box { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+.manual-box textarea { width: 100%; min-height: 140px; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-family: inherit; font-size: 14px; line-height: 1.5; resize: vertical; }
+.manual-box textarea:focus, .manual-box input:focus { outline: none; border-color: var(--accent); }
+.manual-box input[type="url"] { background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; font-family: inherit; font-size: 14px; }
+.manual-box .drive-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 10px; }
+.manual-box .drive-row input { flex: 1; min-width: 220px; }
+.manual-box .action-btn { background: var(--accent); color: #fff; border: none; border-radius: 8px; padding: 9px 16px; font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; }
+.manual-box .action-btn.secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+.manual-box .action-btn.disabled { background: var(--surface); color: var(--muted); pointer-events: none; }
+.save-indicator { font-size: 12px; color: var(--muted); }
 </style>
 <style id="axis-carousel-style">
 #axis-carousel{position:relative;overflow:hidden;}
@@ -926,7 +939,22 @@ footer { text-align: center; color: var(--muted); font-size: 12px; padding: 24px
 </div>
 </div>
 
+<div class="section"><!-- COMENTARIOS -->
+<div class="section-header">💬 Comentários</div>
+<div class="manual-box">
+<textarea id="axisComentarios" placeholder="Anote aqui observações, lembretes ou qualquer coisa que queira registrar sobre os eventos..."></textarea>
+<div class="note">As alterações ficam salvas automaticamente neste navegador.<span class="save-indicator" id="comentariosSaveIndicator"></span> Para sincronizar este texto no dashboard oficial (visível em qualquer aparelho), é só pedir pro Claude no chat.</div>
 </div>
+<!-- /COMENTARIOS --></div><div class="section"><!-- LINK DRIVE -->
+<div class="section-header">📎 Link do Drive</div>
+<div class="manual-box">
+<div class="drive-row">
+<input type="url" id="axisDriveLink" placeholder="Cole aqui o link do Google Drive...">
+<a id="axisDriveOpenBtn" class="action-btn secondary disabled" href="#" target="_blank" rel="noopener">Abrir link</a>
+</div>
+<div class="note">As alterações ficam salvas automaticamente neste navegador.<span class="save-indicator" id="driveSaveIndicator"></span> Para sincronizar este link no dashboard oficial (visível em qualquer aparelho), é só pedir pro Claude no chat.</div>
+</div>
+<!-- /LINK DRIVE --></div></div>
 
 <footer>
 Axis Entretenimento · Dashboard Comercial · Atualizado em 10/07/2026 às
@@ -1429,5 +1457,79 @@ document.getElementById('tabReport').addEventListener('click', function(){ showV
   }, {passive:true});
 
   render(); resetTimer();
+})();
+</script><script>
+// ===== COMENTARIOS E LINK DRIVE: secoes manuais/estaticas =====
+// AVISO PARA A AUTOMACAO: este bloco (entre <!-- COMENTARIOS --> e <!-- LINK DRIVE -->)
+// NUNCA deve ser sobrescrito pela atualizacao automatica de dados do dashboard
+// (task dashboard-vendas-diario). Ver SKILL.md da task.
+//
+// DECISAO DE DESIGN (11/08/2026): a primeira ideia era um botao "Salvar" que gravasse
+// direto no arquivo do dashboard via API do GitHub, pra sincronizar entre aparelhos.
+// Isso foi tentado e o proprio GitHub bloqueou o commit por "secret scanning" (deteccao
+// de token exposto no HTML) — na pratica confirmando o risco de seguranca de colocar
+// um token de escrita no repo no lado do cliente. Por isso, a versao publicada usa
+// apenas localStorage (por navegador). Para sincronizar entre aparelhos, pedir pro
+// Claude no chat, que publica usando seu proprio acesso (sem expor token no navegador).
+(function() {
+  var COMENTARIOS_KEY = 'axis_dashboard_comentarios';
+  var DRIVE_LINK_KEY = 'axis_dashboard_drive_link';
+
+  function flashIndicator(el) {
+    if (!el) return;
+    el.textContent = ' ✓ salvo';
+    clearTimeout(el._hideTimer);
+    el._hideTimer = setTimeout(function() { el.textContent = ''; }, 1500);
+  }
+
+  function initComentarios() {
+    var textarea = document.getElementById('axisComentarios');
+    var indicator = document.getElementById('comentariosSaveIndicator');
+    if (!textarea) return;
+    try {
+      var saved = localStorage.getItem(COMENTARIOS_KEY);
+      if (saved !== null) textarea.value = saved;
+    } catch (e) {}
+    var timer = null;
+    textarea.addEventListener('input', function() {
+      clearTimeout(timer);
+      timer = setTimeout(function() {
+        try { localStorage.setItem(COMENTARIOS_KEY, textarea.value); flashIndicator(indicator); } catch (e) {}
+      }, 400);
+    });
+  }
+
+  function initDriveLink() {
+    var input = document.getElementById('axisDriveLink');
+    var indicator = document.getElementById('driveSaveIndicator');
+    var openBtn = document.getElementById('axisDriveOpenBtn');
+    if (!input) return;
+    function updateOpenBtn() {
+      var val = (input.value || '').trim();
+      if (val) { openBtn.href = val; openBtn.classList.remove('disabled'); }
+      else { openBtn.href = '#'; openBtn.classList.add('disabled'); }
+    }
+    try {
+      var saved = localStorage.getItem(DRIVE_LINK_KEY);
+      if (saved !== null) input.value = saved;
+    } catch (e) {}
+    updateOpenBtn();
+    var timer = null;
+    input.addEventListener('input', function() {
+      clearTimeout(timer);
+      timer = setTimeout(function() {
+        try { localStorage.setItem(DRIVE_LINK_KEY, input.value); flashIndicator(indicator); } catch (e) {}
+        updateOpenBtn();
+      }, 400);
+    });
+  }
+
+  function init() { initComentarios(); initDriveLink(); }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
 })();
 </script></body></html>
