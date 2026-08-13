@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
-<head>
+<html lang="pt-BR"><head>
   <script src="auth.js"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Produção & Marketing — Axis</title>
+<title>Produção &amp; Marketing — Axis</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--bg:#f1f5f9;--panel:#fff;--nav:#0f172a;--red:#ef4444;--green:#16a34a;--amber:#d97706;--blue:#2563eb;--purple:#7c3aed;--text:#1e293b;--muted:#64748b;--border:#e2e8f0;--input-bg:#f8fafc}
@@ -129,7 +128,7 @@ body{background:#fff}
     <div class="logo-badge">MÚSICA ENTRETENIMENTO CORPORATIVO</div>
   </div>
   <div class="page-title">
-    Produção & Marketing
+    Produção &amp; Marketing
     <span>Checklist por evento — Status · Responsável · Prazo</span>
   </div>
   <div class="nav-links">
@@ -260,7 +259,7 @@ var AREAS = [
 // DEFAULTS — eventos pré-carregados
 // ================================================================
 function mkTask(desc){
-  return { id: uid(), desc: desc, status: 'pendente', resp: '', prazo: '' };
+  return { id: uid(), desc: desc, status: 'pendente', resp: '', prazo: '', comentarios: '' };
 }
 function mkArea(areaCfg){
   return { id: areaCfg.id, tarefas: areaCfg.defaults.map(mkTask) };
@@ -275,17 +274,11 @@ function mkEvento(nome){
 }
 
 var DEFAULT_EVENTOS = [
-  'Belo In Concert',
-  'Fun Fest — Pique Novo & Rogerinho',
-  'Fun Fest — DJ Zullu & Pokémon DJ',
-  'Fun Fest — Bruno Diegues',
-  'Fun Fest — Gamadinho',
-  'Fun Fest — Tá Na Mente',
-  'Fun Fest — 3 datas (08, 14, 19/07)',
-  '4 Amigos 2026',
-  'Matuê e Brandão — Guarulhos',
-  'Chico Chico — Deixa Arder',
-  'ZOOM Music Festival'
+  'Simplesmente Roupa Nova',
+  'Lagum e Rod Melim',
+  'Monja Coen',
+  'Chico Chico — Turnê Let It Burn',
+  'ZOOM Music Festival — Veigh & Alee'
 ];
 
 // ================================================================
@@ -383,6 +376,9 @@ function render(){
           h += '<input type="text" class="resp-input" value="'+esc(t.resp)+'" placeholder="👤 Responsável" oninput="upResp(\''+ev.id+'\',\''+area.id+'\',\''+t.id+'\',this.value)">';
           h += '</div>';
           h += '<div style="margin-top:4px">';
+          h += '<input type="text" class="resp-input" value="'+esc(t.comentarios||'')+'" placeholder="🔗 Comentários / links" oninput="upComentario(\''+ev.id+'\',\''+area.id+'\',\''+t.id+'\',this.value)">';
+          h += '</div>';
+          h += '<div style="margin-top:4px">';
           h += '<input type="date" style="width:100%;font-size:11px;padding:3px 5px;border-radius:4px;border:1px solid var(--border);background:var(--input-bg);color:var(--text)" value="'+esc(t.prazo)+'" oninput="upPrazo(\''+ev.id+'\',\''+area.id+'\',\''+t.id+'\',this.value)" title="Prazo">';
           h += '</div>';
           h += '</div>';
@@ -477,6 +473,11 @@ function upPrazo(evId, aId, tId, val){
   t.prazo = val; sv();
 }
 
+function upComentario(evId, aId, tId, val){
+  var t = fTask(evId, aId, tId); if(!t) return;
+  t.comentarios = val; sv();
+}
+
 // ================================================================
 // MODAL
 // ================================================================
@@ -487,5 +488,6 @@ function hideModal(){ $('modal-ov').classList.remove('show'); }
 // ================================================================
 render();
 </script>
-</body>
-</html>
+
+
+</body></html>
