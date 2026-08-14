@@ -1,6 +1,23 @@
 <!DOCTYPE html>
 <html lang="pt-BR"><head>
   <script src="auth.js"></script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
+import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
+const firebaseConfig = {
+  apiKey: "AIzaSyAzlI5yQ3rt91dIYcAtsglvr8vTGFoj1-Y",
+  authDomain: "axis-producao.firebaseapp.com",
+  projectId: "axis-producao",
+  storageBucket: "axis-producao.firebasestorage.app",
+  messagingSenderId: "531283306534",
+  appId: "1:531283306534:web:a6b468c68d07af9ff59ee7"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const stateRef = doc(db, "producao", "state");
+window.__fs = { setDoc, getDoc, onSnapshot, stateRef };
+window.dispatchEvent(new Event("firebase-ready"));
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Produção &amp; Marketing — Axis</title>
@@ -144,6 +161,7 @@ body{background:#fff}
   <div class="sum-stat"><span class="sum-label">✅ Feitas</span><span class="sum-val green" id="s-done">—</span></div>
   <div class="sum-stat"><span class="sum-label">⏳ Em andamento</span><span class="sum-val amber" id="s-prog">—</span></div>
   <div class="sum-stat"><span class="sum-label">🔴 Pendentes</span><span class="sum-val red" id="s-pend">—</span></div>
+  <div class="sum-stat"><span id="sync-badge" style="font-size:12px;font-weight:700;color:#fbbf24">🟡 Conectando...</span></div>
   <div style="margin-left:auto">
     <button onclick="window.print()" style="background:rgba(255,255,255,.15);color:#fff;padding:7px 14px;border:1px solid rgba(255,255,255,.3)">🖨️ Imprimir</button>
   </div>
@@ -154,7 +172,7 @@ body{background:#fff}
     <input type="text" id="new-ev-nome" placeholder="Nome do novo evento (ex: Fun Fest — Gamadinho 2026)..." onkeydown="if(event.key==='Enter')addEvento()">
     <button class="btn-add-ev" onclick="addEvento()">+ Adicionar Evento</button>
   </div>
-  <div id="eventos-ct"></div>
+  <div id="eventos-ct"><div style="text-align:center;padding:40px;color:var(--muted)">Carregando dados compartilhados...</div></div>
 </div>
 
 <div class="modal-overlay" id="modal-ov">
@@ -176,7 +194,22 @@ var _id = 1;
 function uid(){ return 'u' + Date.now() + (_id++); }
 function $(id){ return document.getElementById(id); }
 function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function sv(){ localStorage.setItem('prod_v1', JSON.stringify(D)); }
+function sv(){
+  if(_saveTimer) clearTimeout(_saveTimer);
+  setSyncBadge("🟡 Salvando...", "#fbbf24");
+  _saveTimer = setTimeout(function(){
+    if(!window.__fs || !_ready) return;
+    var json = JSON.stringify(D);
+    if(json === _lastRemoteJSON){ setSyncBadge("🟢 Sincronizado", "#4ade80"); return; }
+    window.__fs.setDoc(window.__fs.stateRef, D).then(function(){
+      _lastRemoteJSON = json;
+      setSyncBadge("🟢 Sincronizado", "#4ade80");
+    }).catch(function(err){
+      console.error("Erro ao salvar no Firestore:", err);
+      setSyncBadge("🔴 Erro ao salvar", "#f87171");
+    });
+  }, 400);
+}
 function deepClone(o){ return JSON.parse(JSON.stringify(o)); }
 
 // ================================================================
@@ -285,13 +318,76 @@ var DEFAULT_EVENTOS = [
 // ================================================================
 // STATE
 // ================================================================
-var D = (function(){
-  try {
-    var s = localStorage.getItem('prod_v1');
-    if(s) return JSON.parse(s);
-  } catch(e) {}
-  return { eventos: DEFAULT_EVENTOS.map(mkEvento) };
-})();
+var D = { eventos: [] };
+var _ready = false;
+var _saveTimer = null;
+var _pendingRemote = null;
+var _lastRemoteJSON = null;
+
+function setSyncBadge(txt, color){
+  var b = $("sync-badge");
+  if(b){ b.textContent = txt; b.style.color = color; }
+}
+
+function isEditingInsideEventos(){
+  var ae = document.activeElement;
+  return !!(ae && ae.closest && ae.closest("#eventos-ct") && (ae.tagName==="INPUT"||ae.tagName==="TEXTAREA"||ae.tagName==="SELECT"));
+}
+
+function applyPendingIfIdle(){
+  if(_pendingRemote && !isEditingInsideEventos()){
+    D = _pendingRemote;
+    _pendingRemote = null;
+    render();
+  }
+}
+
+document.addEventListener("focusout", function(e){
+  if(e.target && e.target.closest && e.target.closest("#eventos-ct")){
+    setTimeout(applyPendingIfIdle, 50);
+  }
+}, true);
+
+function startFirebaseSync(){
+  var fs = window.__fs;
+  setSyncBadge("🟡 Conectando...", "#fbbf24");
+  fs.getDoc(fs.stateRef).then(function(snap){
+    if(snap.exists()){
+      D = snap.data();
+    } else {
+      D = { eventos: DEFAULT_EVENTOS.map(mkEvento) };
+      fs.setDoc(fs.stateRef, D).catch(function(err){ console.error("Erro na criacao inicial do estado compartilhado:", err); });
+    }
+    _lastRemoteJSON = JSON.stringify(D);
+    _ready = true;
+    render();
+    setSyncBadge("🟢 Sincronizado", "#4ade80");
+    fs.onSnapshot(fs.stateRef, function(snap){
+      if(!snap.exists()) return;
+      var data = snap.data();
+      var json = JSON.stringify(data);
+      if(json === _lastRemoteJSON) return;
+      _lastRemoteJSON = json;
+      if(isEditingInsideEventos()){
+        _pendingRemote = data;
+      } else {
+        D = data;
+        render();
+      }
+      setSyncBadge("🟢 Sincronizado", "#4ade80");
+    }, function(err){
+      console.error("Erro no listener do Firestore:", err);
+      setSyncBadge("🔴 Erro de conexao", "#f87171");
+    });
+  }).catch(function(err){
+    console.error("Erro ao conectar no Firestore:", err);
+    setSyncBadge("🔴 Erro de conexao", "#f87171");
+    $("eventos-ct").innerHTML = "<div style=\"text-align:center;padding:40px;color:#ef4444\">⚠️ Nao foi possivel conectar ao banco de dados compartilhado. Verifique sua internet e recarregue a pagina.</div>";
+  });
+}
+
+if(window.__fs){ startFirebaseSync(); }
+else { window.addEventListener("firebase-ready", startFirebaseSync, { once:true }); }
 
 // ================================================================
 // CALC
@@ -485,9 +581,8 @@ function upComentario(evId, aId, tId, val){
 function hideModal(){ $('modal-ov').classList.remove('show'); }
 
 // ================================================================
-// INIT
+// INIT (bootstrap acontece em startFirebaseSync, disparado acima)
 // ================================================================
-render();
 </script>
 
 
