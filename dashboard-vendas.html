@@ -166,7 +166,7 @@ footer { text-align: center; color: var(--muted); font-size: 12px; padding: 24px
 .axis-dot{width:8px;height:8px;border-radius:50%;background:var(--border);cursor:pointer;transition:background .2s;}
 .axis-dot.active{background:var(--accent);}
 </style></head>
-<body><div id="axis-run-banner" style="background:#43e97b;color:#0a0a0a;text-align:center;font-weight:800;font-size:15px;padding:8px 12px;letter-spacing:0.5px;position:sticky;top:0;z-index:1000;">🟢 RODOU EM 23/08/2026 00:32</div>
+<body><div id="axis-run-banner" style="background:#43e97b;color:#0a0a0a;text-align:center;font-weight:800;font-size:15px;padding:8px 12px;letter-spacing:0.5px;position:sticky;top:0;z-index:1000;">🟢 RODOU EM 23/08/2026 00:45</div>
 
 <header class="header">
 <div>
@@ -179,7 +179,7 @@ footer { text-align: center; color: var(--muted); font-size: 12px; padding: 24px
 <a href="https://sis.ingressodigital.com/adm/ven_sessao.php" target="_blank" class="plat-link plat-id">Ingresso Digital</a>
 <a href="https://produtor.icones.com.br" target="_blank" class="plat-link plat-icones">Ícones</a>
 <a href="propostas-artistas.html" class="plat-link plat-propostas">Propostas Artistas</a></div>
-<div class="header-meta">Atualizado em 23/08/2026 00:32</div>
+<div class="header-meta">Atualizado em 23/08/2026 00:45</div>
 </header>
 
 <div class="tab-nav">
@@ -1230,6 +1230,8 @@ document.getElementById('tabReport').addEventListener('click', function(){ showV
   if (document.getElementById('axis-carousel')) return;
   var heroEl = document.querySelector('.belo-hero');
   if (!heroEl) return;
+var featuredH2 = heroEl.querySelector('h2');
+var featuredName = featuredH2 ? featuredH2.textContent.replace(/[^A-Za-z0-9\u00C0-\u00FF ]/g, '').trim().toLowerCase() : '';
 
   function getTableBySignature(required, exclude){
     var tables = document.querySelectorAll('table');
@@ -1265,6 +1267,8 @@ document.getElementById('tabReport').addEventListener('click', function(){ showV
       var statusText = statusIdx!=null && cells[statusIdx] ? cells[statusIdx].textContent.trim() : '';
       if (/realizado/i.test(statusText)) return;
       if (/belo in concert/i.test(name)) return;
+if (/via music hall/i.test(name)) return;
+if (featuredName && name.toLowerCase().indexOf(featuredName) >= 0) return;
       var date = parseDate(dateStr);
       if (!date) return;
       function cellText(h){ var i = idx[h]; return (i!=null && cells[i]) ? cells[i].textContent.trim() : null; }
@@ -1329,7 +1333,7 @@ document.getElementById('tabReport').addEventListener('click', function(){ showV
     stats.appendChild(buildStat(ev.ontem, 'Ontem'));
     stats.appendChild(buildStat(ev.hoje, 'Hoje'));
     if (ev.projecao!=null) stats.appendChild(buildStat(ev.projecao, 'Projeção'));
-    var CUSTOS = {'chico chico': 120000, 'lagum': 150000};
+    var CUSTOS = {'chico chico': 120000, 'lagum e rod melim': 150000};
     var custoKey = Object.keys(CUSTOS).find(function(k){ return ev.name.toLowerCase().indexOf(k) >= 0; });
     var custo = custoKey ? CUSTOS[custoKey] : null;
     var BAR_RATE = {'belo in concert': 35, 'chico chico': 35, 'zoom music': 35, 'monja coen': 15, 'suzy brasil': 15, 'show da luna': 15, 'choppada': 0};
